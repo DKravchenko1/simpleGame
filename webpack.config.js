@@ -42,7 +42,7 @@ module.exports = {
           {
             loader: 'url-loader',
             options: {
-              limit: 8192
+                name: 'dist/images/[name].[ext]'
             }
           }
         ]
@@ -55,7 +55,7 @@ module.exports = {
     poll: 1000,
     ignored: ['bundle/**/*.js']
   },
-  
+
   stats: {
     // Colored output
     colors: true

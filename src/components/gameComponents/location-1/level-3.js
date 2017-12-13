@@ -7,6 +7,7 @@ import {Sunflower} from "../../plantsComponents/sunflower";
 import {Sun} from "../../otherComponents/sun";
 import {Bullet} from "../../plantsComponents/bulletNormal";
 import {Lawnmower} from "../../otherComponents/lawnmover";
+import {CherryBomb} from "../../plantsComponents/cherryBomb";
 
 
 class LevelThree {
@@ -27,7 +28,7 @@ class LevelThree {
         this.openFireBind = this.openFire.bind(this);
         this.levelCompleteBind = this.levelComplete.bind(this);
         this.awardingBind = this.awarding.bind(this);
-        this.peashooterUnit = null;
+        this.peashooter = null;
         this.levelTimeLinePosition = 0;
         this.positionX = 0;
         this.positionY = 0;
@@ -43,6 +44,7 @@ class LevelThree {
         this.zombiesC = [];
         this.lawnmower = null;
         this.lawnmowers = [];
+        this.seedPacket = [];
         this.zombiesLength = 0;
         this.checkComingZombie = 0;
         this.levelUp = 0;
@@ -50,7 +52,6 @@ class LevelThree {
         this.IdIntervalFallOfSuns = 0;
         this.once = 0;
         this.stopAnimation = 0;
-        this.sunflower = new Sunflower(this.context);
         this.menu = commonImages.menu;
         this.menuOpen = 0;
         this.frameWaiting = 0;
@@ -60,7 +61,7 @@ class LevelThree {
         this.zombieAttack = 0;
         this.openFireTimer = 0;
         this.awardTimer = 0;
-        this.peashooterRechargeTimer = 0;
+        this.awardCard = null;
     }
 
     startGame() {
@@ -69,7 +70,10 @@ class LevelThree {
 
         this.levelTimeLinePosition = 0;
 
-        this.peashooterUnit = new Peashooter(this.context);
+        this.peashooter = new Peashooter(this.context);
+        this.sunflower = new Sunflower(this.context);
+        this.cherryBomb = new CherryBomb(this.context);
+        this.awardCard = this.cherryBomb;
         for (let i = 0; i < 3; i++) {
             this.lawnmower = new Lawnmower(this.context, -40, 150+(i*105));
             this.lawnmowers.push(this.lawnmower);
@@ -78,16 +82,36 @@ class LevelThree {
         requestAnimationFrame(this.levelOverview.bind(this));
         this.createZombie();
         this.sortZombieView();
+        this.createSeedPacket();
+    }
+
+    createSeedPacket() {
+        this.seedPacket.push(this.peashooter, this.sunflower, this.cherryBomb);
+        this.seedPacket.forEach((seed) => seed.init());
+    }
+
+    drawSeedPacket() {
+        this.seedPacket.forEach((seed, i) =>{
+            this.context.drawImage(seed.packet, 97+(i*60), 9);
+        });
     }
 
     createZombie() {
         for (let i = 0; i < 20; i++) {
-            this.simpleZombie = new SimpleZombie(this.context);
-            this.simpleZombie.positionOfCreate();
-            this.zombies.push(this.simpleZombie);
+            this.zombie = new Zombie(this.context);
+            this.zombie.positionOfCreate();
+            this.zombies.push(this.zombie);
         }
         this.zombiesLength = this.zombies.length;
     } // TODO AllUnitInTheMap.createZombie()
+
+    setZombieState() {
+        this.zombies.forEach((zombie) => {
+            let state;
+            state = this.setRandom(1,2);
+            zombie.setState(state);
+        });
+    }
 
     sortZombieView() {
         this.zombies = this.zombies.slice().sort((a,b) => {
@@ -176,10 +200,10 @@ class LevelThree {
         this.context.drawImage(this.menu, 660, -5);
 
         this.lawnmowers.forEach((lawnmower) => lawnmower.draw());
-        this.zombieComing();
+
+        this.drawSeedPacket();
         this.drawPlant();
         this.drawSun();
-        this.peashooterRechargeTimer++;
         if (this.firstPlant){
             this.fallOfSuns();
         }
@@ -192,7 +216,8 @@ class LevelThree {
         this.chosePlant();
         this.levelProgress();
         this.choseSun();
-
+        this.zombieComing();
+        this.createPlantLogo();
         if (this.menuOpen) {
             this.showMenu();
         }
@@ -205,37 +230,38 @@ class LevelThree {
     }
 
     levelComplete() {
-        this.sunflower.award();
+        this.awardCard.award();
         if (!this.once) {
             this.once = 1;
             this.canvas.addEventListener('click', (e) => {
-                if (e.layerX > this.sunflower.startX && e.layerX < this.sunflower.startX+50  && e.layerY > this.sunflower.endY+70 && e.layerY < this.sunflower.endY + 140) {
+                if (e.layerX > this.awardCard.startX && e.layerX < this.awardCard.startX+50  && e.layerY > this.awardCard.endY+40 && e.layerY < this.awardCard.endY + 110) {
                     this.awarding()
                 }})
         }
     }
 
     awarding() {
-        this.sunflower.award();
+        this.awardCard.award();
         this.stopAnimation = 1;
-        if (this.sunflower.startY > 206) {
-            this.sunflower.startY -= ((this.sunflower.startY - 206) / 10);
-        } else if(this.sunflower.startY < 204) {
-            this.sunflower.startY += ((204 - this.sunflower.startY) / 10) + 1;
+        if (this.awardCard.startY > 226) {
+            this.awardCard.startY -= ((this.awardCard.startY - 226) / 10);
+        } else if(this.awardCard.startY < 224) {
+            this.awardCard.startY += ((224 - this.awardCard.startY) / 10) + 1;
         }
-        if (this.sunflower.startX > 376) {
-            this.sunflower.startX -= ((this.sunflower.startX - 376) / 10) + 1;
+        if (this.awardCard.startX > 376) {
+            this.awardCard.startX -= ((this.awardCard.startX - 376) / 10) + 1;
             requestAnimationFrame(this.awardingBind);
-        } else if (this.sunflower.startX < 374) {
-            this.sunflower.startX += ((374-this.sunflower.startX)/10)+1;
+        } else if (this.awardCard.startX < 374) {
+            this.awardCard.startX += ((374-this.awardCard.startX)/10)+1;
             requestAnimationFrame(this.awardingBind);
         } else {
             this.context.drawImage(commonImages.starburst, 107, 6);
-            this.sunflower.award();
+            this.awardCard.award();
             if (this.awardTimer === 60){
                 this.stopLevel = 1;
+                this.canvas.removeEventListener('click', this.toPlantBind);
                 this.canvas.removeEventListener('mousemove', this.calculatePlantUnitBind);
-                const betweenLevel = new BetweenLevels(this.canvas, this.context, this.sunflower.logo, 1);
+                const betweenLevel = new BetweenLevels(this.canvas, this.context, this.awardCard.packet, 2);
                 betweenLevel.create();
                 betweenLevel.start();
             } else {
@@ -262,7 +288,10 @@ class LevelThree {
             if (elem.health < 1) {
                 elem.zombiesDead();
                 if (elem.timerDied > 59) {
-                    arr.splice(i,1);
+                    let temp = arr[i];
+                    arr[i] = arr[arr.length - 1];
+                    arr[arr.length - 1] = temp;
+                    arr.pop();
                 }
             } else {
                 if (this.plants.some((plant, i, arr) => {
@@ -293,11 +322,9 @@ class LevelThree {
     }
 
     levelEnd(pointX, pointY) {
-        this.sunflower.createAwardPosition(pointX, pointY);
+        this.cherryBomb.createAwardPosition(pointX, pointY);
         this.levelUp = 1;
         this.levelComplete(pointX);
-        this.sunflower.state = 'once';
-        this.sunflower.direction = 'top';
     }
 
     levelProgress () {
@@ -311,31 +338,55 @@ class LevelThree {
     }
 
     chosePlant() {
-        if (!this.chose && this.numberOfSuns > 99 && this.peashooterRechargeTimer < 360) {
-            this.peashooterUnit.choice();
-        } else {
-            this.peashooterUnit.cancelChoice();
-        }
+        this.seedPacket.forEach((seed, i) => {
+            if (seed.chose && this.numberOfSuns >= seed.cost) {
+                seed.choice(97+(i*60), 9);
+            } else {
+                seed.cancelChoice(97+(i*60), 9);
+            }
+        });
     }
 
     drawPlant() {
-        this.plants.forEach((plant) => {
+        this.plants.forEach((plant, i, arr) => {
             plant.build();
             this.zombiesC.forEach((zombie) => {
                 for (let i = 0; i < plant.positionOfBullet.length; i++) {
                     if ((plant.positionOfBullet[i].pointX > zombie.positionX+60) && (plant.positionOfBullet[i].pointX < zombie.positionX+85) && (zombie.positionY+70> plant.positionOfBullet[i].pointY) && (zombie.positionY+60 < plant.positionOfBullet[i].pointY)) {
                         plant.positionOfBullet[i].hit = 1;
                         if (plant.positionOfBullet[i].frameBulletSpeed === 3) {
-                            zombie.health -= 1;
+                            zombie.health -= plant.damage;
+                            zombie.checkState();
                         }
                     }
                 }
+                if (plant.name === CherryBomb && plant.abilityTimer > 40) {
+                    if (plant.positionX - 160 < zombie.positionX+60 && plant.positionX + 160 > zombie.positionX+60 && plant.positionY - 115 < zombie.positionY+70 && plant.positionY+115 > zombie.positionY+70){
+                        zombie.health = 0;
+                    }
+                }
             });
-            plant.attack();
+            if (plant.name === Sunflower) {
+                if (plant.abilityTimer > 900) {
+                    this.suns.push(plant.useOfAbility());
+                    plant.abilityTimer = 0;
+                } else {
+                    plant.abilityTimer++
+                }
+            } else if(plant.name === CherryBomb) {
+                if (plant.abilityTimer > 40){
+                    arr.splice(i,1);
+                    this.positionOfPlant.splice(i, 1);
+                } else {
+                    plant.abilityTimer++;
+                }
+            } else {
+                plant.useOfAbility();
+            }
         });
     }   //TODO AllUnitInTheMap.drawPlant()
 
-    drawSun() { //TODO AllUnitInTheMap.drawSun()
+    drawSun() {     //TODO AllUnitInTheMap.drawSun()
         this.suns.forEach((elem) => {
             elem.fall();
         });
@@ -355,81 +406,107 @@ class LevelThree {
 
     startLevel() {
         this.canvas.addEventListener('click', this.toPlantBind);
+        this.setZombieState();
     }
 
     toPlant(e) {
-        if ((e.layerX > 99) && (e.layerX < 143) && (e.layerY > 9) && (e.layerY < 74)) {
-            if (!this.chose && this.numberOfSuns > this.peashooterUnit.cost-1 && this.peashooterRechargeTimer < 360) {
-                this.chose = 1;
-                this.positionX = e.layerX - this.peashooterUnit.calculateWidth() / 2;
-                this.positionY = e.layerY - this.peashooterUnit.calculateHeight() / 2;
-                this.canvas.addEventListener('mousemove', this.calculatePlantUnitBind);
-            } else {
-                this.chose = 0;
-                this.positionY = 0;
-                this.positionX = 0;
-                this.canvas.removeEventListener('mousemove', this.calculatePlantUnitBind);
-            }
-            requestAnimationFrame(this.createPlantLogoBind);
+        if (this.seedPacket.every((seed) => (!seed.chose))) {
+            this.seedPacket.find((seed, i) => {
+                    if ((e.layerX > (97 + 60 * i)) && (e.layerX < (97+10*i + (50 * (i + 1)))) && (e.layerY > 9) && (e.layerY < 74)) {
+                        seed.chose = 1;
+                        this.positionX = e.layerX - seed.calculateWidth() / 2;
+                        this.positionY = e.layerY - seed.calculateHeight() / 2;
+                        this.canvas.addEventListener('mousemove', this.calculatePlantUnitBind);
+                        return true;
+                    }
+                }
+            )
+        } else {
+            this.seedPacket.find((seed, i) => {
+                if ((e.layerX > (97+60*i)) && (e.layerX < (97+10*i + (50*(i+1)))) && (e.layerY > 9) && (e.layerY < 74)) {
+                    if (seed.chose) {
+                        seed.chose = 0;
+                        this.canvas.removeEventListener('mousemove', this.calculatePlantUnitBind);
+                        return true;
+                    }
+                }
+            })
         }
+
     }
 
+
     createPlantLogo() {
-        if (this.chose === 1) {
-            this.peashooterUnit.create(this.positionX, this.positionY);
-            for (let i = 0; i < 10; i++) {
-                if ((this.positionX > (i * 72)) && (this.positionX < ((i + 1) * 72)) && this.positionY > 120 && this.positionY < 437) {
-                    for (let j = 0; j < 3; j++) {
-                        if (this.positionY > 120 + j*105 && this.positionY < 120 + (j+1)*105) {
-                            this.positionToCreateY = 165 + j*105;
+        this.seedPacket.forEach((seed) => {
+            if (seed.chose === 1) {
+                seed.create(this.positionX, this.positionY);
+                for (let i = 0; i < 10; i++) {
+                    if ((this.positionX > (i * 72)) && (this.positionX < ((i + 1) * 72)) && this.positionY > 120 && this.positionY < 437) {
+                        for (let j = 0; j < 3; j++) {
+                            if (this.positionY > 120 + j*105 && this.positionY < 120 + (j+1)*105) {
+                                this.positionToCreateY = 165 + j*105;
+                            }
                         }
+                        this.positionToCreateX = 40 + i * 72;
+                        seed.create(this.positionToCreateX, this.positionToCreateY);
+                        this.canvas.addEventListener('click', this.createPlantUnitBind);
                     }
-                    this.positionToCreateX = 40 + i * 72;
-                    this.peashooterUnit.create(this.positionToCreateX, this.positionToCreateY);
-                    this.canvas.addEventListener('click', this.createPlantUnitBind);
                 }
             }
-        }
-        if (!this.levelUp) {
-            requestAnimationFrame(this.createPlantLogoBind);
-        }
+        });
     }
 
 
     calculatePlantUnit(e) {
-        this.positionX = e.layerX - this.peashooterUnit.calculateWidth() / 2;
-        this.positionY = e.layerY - this.peashooterUnit.calculateHeight() / 2;
+        this.seedPacket.forEach((seed) => {
+            if (seed.chose) {
+                this.positionX = e.layerX - seed.calculateWidth() / 2;
+                this.positionY = e.layerY - seed.calculateHeight() / 2;
+            }
+        });
     }
 
     createPlantUnit() {
-        let plant = new Peashooter(this.context, this.positionToCreateX, this.positionToCreateY);
-        plant.init();
-        let length = this.positionOfPlant.length;
-        let checkUniq = 1;
-        if (this.positionX < 730 && this.positionY > 120 && this.positionY < 435) {
-            for (let i = 0; i < length; i++) {
-                if (this.positionOfPlant[i].pointX === plant.positionOfCreate.pointX && this.positionOfPlant[i].pointY === plant.positionOfCreate.pointY) {
-                    checkUniq = 0;
-                }
+        let plant;
+        this.seedPacket.forEach((seed) => {
+            if (seed.chose) {
+                plant = new seed.name(this.context, this.positionToCreateX, this.positionToCreateY)
             }
-            if (checkUniq && this.peashooterRechargeTimer < 360) {
-                this.peashooterRechargeTimer = 0;
-                this.plants.push(plant);
-                this.positionOfPlant.push(plant.positionOfCreate);
-                this.chose = 0;
-                this.numberOfSuns -= this.peashooterUnit.cost;
-                if (!this.firstPlant) {
-                    this.firstPlant = 1;
-                    this.fallOfSuns();
+        });
+        if (plant) {
+            plant.init();
+            let length = this.positionOfPlant.length;
+            let checkUniq = 1;
+            if (this.positionX < 730 && this.positionY > 120 && this.positionY < 435) {
+                for (let i = 0; i < length; i++) {
+                    if (this.positionOfPlant[i].pointX === plant.positionOfCreate.pointX && this.positionOfPlant[i].pointY === plant.positionOfCreate.pointY) {
+                        checkUniq = 0;
+                    }
                 }
-                if ((this.plants.length > 4) && (!this.checkComingZombie)) {
-                    this.checkComingZombie = 1;
-                    this.commingZombieTimer = 600;
-                    this.startComingZombie();
+                if (checkUniq) {
+
+                    this.plants.push(plant);
+                    this.positionOfPlant.push(plant.positionOfCreate);
+                    this.seedPacket.find((seed) => {
+                        if (seed.chose) {
+                            seed.chose = 0;
+                            this.canvas.removeEventListener('mousemove', this.calculatePlantUnitBind);
+                            return true;
+                        }
+                    });
+                    this.numberOfSuns -= plant.cost;
+                    if (!this.firstPlant) {
+                        this.firstPlant = 1;
+                        this.fallOfSuns();
+                    }
+                    if ((this.plants.length > 4) && (!this.checkComingZombie)) {
+                        this.checkComingZombie = 1;
+                        this.commingZombieTimer = 600;
+                        this.startComingZombie();
+                    }
                 }
             }
         }
-
 
         this.canvas.addEventListener('click', this.receivingSunsBind);
         this.canvas.removeEventListener('click', this.createPlantUnitBind);
@@ -437,24 +514,21 @@ class LevelThree {
     }
 
     startComingZombie() {
-        if (this.commingZombieTimer > 300) {
-            if (this.zombies.length > 0) {
-                this.zombies[this.zombies.length - 1].positionX = 710;
-                this.zombies[this.zombies.length - 1].positionY = this.zombies[this.zombies.length - 1].setPositionOfCreate(0, 2)*105 + 100;
-                this.zombiesC.push(this.zombies.pop());
-            }
-            this.commingZombieTimer = 0;
-        } else {
-            this.commingZombieTimer++;
-        } if (this.commingZombieTimer === 60) {
-            let length = Math.ceil(this.zombiesLength/2);
-            if (this.zombies.length < length - 1) {
-                for (let i = 0; i < length - 2; i++) {
+        if (this.zombies.length > 0) {
+            if (this.commingZombieTimer > 300) {
+                if (this.zombies.length > Math.ceil(this.zombiesLength/2)) {
                     this.zombies[this.zombies.length - 1].positionX = 710;
                     this.zombies[this.zombies.length - 1].positionY = this.zombies[this.zombies.length - 1].setPositionOfCreate(0, 2)*105 + 100;
                     this.zombiesC.push(this.zombies.pop());
                 }
                 this.commingZombieTimer = 0;
+            } else if (this.zombies.length <= Math.ceil(this.zombiesLength/2) && this.commingZombieTimer > 90) {
+                this.zombies[this.zombies.length - 1].positionX = 710;
+                this.zombies[this.zombies.length - 1].positionY = this.zombies[this.zombies.length - 1].setPositionOfCreate(0, 2) * 105 + 100;
+                this.zombiesC.push(this.zombies.pop());
+                this.commingZombieTimer = 0;
+            } else {
+                this.commingZombieTimer++;
             }
         }
     }
@@ -508,6 +582,10 @@ class LevelThree {
 
     showMenu() {
         this.context.drawImage(commonImages.menuWindow, 188, 30);
+    }
+
+    setRandom(min, max) {
+        return Math.floor(Math.random() * (max - min +1)) + min;
     }
 
 }
