@@ -14,42 +14,45 @@ export class Sprite {
     }
     
     update (dt) {
-    this._index += this.speed*dt;
+        this._index += this.speed*dt;
+    }
+    
+    update_progress(progress) {
+        this._index = this.frames.length * progress;
     }
     
     render (ctx) {
-        
-    let frame;
+        let frame;
 
-    if(this.speed > 0) {
-        let max = this.frames.length;
-        let idx = Math.floor(this._index);
-        frame = this.frames[idx % max];
+        if(this.speed > 0) {
+            let max = this.frames.length;
+            let idx = Math.floor(this._index);
+            frame = this.frames[idx % max];
 
-        if(this.once && idx >= max) {
-            this.done = true;
-            return;
+            if(this.once && idx >= max) {
+                this.done = true;
+                return;
+            }
         }
-    }
-    else {
-        frame = 0;
-    }
+        else {
+            frame = 0;
+        }
 
-    let x = this.pos[0];
-    let y = this.pos[1];
+        let x = this.pos[0];
+        let y = this.pos[1];
 
-    if(this.dir == 'vertical') {
-        y += frame * this.size[1];
-    }
-    else {
-        x += frame * this.size[0];
-    }
+        if(this.dir == 'vertical') {
+            y += frame * this.size[1];
+        }
+        else {
+            x += frame * this.size[0];
+        }
 
     ctx.drawImage(resources.get(this.url),
-                  x, y,
-                  this.size[0], this.size[1],
-                  150, 200,
-                  this.size[0], this.size[1]);
+        x, y,
+        this.size[0], this.size[1],
+        150, 200,
+        this.size[0], this.size[1]);
     }
 }
 

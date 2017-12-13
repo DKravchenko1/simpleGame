@@ -1,5 +1,6 @@
 import { resources } from './resources';
-import { MenuPage} from './menu_page'
+import { MenuPage} from './menu_page';
+import { buttonAudio} from '../audioComponents/audioButton';
 
 export class StartGame {
   constructor () {
@@ -80,15 +81,6 @@ export class StartGame {
       }
   }
 
- /* playMusic() {
-    let audio = document.createElement('audio'); 
-      
-      
-   <audio src="http://developer.mozilla.org/@api/deki/files/2926/=AudioTest_(1).ogg" autoplay>
-  Your browser does not support the <code>audio</code> element.
-</audio>
-  } */
-
   outsideArea(event,x1,x2,y1,y2) {
     let x = event.pageX - this.elemLeft, y = event.pageY - this.elemTop;
     return x < x1 || x > x2 || y < y1 || y > y2;
@@ -96,6 +88,7 @@ export class StartGame {
 
   onGoToMenu(event) {
     if (this.outsideArea(event,200,590,510,563)) return;
+    buttonAudio.click.play();
     this.disableEvents();
     this.menupage = new MenuPage();
   }

@@ -6,8 +6,7 @@ export class QuitMenu {
     constructor () {
         this.elemLeft = start.offsetLeft;  
         this.elemTop = start.offsetTop;    
-        this.ctx = start.getContext('2d');  
-        this.enableEvents();     
+        this.ctx = start.getContext('2d');   
         this.buttonX;   
         this.buttonY;   
         this.renderPage();

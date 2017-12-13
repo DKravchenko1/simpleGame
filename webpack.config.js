@@ -9,12 +9,12 @@ module.exports = {
 
   output: {
     path: __dirname,
-    filename: 'bundle/js/app.js'
+    filename: 'dist/js/app.js'
   },
 
   plugins: [
     // Specify the resulting CSS filename
-    new ExtractTextPlugin('bundle/css/style.css')
+    new ExtractTextPlugin('dist/css/style.css')
   ],
 
   module: {
@@ -39,10 +39,27 @@ module.exports = {
       {
         test: /\.(png|jpg|gif|svg)$/,
         use: [
-          {
+          /*{
             loader: 'url-loader',
             options: {
+              limit: 8192
+            }
+          },*/
+          {
+            loader: 'file-loader',
+            options: {
                 name: 'dist/images/[name].[ext]'
+            }
+          }
+        ]
+      },
+      {
+        test: /\.(ogg|mp3|wav|mpe?g)$/i,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: 'dist/audio/[name].[ext]'
             }
           }
         ]
@@ -53,9 +70,9 @@ module.exports = {
   watchOptions: {
     aggregateTimeout: 300,
     poll: 1000,
-    ignored: ['bundle/**/*.js']
+    ignored: ['dist/**/*.js', 'bundle/**/*.js']
   },
-
+  
   stats: {
     // Colored output
     colors: true

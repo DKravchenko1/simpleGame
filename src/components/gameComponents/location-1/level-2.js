@@ -7,7 +7,6 @@ import {Sunflower} from "../../plantsComponents/sunflower";
 import {Sun} from "../../otherComponents/sun";
 import {Bullet} from "../../plantsComponents/bulletNormal";
 import {Lawnmower} from "../../otherComponents/lawnmover";
-import {CherryBomb} from "../../plantsComponents/cherryBomb";
 
 
 class LevelTwo {
@@ -16,7 +15,8 @@ class LevelTwo {
         this.context = this.canvas.getContext('2d');
         this.backgroundPositionX = 0;
         this.animationPositionX = 0;
-        this.numberOfSuns = 200;
+        this.numberOfSuns = 1000;
+        this.chose = 0;
         this.toPlantBind = this.toPlant.bind(this);
         this.createPlantLogoBind = this.createPlantLogo.bind(this);
         this.calculatePlantUnitBind = this.calculatePlantUnit.bind(this);
@@ -28,8 +28,6 @@ class LevelTwo {
         this.levelCompleteBind = this.levelComplete.bind(this);
         this.awardingBind = this.awarding.bind(this);
         this.peashooter = null;
-        this.sunflower = null;
-        this.cherryBomb = null;
         this.levelTimeLinePosition = 0;
         this.positionX = 0;
         this.positionY = 0;
@@ -39,6 +37,7 @@ class LevelTwo {
         this.positionOfPlant = [];
         this.suns = [];
         this.firstPlant = 0;
+        this.IdIntervalComingZombie = 0;
         this.chosenSuns = [];
         this.zombies = [];
         this.zombiesC = [];
@@ -49,6 +48,7 @@ class LevelTwo {
         this.checkComingZombie = 0;
         this.levelUp = 0;
         this.stopLevel = 0;
+        this.IdIntervalFallOfSuns = 0;
         this.once = 0;
         this.stopAnimation = 0;
         this.menu = commonImages.menu;
@@ -60,20 +60,16 @@ class LevelTwo {
         this.zombieAttack = 0;
         this.openFireTimer = 0;
         this.awardTimer = 0;
-        this.awardCard = null;
     }
 
     startGame() {
         this.context.font = '24px Arial';
         this.context.textAlign = 'center';
-        this.context.fillStyle = '#000';
 
         this.levelTimeLinePosition = 0;
 
         this.peashooter = new Peashooter(this.context);
         this.sunflower = new Sunflower(this.context);
-        this.cherryBomb = new CherryBomb(this.context);
-        this.awardCard = this.cherryBomb;
         for (let i = 0; i < 3; i++) {
             this.lawnmower = new Lawnmower(this.context, -40, 150+(i*105));
             this.lawnmowers.push(this.lawnmower);
@@ -97,10 +93,10 @@ class LevelTwo {
     }
 
     createZombie() {
-        for (let i = 0; i < 20; i++) {
-            let zombie = new Zombie(this.context);
-            zombie.positionOfCreate();
-            this.zombies.push(zombie);
+        for (let i = 0; i < 10; i++) {
+            this.zombie = new Zombie(this.context);
+            this.zombie.positionOfCreate();
+            this.zombies.push(this.zombie);
         }
         this.zombiesLength = this.zombies.length;
     } // TODO AllUnitInTheMap.createZombie()
@@ -196,11 +192,11 @@ class LevelTwo {
         this.context.drawImage(levelImages.backgroundThree, 0, 0, this.animationPositionX, 600, -220, 0, this.animationPositionX, 600);
         this.context.drawImage(commonImages.seedBank, 10, 0);
         this.context.drawImage(commonImages.sunBank, 10, 0);
-        this.context.fillText(`${this.numberOfSuns}`, 48.5, 59);
+        this.context.fillText(`${this.numberOfSuns}`, 48.5, 80);
         this.context.drawImage(this.menu, 660, -5);
 
         this.lawnmowers.forEach((lawnmower) => lawnmower.draw());
-
+        this.zombieComing();
         this.drawSeedPacket();
         this.drawPlant();
         this.drawSun();
@@ -216,8 +212,7 @@ class LevelTwo {
         this.chosePlant();
         this.levelProgress();
         this.choseSun();
-        this.zombieComing();
-        this.createPlantLogo();
+
         if (this.menuOpen) {
             this.showMenu();
         }
@@ -230,38 +225,37 @@ class LevelTwo {
     }
 
     levelComplete() {
-        this.awardCard.award();
+        this.sunflower.award();
         if (!this.once) {
             this.once = 1;
             this.canvas.addEventListener('click', (e) => {
-                if (e.layerX > this.awardCard.startX && e.layerX < this.awardCard.startX+50  && e.layerY > this.awardCard.endY+40 && e.layerY < this.awardCard.endY + 110) {
+                if (e.layerX > this.sunflower.startX && e.layerX < this.sunflower.startX+50  && e.layerY > this.sunflower.endY+70 && e.layerY < this.sunflower.endY + 140) {
                     this.awarding()
                 }})
         }
     }
 
     awarding() {
-        this.awardCard.award();
+        this.sunflower.award();
         this.stopAnimation = 1;
-        if (this.awardCard.startY > 226) {
-            this.awardCard.startY -= ((this.awardCard.startY - 226) / 10);
-        } else if(this.awardCard.startY < 224) {
-            this.awardCard.startY += ((224 - this.awardCard.startY) / 10) + 1;
+        if (this.sunflower.startY > 206) {
+            this.sunflower.startY -= ((this.sunflower.startY - 206) / 10);
+        } else if(this.sunflower.startY < 204) {
+            this.sunflower.startY += ((204 - this.sunflower.startY) / 10) + 1;
         }
-        if (this.awardCard.startX > 376) {
-            this.awardCard.startX -= ((this.awardCard.startX - 376) / 10) + 1;
+        if (this.sunflower.startX > 376) {
+            this.sunflower.startX -= ((this.sunflower.startX - 376) / 10) + 1;
             requestAnimationFrame(this.awardingBind);
-        } else if (this.awardCard.startX < 374) {
-            this.awardCard.startX += ((374-this.awardCard.startX)/10)+1;
+        } else if (this.sunflower.startX < 374) {
+            this.sunflower.startX += ((374-this.sunflower.startX)/10)+1;
             requestAnimationFrame(this.awardingBind);
         } else {
             this.context.drawImage(commonImages.starburst, 107, 6);
-            this.awardCard.award();
+            this.sunflower.award();
             if (this.awardTimer === 60){
                 this.stopLevel = 1;
-                this.canvas.removeEventListener('click', this.toPlantBind);
                 this.canvas.removeEventListener('mousemove', this.calculatePlantUnitBind);
-                const betweenLevel = new BetweenLevels(this.canvas, this.context, this.awardCard.packet, 2);
+                const betweenLevel = new BetweenLevels(this.canvas, this.context, this.sunflower.packet, 2);
                 betweenLevel.create();
                 betweenLevel.start();
             } else {
@@ -288,10 +282,7 @@ class LevelTwo {
             if (elem.health < 1) {
                 elem.zombiesDead();
                 if (elem.timerDied > 59) {
-                    let temp = arr[i];
-                    arr[i] = arr[arr.length - 1];
-                    arr[arr.length - 1] = temp;
-                    arr.pop();
+                    arr.splice(i,1);
                 }
             } else {
                 if (this.plants.some((plant, i, arr) => {
@@ -322,9 +313,11 @@ class LevelTwo {
     }
 
     levelEnd(pointX, pointY) {
-        this.cherryBomb.createAwardPosition(pointX, pointY);
+        this.sunflower.createAwardPosition(pointX, pointY);
         this.levelUp = 1;
         this.levelComplete(pointX);
+        this.sunflower.state = 'once';
+        this.sunflower.direction = 'top';
     }
 
     levelProgress () {
@@ -339,7 +332,7 @@ class LevelTwo {
 
     chosePlant() {
         this.seedPacket.forEach((seed, i) => {
-            if (seed.chose || this.numberOfSuns < seed.cost-1) {
+            if (seed.chose && this.numberOfSuns >= seed.cost) {
                 seed.choice(97+(i*60), 9);
             } else {
                 seed.cancelChoice(97+(i*60), 9);
@@ -398,29 +391,22 @@ class LevelTwo {
     }
 
     toPlant(e) {
-        if (this.seedPacket.every((seed) => (!seed.chose))) {
-            this.seedPacket.find((seed, i) => {
-                    if ((e.layerX > (97 + 60 * i)) && (e.layerX < (97 + (50 * (i + 1)))) && (e.layerY > 9) && (e.layerY < 74) && this.numberOfSuns > seed.cost-1) {
-                        seed.chose = 1;
-                        this.positionX = e.layerX - seed.calculateWidth() / 2;
-                        this.positionY = e.layerY - seed.calculateHeight() / 2;
-                        this.canvas.addEventListener('mousemove', this.calculatePlantUnitBind);
-                        return true;
-                    }
+        this.seedPacket.find((seed, i) => {
+            if ((e.layerX > (97+60*i)) && (e.layerX < (97 + (50*(i+1)))) && (e.layerY > 9) && (e.layerY < 74)){
+                if (seed.chose){
+                    seed.chose = 0;
+                    this.canvas.removeEventListener('mousemove', this.calculatePlantUnitBind);
+                    return false;
+                } else {
+                    seed.chose = 1;
+                    this.positionX = e.layerX - seed.calculateWidth() / 2;
+                    this.positionY = e.layerY - seed.calculateHeight() / 2;
+                    this.canvas.addEventListener('mousemove', this.calculatePlantUnitBind);
+                    return true;
                 }
-            )
-        } else {
-            this.seedPacket.find((seed, i) => {
-                if ((e.layerX > (97+60*i)) && (e.layerX < (97 + (50*(i+1)))) && (e.layerY > 9) && (e.layerY < 74)) {
-                    if (seed.chose) {
-                        seed.chose = 0;
-                        this.canvas.removeEventListener('mousemove', this.calculatePlantUnitBind);
-                        return true;
-                    }
-                }
-            })
-        }
-
+            }
+        });
+        requestAnimationFrame(this.createPlantLogoBind);
     }
 
     createPlantLogo() {
@@ -441,6 +427,9 @@ class LevelTwo {
                 }
             }
         });
+        if (!this.levelUp) {
+            requestAnimationFrame(this.createPlantLogoBind);
+        }
     }
 
 
@@ -460,40 +449,39 @@ class LevelTwo {
                 plant = new seed.name(this.context, this.positionToCreateX, this.positionToCreateY)
             }
         });
-        if (plant) {
-            plant.init();
-            let length = this.positionOfPlant.length;
-            let checkUniq = 1;
-            if (this.positionX < 730 && this.positionY > 120 && this.positionY < 435) {
-                for (let i = 0; i < length; i++) {
-                    if (this.positionOfPlant[i].pointX === plant.positionOfCreate.pointX && this.positionOfPlant[i].pointY === plant.positionOfCreate.pointY) {
-                        checkUniq = 0;
-                    }
+        plant.init();
+        let length = this.positionOfPlant.length;
+        let checkUniq = 1;
+        if (this.positionX < 730 && this.positionY > 120 && this.positionY < 435) {
+            for (let i = 0; i < length; i++) {
+                if (this.positionOfPlant[i].pointX === plant.positionOfCreate.pointX && this.positionOfPlant[i].pointY === plant.positionOfCreate.pointY) {
+                    checkUniq = 0;
                 }
-                if (checkUniq) {
+            }
+            if (checkUniq) {
 
-                    this.plants.push(plant);
-                    this.positionOfPlant.push(plant.positionOfCreate);
-                    this.seedPacket.find((seed) => {
-                        if (seed.chose) {
-                            seed.chose = 0;
-                            this.canvas.removeEventListener('mousemove', this.calculatePlantUnitBind);
-                            return true;
-                        }
-                    });
-                    this.numberOfSuns -= plant.cost;
-                    if (!this.firstPlant) {
-                        this.firstPlant = 1;
-                        this.fallOfSuns();
+                this.plants.push(plant);
+                this.positionOfPlant.push(plant.positionOfCreate);
+                this.seedPacket.find((seed) => {
+                    if (seed.chose) {
+                        seed.chose = 0;
+                        this.canvas.removeEventListener('mousemove', this.calculatePlantUnitBind);
+                        return true;
                     }
-                    if ((this.plants.length > 4) && (!this.checkComingZombie)) {
-                        this.checkComingZombie = 1;
-                        this.commingZombieTimer = 600;
-                        this.startComingZombie();
-                    }
+                });
+                this.numberOfSuns -= plant.cost;
+                if (!this.firstPlant) {
+                    this.firstPlant = 1;
+                    this.fallOfSuns();
+                }
+                if ((this.plants.length > 4) && (!this.checkComingZombie)) {
+                    this.checkComingZombie = 1;
+                    this.commingZombieTimer = 600;
+                    this.startComingZombie();
                 }
             }
         }
+
 
         this.canvas.addEventListener('click', this.receivingSunsBind);
         this.canvas.removeEventListener('click', this.createPlantUnitBind);
@@ -501,21 +489,24 @@ class LevelTwo {
     }
 
     startComingZombie() {
-        if (this.zombies.length > 0) {
-            if (this.commingZombieTimer > 300) {
-                if (this.zombies.length > Math.ceil(this.zombiesLength/2)) {
+        if (this.commingZombieTimer > 300) {
+            if (this.zombies.length > 0) {
+                this.zombies[this.zombies.length - 1].positionX = 710;
+                this.zombies[this.zombies.length - 1].positionY = this.zombies[this.zombies.length - 1].setPositionOfCreate(0, 2)*105 + 100;
+                this.zombiesC.push(this.zombies.pop());
+            }
+            this.commingZombieTimer = 0;
+        } else {
+            this.commingZombieTimer++;
+        } if (this.commingZombieTimer === 60) {
+            let length = Math.ceil(this.zombiesLength/2);
+            if (this.zombies.length < length - 1) {
+                for (let i = 0; i < length - 2; i++) {
                     this.zombies[this.zombies.length - 1].positionX = 710;
                     this.zombies[this.zombies.length - 1].positionY = this.zombies[this.zombies.length - 1].setPositionOfCreate(0, 2)*105 + 100;
                     this.zombiesC.push(this.zombies.pop());
                 }
                 this.commingZombieTimer = 0;
-            } else if (this.zombies.length <= Math.ceil(this.zombiesLength/2) && this.commingZombieTimer > 90) {
-                this.zombies[this.zombies.length - 1].positionX = 710;
-                this.zombies[this.zombies.length - 1].positionY = this.zombies[this.zombies.length - 1].setPositionOfCreate(0, 2) * 105 + 100;
-                this.zombiesC.push(this.zombies.pop());
-                this.commingZombieTimer = 0;
-            } else {
-                this.commingZombieTimer++;
             }
         }
     }

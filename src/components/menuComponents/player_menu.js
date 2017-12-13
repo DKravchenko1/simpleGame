@@ -1,6 +1,7 @@
 import { resources } from './resources';
 import { store } from './store';
 import { MenuPage} from './menu_page';
+//import { buttonAudio} from '/'
 
 export class PlayerMenu {
     
@@ -73,7 +74,7 @@ export class PlayerMenu {
         this.buttonY = 420;
         this.ctx.drawImage(resources.get('img/dialog_window/quit_menu.png'), 220, 180, 400, 300);
         this.ctx.drawImage(resources.get('img/dialog_window/button.png'), 293, 417, 90, 45);
-        this.ctx.drawImage(resources.get('img/dialog-window/button.png'), 460, 420, 90, 45);
+        this.ctx.drawImage(resources.get('img/dialog_window/button.png'), 460, 420, 90, 45);
         this.ctx.drawImage(resources.get('img/dialog_window/please.png'), 365, 240, 80, 40);
         this.ctx.drawImage(resources.get('img/dialog_window/enter_name.png'), 310, 365, 220, 30);
         this.ctx.drawImage(resources.get('img/dialog_window/ok_button.png'), 323, 427, 25, 20);

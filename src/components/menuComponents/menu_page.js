@@ -55,33 +55,32 @@ export class MenuPage {
         this.ctx.drawImage(resources.get('img/menu_backgrounds/level_'+store.getLevel()+'_light.png'), 400, 65, 335, 145);
         this.lasttime = Date.now();
         //Effect 2
-        window.setTimeout(this.onMoveZombyHand.bind(this), 1000 / 60);
+        window.setTimeout(this.onMoveZombyHand.bind(this), 500);
         this.disableEvents();
         //start game on certain level
         const game = new GameComponents(start, store.getLevel(), '1');
         const startGameProcess = game.preparationLevel.bind(game);
-        window.setTimeout(startGameProcess, 150000 / 60);
+        window.setTimeout(startGameProcess, 2500);
     }    
     
     onMoveZombyHand() {
-        this.zombyhand = new Sprite('img/zomby_hand/sprite_zomby_hand.png', [0,0],[300,400], 4, [0,1,2], 'horizontal', true);
-        this.spriteRenderCycle();
-        
+        this.zombyhand = new Sprite('img/zomby_hand/sprite_zomby_hand.png', [0,0],[300,400], 1, [0,1,2], 'horizontal', true);
+        this.startZH = performance.now();
+        requestAnimationFrame(this.spriteRenderCycle.bind(this));
     }
     
-    spriteRenderCycle() {
-        this.counter++; 
-        let now = Date.now();
-        let dt = (now-this.lasttime)/1000;
-        if (this.counter > 35) {
-             return;
-        }
+    spriteRenderCycle(timestamp) {
+        const duration = 1000;
+        let timePassed = timestamp - this.startZH;
+        let progress = timePassed / duration;
+        
         this.renderPage();
         this.zombyhand.render(this.ctx);
-        this.zombyhand.update(dt);
-        this.lasttime = now;
-        requestAnimationFrame(this.spriteRenderCycle.bind(this));
-               
+        this.zombyhand.update_progress(progress);
+        
+        if (timePassed < duration) {
+          requestAnimationFrame(this.spriteRenderCycle.bind(this));
+        }
     }
     
     onGoToPlayerMenu(event) {

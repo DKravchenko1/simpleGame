@@ -1,6 +1,5 @@
 import {LevelOne} from "./location-1/level-1";
 import {LevelTwo} from "./location-1/level-2";
-import {LevelThree} from "./location-1/level-3";
 
 class GameComponents {
     constructor(canvas, currentLevel, currentLocation) {
