@@ -68,8 +68,6 @@ export class MenuPage {
         const game = new GameComponents(start, store.getLevel(), '1');
         const startGameProcess = game.preparationLevel.bind(game);
         window.setTimeout(startGameProcess, 2500);
-        this.gameAudioStates.gameprocess.loop = true;
-        this.gameAudioStates.gameprocess.volume = 0.5;
         
     }    
     

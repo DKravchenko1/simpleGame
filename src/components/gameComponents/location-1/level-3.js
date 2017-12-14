@@ -79,6 +79,10 @@ class LevelThree {
     startGame() {
         this.context.font = '24px Arial';
         this.context.textAlign = 'center';
+         
+        this.gameAudioStates.gameprocess.play();
+        this.gameAudioStates.gameprocess.loop = true;
+        this.gameAudioStates.gameprocess.volume = 0.5;
 
         this.levelTimeLinePosition = 0;
 

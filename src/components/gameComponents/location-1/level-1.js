@@ -14,6 +14,7 @@ import {zombyAudioGroan} from '../../audioComponents/audioZombyGroan';
 import {zombyAudioChomp} from '../../audioComponents/audioZombyChomp';
 import {zombyAudioFalling} from '../../audioComponents/audioZombyFalling';
 import {sunAudioPoints} from '../../audioComponents/audioSunPoints';
+import {plantAudio} from '../../audioComponents/audioPlants';
 
 
 class LevelOne {
@@ -76,6 +77,7 @@ class LevelOne {
         this.zombyAudioChomp = zombyAudioChomp;
         this.zombyAudioFalling = zombyAudioFalling;
         this.sunAudioPoints = sunAudioPoints;
+        this.plantAudio = plantAudio;
            
     }
 
@@ -83,7 +85,7 @@ class LevelOne {
         this.context.font = '24px Arial';
         this.context.textAlign = 'center';
         
-        window.setTimeout(() => { this.gameAudioStates.gameprocess.play()}, 3500);
+        this.gameAudioStates.gameprocess.play();
         this.gameAudioStates.gameprocess.loop = true;
         this.gameAudioStates.gameprocess.volume = 0.5;
         
