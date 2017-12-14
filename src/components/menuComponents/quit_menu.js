@@ -1,5 +1,7 @@
-import { resources } from './resources';
-import { MenuPage} from './menu_page';
+import {resources} from './resources';
+import {MenuPage} from './menu_page';
+import {buttonAudio} from '../audioComponents/audioButton';
+
 
 export class QuitMenu {
     
@@ -48,13 +50,17 @@ export class QuitMenu {
         this.ctx.drawImage(resources.get('img/dialog_window/quit_button.png'), 310, 430, 50, 25);
         this.ctx.drawImage(resources.get('img/dialog_window/cancel_button.png'), 468, 427, 70, 25);
         this.ctx.drawImage(resources.get('img/menu_backgrounds/quit_flowers.png'), 697, 445, 93, 108);
-        //console.log('PlayerMenu - rendered');
+       
     }
     
     onQuitDown(event) {
         if (this.outsideArea(event,290,380,420,465)) return;
-        this.buttonX = 290;
-        this.buttonY = 420;
+        buttonAudio.tap.volume = 0.5;
+        buttonAudio.tap.play();
+        buttonAudio.tap2.volume = 0.5;
+        buttonAudio.tap2.play();
+        buttonAudio.bleep.volume = 0.5;
+        buttonAudio.bleep.play();
         this.ctx.drawImage(resources.get('img/dialog_window/quit_menu.png'), 220, 180, 400, 300);
         this.ctx.drawImage(resources.get('img/dialog_window/button.png'), 293, 417, 90, 45);
         this.ctx.drawImage(resources.get('img/dialog_window/button.png'), 460, 420, 90, 45);
@@ -66,8 +72,12 @@ export class QuitMenu {
     
     onCancelDown(event) {
         if (this.outsideArea(event,460,550,420,465)) return;
-        this.buttonX = 460;
-        this.buttonY = 420;
+        buttonAudio.tap.volume = 0.5;
+        buttonAudio.tap.play();
+        buttonAudio.tap2.volume = 0.5;
+        buttonAudio.tap2.play();
+        buttonAudio.bleep.volume = 0.5;
+        buttonAudio.bleep.play();
         this.ctx.drawImage(resources.get('img/dialog_window/quit_menu.png'), 220, 180, 400, 300);
         this.ctx.drawImage(resources.get('img/dialog_window/button.png'), 290, 420, 90, 45);
         this.ctx.drawImage(resources.get('img/dialog_window/button.png'), 463, 417, 90, 45);

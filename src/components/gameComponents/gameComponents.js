@@ -7,13 +7,18 @@ class GameComponents {
         this.currentLevel = currentLevel;
         this.currentLocation = currentLocation;
         this.levelComplite = 0;
+        
     }
 
     preparationLevel() {
-        const level = new LevelOne(this.canvas);
+        let level;
+        if (this.currentLevel == '1') {
+            level = new LevelOne(this.canvas);
+        } else if (this.currentLevel == '2'){
+            level = new LevelTwo(this.canvas);
+        }
         const startGame = level.startGame.bind(level);
         startGame();
-        console.log('level one!');
     }
 
 }

@@ -1,11 +1,13 @@
-import bigChomp from '../../../audio/zomby/bigchomp.ogg';
-import chomp from '../../../audio/zomby/chomp.ogg';
-import chomp2 from '../../../audio/zomby/chomp2.ogg';
-import chompSoft from '../../../audio/zomby/chompSoft.ogg';
+import groan from '../../../audio/zomby/groan.ogg';
+import groan2 from '../../../audio/zomby/groan2.ogg';
+import groan3 from '../../../audio/zomby/groan3.ogg';
+import groan4 from '../../../audio/zomby/groan4.ogg';
+import groan5 from '../../../audio/zomby/groan5.ogg';
+import groan6 from '../../../audio/zomby/groan6.ogg';
 import {archivatorAudio} from "./archiverForAudio";
 
 
-let zombyAudioChomp = {bigChomp, chomp, chomp2, chompSoft};
-zombyAudioChomp = archivatorAudio(zombyAudioChomp);
+let zombyAudioGroan = {groan, groan2, groan3, groan4, groan5, groan6};
+zombyAudioGroan = archivatorAudio(zombyAudioGroan);
 
-export {zombyAudioChomp}
+export {zombyAudioGroan}

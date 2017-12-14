@@ -7,7 +7,14 @@ import {Sunflower} from "../../plantsComponents/sunflower";
 import {Sun} from "../../otherComponents/sun";
 import {Bullet} from "../../plantsComponents/bulletNormal";
 import {Lawnmower} from "../../otherComponents/lawnmover";
-
+import {buttonAudio} from '../../audioComponents/audioButton';
+import {gameAudioStates} from '../../audioComponents/audioGameState';
+import {zombyAudioWave} from '../../audioComponents/audioZombyWave';
+import {zombyAudioGroan} from '../../audioComponents/audioZombyGroan';
+import {zombyAudioChomp} from '../../audioComponents/audioZombyChomp';
+import {plantAudio} from '../../audioComponents/audioPlants';
+import {zombyAudioFalling} from '../../audioComponents/audioZombyFalling';
+import {sunAudioPoints} from '../../audioComponents/audioSunPoints';
 
 class LevelTwo {
     constructor(canvas) {
@@ -60,12 +67,25 @@ class LevelTwo {
         this.zombieAttack = 0;
         this.openFireTimer = 0;
         this.awardTimer = 0;
+        this.buttonAudio = buttonAudio;
+        this.gameAudioStates = gameAudioStates;
+        this.zombyAudioWave = zombyAudioWave;
+        this.zombyAudioGroan = zombyAudioGroan;
+        this.zombyAudioChomp = zombyAudioChomp;
+        this.zombyAudioFalling = zombyAudioFalling;
+        this.plantAudio = plantAudio;
+        this.zombyAudioFalling = zombyAudioFalling;
+        this.sunAudioPoints = sunAudioPoints;
     }
 
     startGame() {
         this.context.font = '24px Arial';
         this.context.textAlign = 'center';
-
+        
+        this.gameAudioStates.gameprocess.play();
+        this.gameAudioStates.gameprocess.loop = true;
+        this.gameAudioStates.gameprocess.volume = 0.5;
+        
         this.levelTimeLinePosition = 0;
 
         this.peashooter = new Peashooter(this.context);
@@ -194,7 +214,9 @@ class LevelTwo {
         this.context.drawImage(commonImages.sunBank, 10, 0);
         this.context.fillText(`${this.numberOfSuns}`, 48.5, 80);
         this.context.drawImage(this.menu, 660, -5);
-
+        
+        
+        
         this.lawnmowers.forEach((lawnmower) => lawnmower.draw());
         this.zombieComing();
         this.drawSeedPacket();
@@ -233,6 +255,7 @@ class LevelTwo {
                     this.awarding()
                 }})
         }
+        
     }
 
     awarding() {
@@ -265,7 +288,7 @@ class LevelTwo {
         }
     }
 
-    zombieComing() { //TODO AllUnitInTheMap.zombieComing();
+    zombieComing() {     //TODO AllUnitInTheMap.zombieComing();
         if (this.lawnmowers.length > 0) { //
             this.lawnmowers.forEach((lawnmower) => lawnmower.activated());
         }
@@ -280,6 +303,7 @@ class LevelTwo {
                 }
             });
             if (elem.health < 1) {
+                this.zombyAudioFalling.zombyfalling1.play();
                 elem.zombiesDead();
                 if (elem.timerDied > 59) {
                     arr.splice(i,1);
@@ -287,6 +311,9 @@ class LevelTwo {
             } else {
                 if (this.plants.some((plant, i, arr) => {
                         if (plant.positionX-20 > elem.positionX && plant.positionX - 90 < elem.positionX && plant.positionY < elem.positionY+70 && plant.positionY > elem.positionY+60){
+                            this.zombyAudioChomp.chomp.play();
+                            this.zombyAudioChomp.chomp2.play();
+                            this.zombyAudioChomp.chompSoft.play();
                             this.zombieAttack++;
                             if (this.zombieAttack > 42){
                                 plant.health -= 1;
@@ -313,6 +340,7 @@ class LevelTwo {
     }
 
     levelEnd(pointX, pointY) {
+        this.gameAudioStates.gameprocess.pause();
         this.sunflower.createAwardPosition(pointX, pointY);
         this.levelUp = 1;
         this.levelComplete(pointX);
@@ -338,6 +366,7 @@ class LevelTwo {
                 seed.cancelChoice(97+(i*60), 9);
             }
         });
+        
     }
 
     drawPlant() {
@@ -348,6 +377,7 @@ class LevelTwo {
                     if ((plant.positionOfBullet[i].pointX > zombie.positionX+60) && (plant.positionOfBullet[i].pointX < zombie.positionX+85) && (zombie.positionY+70> plant.positionOfBullet[i].pointY) && (zombie.positionY+60 < plant.positionOfBullet[i].pointY)) {
                         plant.positionOfBullet[i].hit = 1;
                         if (plant.positionOfBullet[i].frameBulletSpeed === 3) {
+                            this.zombyAudioFalling.bonk.play();
                             zombie.health -= plant.damage;
                             zombie.checkState();
                         }
@@ -373,7 +403,7 @@ class LevelTwo {
         });
     }
 
-    choseSun() {    // TODO AllUnitInTheMap.choseSun()
+    choseSun() {        // TODO AllUnitInTheMap.choseSun()   
         this.chosenSuns.forEach((elem, i, arr) => {
             elem.chose();
             if (elem.startX < 10){
@@ -388,16 +418,19 @@ class LevelTwo {
     startLevel() {
         this.canvas.addEventListener('click', this.toPlantBind);
         this.setZombieState();
+        
     }
 
     toPlant(e) {
         this.seedPacket.find((seed, i) => {
             if ((e.layerX > (97+60*i)) && (e.layerX < (97 + (50*(i+1)))) && (e.layerY > 9) && (e.layerY < 74)){
+               
                 if (seed.chose){
                     seed.chose = 0;
                     this.canvas.removeEventListener('mousemove', this.calculatePlantUnitBind);
                     return false;
                 } else {
+                    this.plantAudio.seedlift.play();
                     seed.chose = 1;
                     this.positionX = e.layerX - seed.calculateWidth() / 2;
                     this.positionY = e.layerY - seed.calculateHeight() / 2;
@@ -423,6 +456,7 @@ class LevelTwo {
                         this.positionToCreateX = 40 + i * 72;
                         seed.create(this.positionToCreateX, this.positionToCreateY);
                         this.canvas.addEventListener('click', this.createPlantUnitBind);
+                        
                     }
                 }
             }
@@ -443,6 +477,7 @@ class LevelTwo {
     }
 
     createPlantUnit() {
+        this.plantAudio.plant1.play();
         let plant;
         this.seedPacket.forEach((seed) => {
             if (seed.chose) {
@@ -490,6 +525,9 @@ class LevelTwo {
 
     startComingZombie() {
         if (this.commingZombieTimer > 300) {
+            this.zombyAudioGroan.groan3.play();
+            this.zombyAudioGroan.groan5.play();
+            this.zombyAudioGroan.groan6.play();
             if (this.zombies.length > 0) {
                 this.zombies[this.zombies.length - 1].positionX = 710;
                 this.zombies[this.zombies.length - 1].positionY = this.zombies[this.zombies.length - 1].setPositionOfCreate(0, 2)*105 + 100;
@@ -516,6 +554,7 @@ class LevelTwo {
         if (this.openFireTimer === 90){
             this.plants.forEach((plant) => {
                 if (this.zombiesC.some((zombie) => zombie.positionX < 690 && zombie.positionX > plant.positionX-35 && zombie.positionY+70 > plant.positionY && zombie.positionY+60 < plant.positionY)){
+                    this.plantAudio.firepea.play();
                     const bullet =  new Bullet(plant.positionX, plant.positionY);
                     plant.positionOfBullet.push(bullet);
                 }
@@ -546,12 +585,14 @@ class LevelTwo {
             this.sunDestroyTimer = 0;
         } else {
             this.sunDestroyTimer++;
+            
         }
     }
 
     receivingSuns(e){
         this.suns.forEach((elem, i, arr) => {
             if ((e.layerX > elem.startX) && (e.layerX < elem.startX + 75) && (e.layerY > elem.startY) && (e.layerY < elem.startY + 75)){
+                this.sunAudioPoints.sunpoints.play();                
                 this.chosenSuns.push(elem);
                 arr.splice(i, 1);
             }

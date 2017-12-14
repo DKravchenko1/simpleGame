@@ -7,7 +7,13 @@ import {Sunflower} from "../../plantsComponents/sunflower";
 import {Sun} from "../../otherComponents/sun";
 import {Bullet} from "../../plantsComponents/bulletNormal";
 import {Lawnmower} from "../../otherComponents/lawnmover";
-
+import {buttonAudio} from '../../audioComponents/audioButton';
+import {gameAudioStates} from '../../audioComponents/audioGameState';
+import {zombyAudioWave} from '../../audioComponents/audioZombyWave';
+import {zombyAudioGroan} from '../../audioComponents/audioZombyGroan';
+import {zombyAudioChomp} from '../../audioComponents/audioZombyChomp';
+import {zombyAudioFalling} from '../../audioComponents/audioZombyFalling';
+import {sunAudioPoints} from '../../audioComponents/audioSunPoints';
 
 class LevelThree {
     constructor(canvas) {
@@ -61,6 +67,13 @@ class LevelThree {
         this.openFireTimer = 0;
         this.awardTimer = 0;
         this.peashooterRechargeTimer = 0;
+        this.buttonAudio = buttonAudio;
+        this.gameAudioStates = gameAudioStates;
+        this.zombyAudioWave = zombyAudioWave;
+        this.zombyAudioGroan = zombyAudioGroan;
+        this.zombyAudioChomp = zombyAudioChomp;
+        this.zombyAudioFalling = zombyAudioFalling;
+        this.sunAudioPoints = sunAudioPoints;
     }
 
     startGame() {
@@ -245,7 +258,7 @@ class LevelThree {
         }
     }
 
-    zombieComing() { //TODO AllUnitInTheMap.zombieComing();
+    zombieComing() {        //TODO AllUnitInTheMap.zombieComing();
         if (this.lawnmowers.length > 0) { //
             this.lawnmowers.forEach((lawnmower) => lawnmower.activated());
         }
@@ -260,6 +273,7 @@ class LevelThree {
                 }
             });
             if (elem.health < 1) {
+                this.zombyAudioFalling.zombyfalling1.play();
                 elem.zombiesDead();
                 if (elem.timerDied > 59) {
                     arr.splice(i,1);
@@ -267,6 +281,9 @@ class LevelThree {
             } else {
                 if (this.plants.some((plant, i, arr) => {
                         if (plant.positionX-20 > elem.positionX && plant.positionX - 90 < elem.positionX && plant.positionY < elem.positionY+70 && plant.positionY > elem.positionY+60){
+                            this.zombyAudioChomp.chomp.play();
+                            this.zombyAudioChomp.chomp2.play();
+                            this.zombyAudioChomp.chompSoft.play();
                             this.zombieAttack++;
                             if (this.zombieAttack > 42){
                                 plant.health -= 1;
@@ -293,6 +310,7 @@ class LevelThree {
     }
 
     levelEnd(pointX, pointY) {
+        this.gameAudioProcess.gameprocess.pause();
         this.sunflower.createAwardPosition(pointX, pointY);
         this.levelUp = 1;
         this.levelComplete(pointX);
@@ -326,6 +344,7 @@ class LevelThree {
                     if ((plant.positionOfBullet[i].pointX > zombie.positionX+60) && (plant.positionOfBullet[i].pointX < zombie.positionX+85) && (zombie.positionY+70> plant.positionOfBullet[i].pointY) && (zombie.positionY+60 < plant.positionOfBullet[i].pointY)) {
                         plant.positionOfBullet[i].hit = 1;
                         if (plant.positionOfBullet[i].frameBulletSpeed === 3) {
+                            this.zombyAudioFalling.bonk.play();
                             zombie.health -= 1;
                         }
                     }
@@ -361,6 +380,7 @@ class LevelThree {
         if ((e.layerX > 99) && (e.layerX < 143) && (e.layerY > 9) && (e.layerY < 74)) {
             if (!this.chose && this.numberOfSuns > this.peashooterUnit.cost-1 && this.peashooterRechargeTimer < 360) {
                 this.chose = 1;
+                this.plantAudio.seedlift.play();
                 this.positionX = e.layerX - this.peashooterUnit.calculateWidth() / 2;
                 this.positionY = e.layerY - this.peashooterUnit.calculateHeight() / 2;
                 this.canvas.addEventListener('mousemove', this.calculatePlantUnitBind);
@@ -402,6 +422,7 @@ class LevelThree {
     }
 
     createPlantUnit() {
+        this.plantAudio.plant1.play();
         let plant = new Peashooter(this.context, this.positionToCreateX, this.positionToCreateY);
         plant.init();
         let length = this.positionOfPlant.length;
@@ -436,8 +457,11 @@ class LevelThree {
 
     }
 
-    startComingZombie() {
+    startComingZombie() { 
         if (this.commingZombieTimer > 300) {
+            this.zombyAudioGroan.groan3.play();
+            this.zombyAudioGroan.groan5.play();
+            this.zombyAudioGroan.groan6.play();
             if (this.zombies.length > 0) {
                 this.zombies[this.zombies.length - 1].positionX = 710;
                 this.zombies[this.zombies.length - 1].positionY = this.zombies[this.zombies.length - 1].setPositionOfCreate(0, 2)*105 + 100;
@@ -490,6 +514,7 @@ class LevelThree {
 
     destroySuns() {
         if (this.suns.length > 2 && this.sunDestroyTimer > 450) {
+            this.sunAudioPoints.sunpoints.play();
             this.suns.shift();
             this.sunDestroyTimer = 0;
         } else {
@@ -500,6 +525,7 @@ class LevelThree {
     receivingSuns(e){
         this.suns.forEach((elem, i, arr) => {
             if ((e.layerX > elem.startX) && (e.layerX < elem.startX + 75) && (e.layerY > elem.startY) && (e.layerY < elem.startY + 75)){
+                this.sunAudioPoints.sunpoints.play();
                 this.chosenSuns.push(elem);
                 arr.splice(i, 1);
             }
