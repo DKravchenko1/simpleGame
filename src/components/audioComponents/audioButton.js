@@ -1,8 +1,8 @@
 import click from '../../../audio/button/buttonclick.ogg';
-import {archivator} from "./archiverForAudio";
+import {archivatorAudio} from "./archiverForAudio";
+import tap from '../../../audio/button/tap.ogg';
+import tap2 from '../../../audio/button/tap2.ogg';
+import bleep from '../../../audio/button/bleep.ogg';
 
-let buttonAudio = {click};
-
-buttonAudio = archivator(buttonAudio);
-
+let buttonAudio = archivatorAudio( {click, tap, tap2, bleep} );
 export { buttonAudio }

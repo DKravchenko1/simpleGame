@@ -1,6 +1,7 @@
 import { resources } from './resources';
 import { store } from './store';
-import { MenuPage} from './menu_page';
+import { MenuPage } from './menu_page';
+import { buttonAudio } from '../audioComponents/audioButton';
 
 export class PlayerMenu {
     
@@ -11,9 +12,7 @@ export class PlayerMenu {
         this.enableEvents();
         this.hasInput = false;
         this.input;
-        this.buttonX;
-        this.buttonY;
-        
+        this.buttonAudio = buttonAudio;
         this.renderPage();
         this.enableEvents();
     }
@@ -23,7 +22,6 @@ export class PlayerMenu {
         start.addEventListener('mousedown', this.event_okDown, false);
         this.event_okUp = this.onOkUp.bind(this);
         start.addEventListener('mouseup', this.event_okUp, false); 
-        
         this.event_cancelDown = this.onCancelDown.bind(this);
         start.addEventListener('mousedown', this.event_cancelDown, false);
         this.event_cancelUp = this.onCancelUp.bind(this);
@@ -52,7 +50,6 @@ export class PlayerMenu {
         this.ctx.drawImage(resources.get('img/dialog_window/cancel_button.png'), 468, 427, 70, 25);
         this.ctx.drawImage(resources.get('img/dialog_window/ok_button.png'), 320, 430, 25, 20);
         this.addInput();
-        console.log('PlayerMenu - rendered');
     }
     
     addInput() {
@@ -68,13 +65,12 @@ export class PlayerMenu {
 
     onOkDown(event) {
         if (this.outsideArea(event,290,380,420,465)) return;
-        console.log("Button Ok");
         this.buttonX = 290;
         this.buttonY = 420;
         this.ctx.drawImage(resources.get('img/dialog_window/quit_menu.png'), 220, 180, 400, 300);
         this.ctx.drawImage(resources.get('img/dialog_window/button.png'), 293, 417, 90, 45);
-        this.ctx.drawImage(resources.get('img/dialog-window/button.png'), 460, 420, 90, 45);
-        this.ctx.drawImage(resources.get('img/dialog_window/please.png'), 365, 240, 80, 40);
+        this.ctx.drawImage(resources.get('img/dialog_window/button.png'), 460, 420, 90, 45);
+        this.ctx.drawImage(resources.get('img/dialog_window/please.png'), 370, 240, 120, 35);
         this.ctx.drawImage(resources.get('img/dialog_window/enter_name.png'), 310, 365, 220, 30);
         this.ctx.drawImage(resources.get('img/dialog_window/ok_button.png'), 323, 427, 25, 20);
         this.ctx.drawImage(resources.get('img/dialog_window/cancel_button.png'), 468, 427, 70, 25);
@@ -82,13 +78,18 @@ export class PlayerMenu {
     
     onCancelDown(event) {
         if (this.outsideArea(event,460,550,420,465)) return;
-        console.log("Button Cancel");
+        this.buttonAudio.tap.volume = 0.5;
+        this.buttonAudio.tap.play();
+        this.buttonAudio.tap2.volume = 0.5;
+        this.buttonAudio.tap2.play();
+        this.buttonAudio.bleep.volume = 0.5;
+        this.buttonAudio.bleep.play();
         this.buttonX = 460;
         this.buttonY = 420;
         this.ctx.drawImage(resources.get('img/dialog_window/quit_menu.png'), 220, 180, 400, 300);
         this.ctx.drawImage(resources.get('img/dialog_window/button.png'), 290, 420, 90, 45);
         this.ctx.drawImage(resources.get('img/dialog_window/button.png'), 463, 417, 90, 45);
-        this.ctx.drawImage(resources.get('img/dialog_window/please.png'), 365, 240, 80, 40);
+        this.ctx.drawImage(resources.get('img/dialog_window/please.png'), 370, 240, 120, 35);
         this.ctx.drawImage(resources.get('img/dialog_window/enter_name.png'), 310, 365, 220, 30);
         this.ctx.drawImage(resources.get('img/dialog_window/ok_button.png'), 320, 430, 25, 20);
         this.ctx.drawImage(resources.get('img/dialog_window/cancel_button.png'), 471, 424, 70, 25);
@@ -98,7 +99,7 @@ export class PlayerMenu {
         this.ctx.drawImage(resources.get('img/dialog_window/quit_menu.png'), 220, 180, 400, 300);
         this.ctx.drawImage(resources.get('img/dialog_window/button.png'), 293, 417, 90, 45);
         this.ctx.drawImage(resources.get('img/dialog_window/button.png'), 460, 420, 90, 45);
-        this.ctx.drawImage(resources.get('img/dialog_window/please.png'), 365, 240, 80, 40);
+        this.ctx.drawImage(resources.get('img/dialog_window/please.png'), 370, 240, 120, 35);
         this.ctx.drawImage(resources.get('img/dialog_window/enter_name.png'), 310, 365, 220, 30);
         this.ctx.drawImage(resources.get('img/dialog_window/ok_button.png'), 320, 430, 25, 20);
         this.ctx.drawImage(resources.get('img/dialog_window/cancel_button.png'), 465, 425, 70, 25);
@@ -106,6 +107,12 @@ export class PlayerMenu {
     
     onOkUp(event) {
         if (this.outsideArea(event,290,380,420,465)) return;
+        this.buttonAudio.tap.volume = 0.5;
+        this.buttonAudio.tap.play();
+        this.buttonAudio.tap2.volume = 0.5;
+        this.buttonAudio.tap2.play();
+        this.buttonAudio.bleep.volume = 0.5;
+        this.buttonAudio.bleep.play();
         //Effect button up
         this.effectButtonUp();
         //Store name
