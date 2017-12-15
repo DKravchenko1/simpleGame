@@ -16,7 +16,7 @@ class Sunflower extends Plants {
     }
 
     award() {
-        super.award(sunflowerImages.sunflowerLogo, this.startX, this.startY+40);
+        super.award(sunflowerImages.sunflowerLogo, this.startX, this.startY+60);
     }
 
     createAwardPosition(pointX, pointY) {

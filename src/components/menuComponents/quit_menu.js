@@ -46,7 +46,7 @@ export class QuitMenu {
         this.ctx.drawImage(resources.get('img/dialog_window/button.png'), 290, 420, 90, 45);
         this.ctx.drawImage(resources.get('img/dialog_window/button.png'), 460, 420, 90, 45);
         this.ctx.drawImage(resources.get('img/dialog_window/quit_text_1.png'), 375, 250, 80, 40);
-        this.ctx.drawImage(resources.get('img/dialog_window/quit_text_2.png'), 265, 330, 320, 30);
+        this.ctx.drawImage(resources.get('img/dialog_window/quit_text_2.png'), 260, 330, 330, 30);
         this.ctx.drawImage(resources.get('img/dialog_window/quit_button.png'), 310, 430, 50, 25);
         this.ctx.drawImage(resources.get('img/dialog_window/cancel_button.png'), 468, 427, 70, 25);
         this.ctx.drawImage(resources.get('img/menu_backgrounds/quit_flowers.png'), 697, 445, 93, 108);
@@ -65,7 +65,7 @@ export class QuitMenu {
         this.ctx.drawImage(resources.get('img/dialog_window/button.png'), 293, 417, 90, 45);
         this.ctx.drawImage(resources.get('img/dialog_window/button.png'), 460, 420, 90, 45);
         this.ctx.drawImage(resources.get('img/dialog_window/quit_text_1.png'), 375, 250, 80, 40);
-        this.ctx.drawImage(resources.get('img/dialog_window/quit_text_2.png'), 265, 330, 320, 30);
+        this.ctx.drawImage(resources.get('img/dialog_window/quit_text_2.png'), 260, 330, 330, 30);
         this.ctx.drawImage(resources.get('img/dialog_window/quit_button.png'), 313, 427, 50, 25);
         this.ctx.drawImage(resources.get('img/dialog_window/cancel_button.png'), 468, 427, 70, 25);
     }
@@ -82,7 +82,7 @@ export class QuitMenu {
         this.ctx.drawImage(resources.get('img/dialog_window/button.png'), 290, 420, 90, 45);
         this.ctx.drawImage(resources.get('img/dialog_window/button.png'), 463, 417, 90, 45);
         this.ctx.drawImage(resources.get('img/dialog_window/quit_text_1.png'), 375, 250, 80, 40);
-        this.ctx.drawImage(resources.get('img/dialog_window/quit_text_2.png'), 265, 330, 320, 30);
+        this.ctx.drawImage(resources.get('img/dialog_window/quit_text_2.png'), 260, 330, 330, 30);
         this.ctx.drawImage(resources.get('img/dialog_window/quit_button.png'), 310, 430, 50, 25);
         this.ctx.drawImage(resources.get('img/dialog_window/cancel_button.png'), 471, 424, 70, 25);
     }
@@ -92,29 +92,23 @@ export class QuitMenu {
         this.ctx.drawImage(resources.get('img/dialog_window/button.png'), 293, 417, 90, 45);
         this.ctx.drawImage(resources.get('img/dialog_window/button.png'), 460, 420, 90, 45);
         this.ctx.drawImage(resources.get('img/dialog_window/quit_text_1.png'), 375, 250, 80, 40);
-        this.ctx.drawImage(resources.get('img/dialog_window/quit_text_2.png'), 265, 330, 320, 30);
+        this.ctx.drawImage(resources.get('img/dialog_window/quit_text_2.png'), 260, 330, 330, 30);
         this.ctx.drawImage(resources.get('img/dialog_window/quit_button.png'), 310, 430, 50, 25);
         this.ctx.drawImage(resources.get('img/dialog_window/cancel_button.png'), 465, 425, 70, 25);
     }
     
     onQuitUp(event) {
         if (this.outsideArea(event,290,380,420,465)) return;
-        //Effect button up
         this.effectButtonUp();
-        //Go to menu page
         this.disableEvents();
-        //Hide canvas
         document.querySelector('#canvas-container').classList.add('not-display');
         document.querySelector('#start-button').classList.remove('not-display');
     }
     
     onCancelUp(event) {
         if (this.outsideArea(event,460,550,420,465)) return;
-        //Effect button up
         this.effectButtonUp();
-        //Go to menu page
         this.disableEvents();
         let x = new MenuPage();
     }
-
 }

@@ -2,6 +2,14 @@ class Store {
     constructor() {
     }
     
+    getVolume() {
+        return localStorage.getItem('volume');
+    }
+    
+    setVolume(volume) {
+        localStorage.setItem('volume', volume);
+    }
+    
     getPlayer() {
         return localStorage.getItem('name');
     }

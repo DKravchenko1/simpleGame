@@ -7,6 +7,7 @@ import {Sunflower} from "../../plantsComponents/sunflower";
 import {Sun} from "../../otherComponents/sun";
 import {Bullet} from "../../plantsComponents/bulletNormal";
 import {Lawnmower} from "../../otherComponents/lawnmover";
+import {CherryBomb} from "../../plantsComponents/cherryBomb";
 import {buttonAudio} from '../../audioComponents/audioButton';
 import {gameAudioStates} from '../../audioComponents/audioGameState';
 import {zombyAudioWave} from '../../audioComponents/audioZombyWave';
@@ -15,6 +16,10 @@ import {zombyAudioChomp} from '../../audioComponents/audioZombyChomp';
 import {plantAudio} from '../../audioComponents/audioPlants';
 import {zombyAudioFalling} from '../../audioComponents/audioZombyFalling';
 import {sunAudioPoints} from '../../audioComponents/audioSunPoints';
+import {audioPlayer} from '../../audioComponents/audioPlayer';
+import {resources} from '../../menuComponents/resources';
+import {store} from '../../menuComponents/store';
+
 
 class LevelTwo {
     constructor(canvas) {
@@ -22,8 +27,7 @@ class LevelTwo {
         this.context = this.canvas.getContext('2d');
         this.backgroundPositionX = 0;
         this.animationPositionX = 0;
-        this.numberOfSuns = 1000;
-        this.chose = 0;
+        this.numberOfSuns = 200;
         this.toPlantBind = this.toPlant.bind(this);
         this.createPlantLogoBind = this.createPlantLogo.bind(this);
         this.calculatePlantUnitBind = this.calculatePlantUnit.bind(this);
@@ -34,7 +38,12 @@ class LevelTwo {
         this.openFireBind = this.openFire.bind(this);
         this.levelCompleteBind = this.levelComplete.bind(this);
         this.awardingBind = this.awarding.bind(this);
+        this.openMenuRestartBind = this.openMenuRestart.bind(this);
+        this.openMenuQuitBind = this.openMenuQuit.bind(this);
+        this.changeVolumeBind = this.changeVolume.bind(this);
         this.peashooter = null;
+        this.sunflower = null;
+        this.cherryBomb = null;
         this.levelTimeLinePosition = 0;
         this.positionX = 0;
         this.positionY = 0;
@@ -44,7 +53,6 @@ class LevelTwo {
         this.positionOfPlant = [];
         this.suns = [];
         this.firstPlant = 0;
-        this.IdIntervalComingZombie = 0;
         this.chosenSuns = [];
         this.zombies = [];
         this.zombiesC = [];
@@ -55,7 +63,6 @@ class LevelTwo {
         this.checkComingZombie = 0;
         this.levelUp = 0;
         this.stopLevel = 0;
-        this.IdIntervalFallOfSuns = 0;
         this.once = 0;
         this.stopAnimation = 0;
         this.menu = commonImages.menu;
@@ -67,6 +74,7 @@ class LevelTwo {
         this.zombieAttack = 0;
         this.openFireTimer = 0;
         this.awardTimer = 0;
+        this.awardCard = null;
         this.buttonAudio = buttonAudio;
         this.gameAudioStates = gameAudioStates;
         this.zombyAudioWave = zombyAudioWave;
@@ -76,20 +84,28 @@ class LevelTwo {
         this.plantAudio = plantAudio;
         this.zombyAudioFalling = zombyAudioFalling;
         this.sunAudioPoints = sunAudioPoints;
+        this.elemLeft = this.canvas.offsetLeft;
+        this.elemTop = this.canvas.offsetTop;
+        this.audioPlayer = audioPlayer;
+        this.reastartdialogOpen = 0;
+        this.knobPositionX = 450;
+        this.knobPositionY = 205;
+        this.quitDialogOpen = 0;
     }
 
     startGame() {
         this.context.font = '24px Arial';
         this.context.textAlign = 'center';
         
-        this.gameAudioStates.gameprocess.play();
+        this.audioPlayer(gameAudioStates.gameprocess);
         this.gameAudioStates.gameprocess.loop = true;
-        this.gameAudioStates.gameprocess.volume = 0.5;
-        
+
         this.levelTimeLinePosition = 0;
 
         this.peashooter = new Peashooter(this.context);
         this.sunflower = new Sunflower(this.context);
+        this.cherryBomb = new CherryBomb(this.context);
+        this.awardCard = this.cherryBomb;
         for (let i = 0; i < 3; i++) {
             this.lawnmower = new Lawnmower(this.context, -40, 150+(i*105));
             this.lawnmowers.push(this.lawnmower);
@@ -113,10 +129,10 @@ class LevelTwo {
     }
 
     createZombie() {
-        for (let i = 0; i < 10; i++) {
-            this.zombie = new Zombie(this.context);
-            this.zombie.positionOfCreate();
-            this.zombies.push(this.zombie);
+        for (let i = 0; i < 20; i++) {
+            let zombie = new Zombie(this.context);
+            zombie.positionOfCreate();
+            this.zombies.push(zombie);
         }
         this.zombiesLength = this.zombies.length;
     } // TODO AllUnitInTheMap.createZombie()
@@ -212,13 +228,11 @@ class LevelTwo {
         this.context.drawImage(levelImages.backgroundThree, 0, 0, this.animationPositionX, 600, -220, 0, this.animationPositionX, 600);
         this.context.drawImage(commonImages.seedBank, 10, 0);
         this.context.drawImage(commonImages.sunBank, 10, 0);
-        this.context.fillText(`${this.numberOfSuns}`, 48.5, 80);
+        this.context.fillText(`${this.numberOfSuns}`, 48.5, 59);
         this.context.drawImage(this.menu, 660, -5);
-        
-        
-        
+
         this.lawnmowers.forEach((lawnmower) => lawnmower.draw());
-        this.zombieComing();
+
         this.drawSeedPacket();
         this.drawPlant();
         this.drawSun();
@@ -234,10 +248,20 @@ class LevelTwo {
         this.chosePlant();
         this.levelProgress();
         this.choseSun();
-
+        this.zombieComing();
+        this.createPlantLogo();
         if (this.menuOpen) {
             this.showMenu();
         }
+        
+        if (this.restartDialogOpen) {
+            this.menuRestartDraw();
+        }
+        
+        if (this.quitDialogOpen) {
+            this.menuQuitDraw();
+        }
+        
         if (this.levelUp && !this.stopAnimation) {
             this.levelComplete();
         }
@@ -247,38 +271,38 @@ class LevelTwo {
     }
 
     levelComplete() {
-        this.sunflower.award();
+        this.awardCard.award();
         if (!this.once) {
             this.once = 1;
             this.canvas.addEventListener('click', (e) => {
-                if (e.layerX > this.sunflower.startX && e.layerX < this.sunflower.startX+50  && e.layerY > this.sunflower.endY+70 && e.layerY < this.sunflower.endY + 140) {
+                if (e.layerX > this.awardCard.startX && e.layerX < this.awardCard.startX+50  && e.layerY > this.awardCard.endY+40 && e.layerY < this.awardCard.endY + 110) {
                     this.awarding()
                 }})
         }
-        
     }
 
     awarding() {
-        this.sunflower.award();
+        this.awardCard.award();
         this.stopAnimation = 1;
-        if (this.sunflower.startY > 206) {
-            this.sunflower.startY -= ((this.sunflower.startY - 206) / 10);
-        } else if(this.sunflower.startY < 204) {
-            this.sunflower.startY += ((204 - this.sunflower.startY) / 10) + 1;
+        if (this.awardCard.startY > 226) {
+            this.awardCard.startY -= ((this.awardCard.startY - 226) / 10);
+        } else if(this.awardCard.startY < 224) {
+            this.awardCard.startY += ((224 - this.awardCard.startY) / 10) + 1;
         }
-        if (this.sunflower.startX > 376) {
-            this.sunflower.startX -= ((this.sunflower.startX - 376) / 10) + 1;
+        if (this.awardCard.startX > 376) {
+            this.awardCard.startX -= ((this.awardCard.startX - 376) / 10) + 1;
             requestAnimationFrame(this.awardingBind);
-        } else if (this.sunflower.startX < 374) {
-            this.sunflower.startX += ((374-this.sunflower.startX)/10)+1;
+        } else if (this.awardCard.startX < 374) {
+            this.awardCard.startX += ((374-this.awardCard.startX)/10)+1;
             requestAnimationFrame(this.awardingBind);
         } else {
             this.context.drawImage(commonImages.starburst, 107, 6);
-            this.sunflower.award();
+            this.awardCard.award();
             if (this.awardTimer === 60){
                 this.stopLevel = 1;
+                this.canvas.removeEventListener('click', this.toPlantBind);
                 this.canvas.removeEventListener('mousemove', this.calculatePlantUnitBind);
-                const betweenLevel = new BetweenLevels(this.canvas, this.context, this.sunflower.packet, 2);
+                const betweenLevel = new BetweenLevels(this.canvas, this.context, this.awardCard.packet, 2);
                 betweenLevel.create();
                 betweenLevel.start();
             } else {
@@ -288,7 +312,7 @@ class LevelTwo {
         }
     }
 
-    zombieComing() {     //TODO AllUnitInTheMap.zombieComing();
+    zombieComing() { //TODO AllUnitInTheMap.zombieComing();
         if (this.lawnmowers.length > 0) { //
             this.lawnmowers.forEach((lawnmower) => lawnmower.activated());
         }
@@ -303,17 +327,20 @@ class LevelTwo {
                 }
             });
             if (elem.health < 1) {
-                this.zombyAudioFalling.zombyfalling1.play();
+                this.audioPlayer(this.zombyAudioFalling.zombyfalling1);
                 elem.zombiesDead();
                 if (elem.timerDied > 59) {
-                    arr.splice(i,1);
+                    let temp = arr[i];
+                    arr[i] = arr[arr.length - 1];
+                    arr[arr.length - 1] = temp;
+                    arr.pop();
                 }
             } else {
                 if (this.plants.some((plant, i, arr) => {
                         if (plant.positionX-20 > elem.positionX && plant.positionX - 90 < elem.positionX && plant.positionY < elem.positionY+70 && plant.positionY > elem.positionY+60){
-                            this.zombyAudioChomp.chomp.play();
-                            this.zombyAudioChomp.chomp2.play();
-                            this.zombyAudioChomp.chompSoft.play();
+                            this.audioPlayer(this.zombyAudioChomp.chomp);
+                            this.audioPlayer(this.zombyAudioChomp.chomp2);
+                            this.audioPlayer(this.zombyAudioChomp.chompSoft);
                             this.zombieAttack++;
                             if (this.zombieAttack > 42){
                                 plant.health -= 1;
@@ -341,11 +368,9 @@ class LevelTwo {
 
     levelEnd(pointX, pointY) {
         this.gameAudioStates.gameprocess.pause();
-        this.sunflower.createAwardPosition(pointX, pointY);
+        this.cherryBomb.createAwardPosition(pointX, pointY);
         this.levelUp = 1;
         this.levelComplete(pointX);
-        this.sunflower.state = 'once';
-        this.sunflower.direction = 'top';
     }
 
     levelProgress () {
@@ -360,13 +385,12 @@ class LevelTwo {
 
     chosePlant() {
         this.seedPacket.forEach((seed, i) => {
-            if (seed.chose && this.numberOfSuns >= seed.cost) {
+            if (seed.chose || this.numberOfSuns < seed.cost-1) {
                 seed.choice(97+(i*60), 9);
             } else {
                 seed.cancelChoice(97+(i*60), 9);
             }
         });
-        
     }
 
     drawPlant() {
@@ -377,7 +401,7 @@ class LevelTwo {
                     if ((plant.positionOfBullet[i].pointX > zombie.positionX+60) && (plant.positionOfBullet[i].pointX < zombie.positionX+85) && (zombie.positionY+70> plant.positionOfBullet[i].pointY) && (zombie.positionY+60 < plant.positionOfBullet[i].pointY)) {
                         plant.positionOfBullet[i].hit = 1;
                         if (plant.positionOfBullet[i].frameBulletSpeed === 3) {
-                            this.zombyAudioFalling.bonk.play();
+                            this.audioPlayer(this.zombyAudioFalling.bonk);
                             zombie.health -= plant.damage;
                             zombie.checkState();
                         }
@@ -403,7 +427,7 @@ class LevelTwo {
         });
     }
 
-    choseSun() {        // TODO AllUnitInTheMap.choseSun()   
+    choseSun() {    // TODO AllUnitInTheMap.choseSun()
         this.chosenSuns.forEach((elem, i, arr) => {
             elem.chose();
             if (elem.startX < 10){
@@ -418,28 +442,33 @@ class LevelTwo {
     startLevel() {
         this.canvas.addEventListener('click', this.toPlantBind);
         this.setZombieState();
-        
     }
 
     toPlant(e) {
-        this.seedPacket.find((seed, i) => {
-            if ((e.layerX > (97+60*i)) && (e.layerX < (97 + (50*(i+1)))) && (e.layerY > 9) && (e.layerY < 74)){
-               
-                if (seed.chose){
-                    seed.chose = 0;
-                    this.canvas.removeEventListener('mousemove', this.calculatePlantUnitBind);
-                    return false;
-                } else {
-                    this.plantAudio.seedlift.play();
-                    seed.chose = 1;
-                    this.positionX = e.layerX - seed.calculateWidth() / 2;
-                    this.positionY = e.layerY - seed.calculateHeight() / 2;
-                    this.canvas.addEventListener('mousemove', this.calculatePlantUnitBind);
-                    return true;
+        if (this.seedPacket.every((seed) => (!seed.chose))) {
+            this.seedPacket.find((seed, i) => {
+                    if ((e.layerX > (97 + 60 * i)) && (e.layerX < (97 + (50 * (i + 1)))) && (e.layerY > 9) && (e.layerY < 74) && this.numberOfSuns > seed.cost-1) {
+                      this.audioPlayer(this.plantAudio.seedlift);
+                        seed.chose = 1;
+                        this.positionX = e.layerX - seed.calculateWidth() / 2;
+                        this.positionY = e.layerY - seed.calculateHeight() / 2;
+                        this.canvas.addEventListener('mousemove', this.calculatePlantUnitBind);
+                        return true;
+                    }
                 }
-            }
-        });
-        requestAnimationFrame(this.createPlantLogoBind);
+            )
+        } else {
+            this.seedPacket.find((seed, i) => {
+                if ((e.layerX > (97+60*i)) && (e.layerX < (97 + (50*(i+1)))) && (e.layerY > 9) && (e.layerY < 74)) {
+                    if (seed.chose) {
+                        seed.chose = 0;
+                        this.canvas.removeEventListener('mousemove', this.calculatePlantUnitBind);
+                        return true;
+                    }
+                }
+            })
+        }
+
     }
 
     createPlantLogo() {
@@ -456,14 +485,10 @@ class LevelTwo {
                         this.positionToCreateX = 40 + i * 72;
                         seed.create(this.positionToCreateX, this.positionToCreateY);
                         this.canvas.addEventListener('click', this.createPlantUnitBind);
-                        
                     }
                 }
             }
         });
-        if (!this.levelUp) {
-            requestAnimationFrame(this.createPlantLogoBind);
-        }
     }
 
 
@@ -477,74 +502,72 @@ class LevelTwo {
     }
 
     createPlantUnit() {
-        this.plantAudio.plant1.play();
+        this.audioPlayer(this.plantAudio.plant1);
         let plant;
         this.seedPacket.forEach((seed) => {
             if (seed.chose) {
                 plant = new seed.name(this.context, this.positionToCreateX, this.positionToCreateY)
             }
         });
-        plant.init();
-        let length = this.positionOfPlant.length;
-        let checkUniq = 1;
-        if (this.positionX < 730 && this.positionY > 120 && this.positionY < 435) {
-            for (let i = 0; i < length; i++) {
-                if (this.positionOfPlant[i].pointX === plant.positionOfCreate.pointX && this.positionOfPlant[i].pointY === plant.positionOfCreate.pointY) {
-                    checkUniq = 0;
-                }
-            }
-            if (checkUniq) {
-
-                this.plants.push(plant);
-                this.positionOfPlant.push(plant.positionOfCreate);
-                this.seedPacket.find((seed) => {
-                    if (seed.chose) {
-                        seed.chose = 0;
-                        this.canvas.removeEventListener('mousemove', this.calculatePlantUnitBind);
-                        return true;
+        if (plant) {
+            plant.init();
+            let length = this.positionOfPlant.length;
+            let checkUniq = 1;
+            if (this.positionX < 730 && this.positionY > 120 && this.positionY < 435) {
+                for (let i = 0; i < length; i++) {
+                    if (this.positionOfPlant[i].pointX === plant.positionOfCreate.pointX && this.positionOfPlant[i].pointY === plant.positionOfCreate.pointY) {
+                        checkUniq = 0;
                     }
-                });
-                this.numberOfSuns -= plant.cost;
-                if (!this.firstPlant) {
-                    this.firstPlant = 1;
-                    this.fallOfSuns();
                 }
-                if ((this.plants.length > 4) && (!this.checkComingZombie)) {
-                    this.checkComingZombie = 1;
-                    this.commingZombieTimer = 600;
-                    this.startComingZombie();
+                if (checkUniq) {
+
+                    this.plants.push(plant);
+                    this.positionOfPlant.push(plant.positionOfCreate);
+                    this.seedPacket.find((seed) => {
+                        if (seed.chose) {
+                            seed.chose = 0;
+                            this.canvas.removeEventListener('mousemove', this.calculatePlantUnitBind);
+                            return true;
+                        }
+                    });
+                    this.numberOfSuns -= plant.cost;
+                    if (!this.firstPlant) {
+                        this.firstPlant = 1;
+                        this.fallOfSuns();
+                    }
+                    if ((this.plants.length > 4) && (!this.checkComingZombie)) {
+                        this.checkComingZombie = 1;
+                        this.commingZombieTimer = 600;
+                        this.startComingZombie();
+                        this.audioPlayer(this.zombyAudioGroan.groan3);
+                        this.audioPlayer(this.zombyAudioGroan.groan5);
+                        this.audioPlayer(this.zombyAudioGroan.groan6);
+                    }
                 }
             }
+
         }
-
-
         this.canvas.addEventListener('click', this.receivingSunsBind);
         this.canvas.removeEventListener('click', this.createPlantUnitBind);
 
     }
 
-    startComingZombie() {
-        if (this.commingZombieTimer > 300) {
-            this.zombyAudioGroan.groan3.play();
-            this.zombyAudioGroan.groan5.play();
-            this.zombyAudioGroan.groan6.play();
-            if (this.zombies.length > 0) {
-                this.zombies[this.zombies.length - 1].positionX = 710;
-                this.zombies[this.zombies.length - 1].positionY = this.zombies[this.zombies.length - 1].setPositionOfCreate(0, 2)*105 + 100;
-                this.zombiesC.push(this.zombies.pop());
-            }
-            this.commingZombieTimer = 0;
-        } else {
-            this.commingZombieTimer++;
-        } if (this.commingZombieTimer === 60) {
-            let length = Math.ceil(this.zombiesLength/2);
-            if (this.zombies.length < length - 1) {
-                for (let i = 0; i < length - 2; i++) {
+    startComingZombie() {   
+        if (this.zombies.length > 0) {
+            if (this.commingZombieTimer > 300) {
+                if (this.zombies.length > Math.ceil(this.zombiesLength/2)) {
                     this.zombies[this.zombies.length - 1].positionX = 710;
                     this.zombies[this.zombies.length - 1].positionY = this.zombies[this.zombies.length - 1].setPositionOfCreate(0, 2)*105 + 100;
                     this.zombiesC.push(this.zombies.pop());
                 }
                 this.commingZombieTimer = 0;
+            } else if (this.zombies.length <= Math.ceil(this.zombiesLength/2) && this.commingZombieTimer > 90) {
+                this.zombies[this.zombies.length - 1].positionX = 710;
+                this.zombies[this.zombies.length - 1].positionY = this.zombies[this.zombies.length - 1].setPositionOfCreate(0, 2) * 105 + 100;
+                this.zombiesC.push(this.zombies.pop());
+                this.commingZombieTimer = 0;
+            } else {
+                this.commingZombieTimer++;
             }
         }
     }
@@ -554,7 +577,7 @@ class LevelTwo {
         if (this.openFireTimer === 90){
             this.plants.forEach((plant) => {
                 if (this.zombiesC.some((zombie) => zombie.positionX < 690 && zombie.positionX > plant.positionX-35 && zombie.positionY+70 > plant.positionY && zombie.positionY+60 < plant.positionY)){
-                    this.plantAudio.firepea.play();
+                    this.audioPlayer(this.plantAudio.firepea);
                     const bullet =  new Bullet(plant.positionX, plant.positionY);
                     plant.positionOfBullet.push(bullet);
                 }
@@ -585,14 +608,13 @@ class LevelTwo {
             this.sunDestroyTimer = 0;
         } else {
             this.sunDestroyTimer++;
-            
         }
     }
 
     receivingSuns(e){
         this.suns.forEach((elem, i, arr) => {
             if ((e.layerX > elem.startX) && (e.layerX < elem.startX + 75) && (e.layerY > elem.startY) && (e.layerY < elem.startY + 75)){
-                this.sunAudioPoints.sunpoints.play();                
+                this.audioPlayer(this.sunAudioPoints.sunpoints);                
                 this.chosenSuns.push(elem);
                 arr.splice(i, 1);
             }
@@ -606,6 +628,76 @@ class LevelTwo {
     setRandom(min, max) {
         return Math.floor(Math.random() * (max - min +1)) + min;
     }
+    
+    showMenu() {
+        this.context.drawImage(commonImages.menuWindow, 188, 30);
+        this.context.drawImage(commonImages.restartButton, 230, 445);
+        this.context.drawImage(commonImages.quitButton, 397, 445);
+        this.context.drawImage(commonImages.sliderKnob, this.knobPositionX, this.knobPositionY);
+        this.canvas.addEventListener('click', this.changeVolumeBind);
+        this.canvas.addEventListener('click', this.openMenuRestartBind);
+        this.canvas.addEventListener('click', this.openMenuQuitBind); 
+    }
+  
+    openMenuRestart(e) {
+        if (this.outsideArea(e,230,390,445,500)) return;
+        this.audioPlayer(this.buttonAudio.tap);
+        this.audioPlayer(this.buttonAudio.tap2);
+        this.audioPlayer(this.buttonAudio.bleep);
+        this.restartDialogOpen = 1;
+    }
+  
+    menuRestartDraw() {
+        this.context.drawImage(resources.get('img/dialog_window/quit_menu.png'),170, 180, 450, 350);
+        this.context.drawImage(commonImages.restart1, 325, 250);
+        this.context.drawImage(commonImages.restart2, 205, 350);
+        this.context.drawImage(commonImages.restartButton, 210, 460);
+        this.context.drawImage(commonImages.cancelButton, 420, 460);
+        this.canvas.removeEventListener('click', this.openMenuQuitBind);
+        this.canvas.removeEventListener('click', this.changeVolumeBind);
+    }
+  
+    openMenuQuit(e) {
+        if (this.outsideArea(e,397,555,445,500)) return;
+        this.audioPlayer(this.buttonAudio.tap);
+        this.audioPlayer(this.buttonAudio.tap2);
+        this.audioPlayer(this.buttonAudio.bleep);
+        this.quitDialogOpen = 1;    
+    }
+  
+    menuQuitDraw() {
+        this.context.drawImage(resources.get('img/dialog_window/quit_menu.png'),170, 180, 450, 350);
+        this.context.drawImage(commonImages.quit1, 350, 250);
+        this.context.drawImage(commonImages.quit2, 210, 350);
+        this.context.drawImage(commonImages.quitButton, 210, 460);
+        this.context.drawImage(commonImages.cancelButton, 420, 460);
+        this.canvas.removeEventListener('click', this.openMenuRestartBind);
+        this.canvas.removeEventListener('click', this.changeVolumeBind);
+    }
+  
+    outsideArea(e, x1, x2, y1, y2) {
+        let x = e.pageX - this.elemLeft, y = e.pageY - this.elemTop;
+        return x < x1 || x > x2 || y < y1 || y > y2;
+    }
+    
+   
+    changeVolume(e) {
+        if (this.outsideArea(e, 320, 460, 180, 230)) return;
+        this.knobPositionX = e.pageX - this.elemLeft - 5;
+        this.knobpositionY = e.pageY - this.elemTop - 5;
+        if (this.knobPositionX  <= 460 && this.knobPositionX > 420) {
+            store.setVolume(0.5);
+        } else if (this.knobPositionX  <= 420 && this.knobPositionX > 380) {
+            store.setVolume(0.3);
+        } else if (this.knobPositionX  <= 380 && this.knobPositionX > 340) {
+            store.setVolume(0.2);
+        } else if (this.knobPositionX  <= 340 && this.knobPositionX > 320) {
+            store.setVolume(0.1);
+        } else if (this.knobPositionX <= 320) {
+            store.setVolume(0);
+        }
+        this.gameAudioStates.gameprocess.volume = Number(store.getVolume());    
+    }   
 
 }
 

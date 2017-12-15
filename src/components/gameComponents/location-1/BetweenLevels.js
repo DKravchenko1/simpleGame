@@ -37,11 +37,11 @@ class BetweenLevels {
             this.context.drawImage(this.award, 375, 167);
             this.context.drawImage(this.buttonImage, 322, 515);
             this.context.fillStyle = '#d59f2b';
-            this.context.fillText(this.heading, 400, 57);
-            this.context.fillText(this.description.name, 400, 328);
-            this.context.fillText(this.buttonLabel, 400, 544);
+            this.context.fillText(this.heading, 400, 35);
+            this.context.fillText(this.description.name, 400, 305);
+            this.context.fillText(this.buttonLabel, 400, 522);
             this.context.fillStyle = '#28325a';
-            this.context.fillText(this.description.body, 400, 418);
+            this.context.fillText(this.description.body, 400, 396);
             requestAnimationFrame(this.start.bind(this));
         }
     }

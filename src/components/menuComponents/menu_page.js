@@ -6,6 +6,7 @@ import {Sprite} from './sprite_func';
 import {GameComponents} from "../gameComponents/gameComponents";
 import {buttonAudio} from '../audioComponents/audioButton';
 import {gameAudioStates} from '../audioComponents/audioGameState';
+import {audioPlayer} from '../audioComponents/audioPlayer';
 
 
 export class MenuPage {
@@ -18,7 +19,9 @@ export class MenuPage {
         this.enableEvents();
         this.counter = 0;
         this.buttonAudio = buttonAudio;
-        this.gameAudioStates = gameAudioStates;   
+        this.gameAudioStates = gameAudioStates; 
+        this.buttonAudio = buttonAudio;
+        this.audioPlayer = audioPlayer;        
     }
     
     enableEvents() {
@@ -57,7 +60,7 @@ export class MenuPage {
     onGoToPlay() {
         if (this.outsideArea(event,400,720,80,190)) return;
         this.gameAudioStates.menupage.pause();
-        this.gameAudioStates.evilLaugh.play();
+        this.audioPlayer(this.gameAudioStates.evilLaugh);
         //Effect button down/up
         this.ctx.drawImage(resources.get('img/menu_backgrounds/level_'+store.getLevel()+'_light.png'), 400, 65, 335, 145);
         this.lasttime = Date.now();
@@ -88,26 +91,22 @@ export class MenuPage {
         this.zombyhand.update_progress(progress);
         
         if (timePassed < duration) {
-          requestAnimationFrame(this.spriteRenderCycle.bind(this));
+            requestAnimationFrame(this.spriteRenderCycle.bind(this));
         }
     }
     
     onGoToPlayerMenu(event) {
         if (this.outsideArea(event,50,320,130,160)) return;
-        this.buttonAudio.tap.volume = 0.5;
-        this.buttonAudio.tap.play();
-        this.buttonAudio.tap2.volume = 0.5;
-        this.buttonAudio.tap2.play();
-        this.buttonAudio.bleep.volume = 0.5;
-        this.buttonAudio.bleep.play();
+        this.audioPlayer(this.buttonAudio.tap);
+        this.audioPlayer(this.buttonAudio.tap2);
+        this.audioPlayer(this.buttonAudio.bleep);
         this.disableEvents();
         this.playerMenu = new PlayerMenu();
     }
     
     onGoToQuitMenu(event) {
         if (this.outsideArea(event,700,780,490,550)) return;
-        this.buttonAudio.click.volume = 0.5;
-        this.buttonAudio.click.play();
+        this.audioPlayer(this.buttonAudio.click);
         this.disableEvents();
         this.quitMenu = new QuitMenu();
     }

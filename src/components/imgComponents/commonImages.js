@@ -10,12 +10,23 @@ import levelTimeLineProcess from '../../../img/common/levelTimeLineProcess.png';
 import menuWindow from '../../../img/common/options_menuback.png';
 import lawnmower from '../../../img/common/lawnmower.png';
 import starburst from '../../../img/common/starburst.png';
+import sliderKnob from '../../../img/common/options_sliderknob2.png';
+import restartButton from '../../../img/common/restart-button.png';
+import cancelButton from '../../../img/common/cancel-button.png';
+import quitButton from '../../../img/common/quit_to_menu.png';
+import quit1 from '../../../img/common/quit1.png';
+import quit2 from '../../../img/common/quit2.png';
+import restart1 from '../../../img/common/restart1.png';
+import restart2 from '../../../img/common/restart2.png';
+
+
 import {archivator} from "./archiver";
 
 let commonImages = {
     seedBank, menu, menuHover, sunBank, sun, arrowTop,
     arrowBottom, levelTimeLine, levelTimeLineProcess, menuWindow,
-    lawnmower, starburst
+    lawnmower, starburst, sliderKnob, restartButton, cancelButton, 
+    quitButton, quit1, quit2, restart1, restart2
 };
 
 commonImages = archivator(commonImages);

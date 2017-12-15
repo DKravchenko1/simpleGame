@@ -1,7 +1,8 @@
-import { resources } from './resources';
-import { store } from './store';
-import { MenuPage } from './menu_page';
-import { buttonAudio } from '../audioComponents/audioButton';
+import {resources} from './resources';
+import {store} from './store';
+import {MenuPage} from './menu_page';
+import {buttonAudio} from '../audioComponents/audioButton';
+import {audioPlayer} from '../audioComponents/audioPlayer';
 
 export class PlayerMenu {
     
@@ -15,6 +16,8 @@ export class PlayerMenu {
         this.buttonAudio = buttonAudio;
         this.renderPage();
         this.enableEvents();
+        this.audioPlayer = audioPlayer;
+        this.buttonAudio = buttonAudio;
     }
     
     enableEvents() {       
@@ -56,6 +59,7 @@ export class PlayerMenu {
         let input = document.createElement('input'); 
         input.type = 'text';
         input.style.position = 'absolute';
+        input.style.color = 'white';
         input.style.left = (this.elemLeft + 330)  + 'px';
         input.style.top = (this.elemTop + 300) + 'px';
         this.input = input;
@@ -78,12 +82,9 @@ export class PlayerMenu {
     
     onCancelDown(event) {
         if (this.outsideArea(event,460,550,420,465)) return;
-        this.buttonAudio.tap.volume = 0.5;
-        this.buttonAudio.tap.play();
-        this.buttonAudio.tap2.volume = 0.5;
-        this.buttonAudio.tap2.play();
-        this.buttonAudio.bleep.volume = 0.5;
-        this.buttonAudio.bleep.play();
+        this.audioPlayer(this.buttonAudio.tap);
+        this.audioPlayer(this.buttonAudio.tap2);
+        this.audioPlayer(this.buttonAudio.bleep);
         this.buttonX = 460;
         this.buttonY = 420;
         this.ctx.drawImage(resources.get('img/dialog_window/quit_menu.png'), 220, 180, 400, 300);
@@ -107,32 +108,21 @@ export class PlayerMenu {
     
     onOkUp(event) {
         if (this.outsideArea(event,290,380,420,465)) return;
-        this.buttonAudio.tap.volume = 0.5;
-        this.buttonAudio.tap.play();
-        this.buttonAudio.tap2.volume = 0.5;
-        this.buttonAudio.tap2.play();
-        this.buttonAudio.bleep.volume = 0.5;
-        this.buttonAudio.bleep.play();
-        //Effect button up
+        this.audioPlayer(this.buttonAudio.tap);
+        this.audioPlayer(this.buttonAudio.tap2);
+        this.audioPlayer(this.buttonAudio.bleep);
         this.effectButtonUp();
-        //Store name
         store.setPlayer(this.input.value);
-        //Dispose input field
         document.body.removeChild(this.input);
-        //Go to menu page
         this.disableEvents();
         let x = new MenuPage();
     }
     
     onCancelUp(event) {
         if (this.outsideArea(event,460,550,420,465)) return;
-        //Effect button up
         this.effectButtonUp();
-        //Dispose input field
         document.body.removeChild(this.input);
-        //Go to menu page
         this.disableEvents();
         let x = new MenuPage();
     }
-
 }
