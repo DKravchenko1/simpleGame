@@ -1,0 +1,28 @@
+{
+  "name": "div",
+  "elements": [
+    {
+      "name" : "span",
+      "elements": [{
+        "name": "p",
+        "elements" : [
+          {
+          "name": "p",
+          "elements" : []
+          },
+          {
+            "name": "p",
+            "elements" : []
+          }
+        ]
+      }]
+    },
+    {
+      "name" : "a",
+      "elements" : [{
+        "name": "i",
+        "elements" : []
+      }]
+    }
+  ]
+}
