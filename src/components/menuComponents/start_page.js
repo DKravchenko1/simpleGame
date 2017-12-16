@@ -13,22 +13,22 @@ export class StartGame {
         this.buttonAudio = buttonAudio;
         this.audioPlayer = audioPlayer;
     }
-  
+
     enableEvents() {
         this.event_goToMenu = this.onGoToMenu.bind(this);
         start.addEventListener('click', this.event_goToMenu, false);
         this.event_changeText = this.changeTextColor.bind(this);
         start.addEventListener('mousemove', this.event_changeText, false);
     }
-  
+
     disableEvents() {
         start.removeEventListener('click', this.event_goToMenu, false);
-        start.removeEventListener('mousemove', this.event_changeText, false);  
+        start.removeEventListener('mousemove', this.event_changeText, false);
     }
-  
+
     onLoadResources() {
         this.enableEvents();
-        if(resources.isReady()) { this.renderPage();}       
+        if(resources.isReady()) { this.renderPage();}
         resources.load([
             'img/start_page/start_grass_button.png',
             'img/start_page/titlescreen.png',
@@ -51,20 +51,23 @@ export class StartGame {
             'img/menu_backgrounds/level_2_light.png',
             'img/zomby_hand/sprite_zomby_hand.png',
             'img/start_page/writting_white.png',
-            'img/start_page/writting_red.png'    
+            'img/start_page/writting_red.png'
         ]);
         resources.onReady(this.renderPage.bind(this));
         document.querySelector('#start-button').classList.add('not-display');
         document.querySelector('#canvas-container').classList.remove('not-display');
+        document.querySelector('#landing-information').classList.add('not-display');
+        document.querySelector('.body-landing').classList.add('body-in-game');
+        document.querySelector('.body-landing').classList.remove('body-landing');
         start.width  = 800;
-        start.height = 600;  
-    }  
-   
+        start.height = 600;
+    }
+
     renderPage() {
-        this.ctx.drawImage(resources.get('img/start_page/titlescreen.png'), 0, 0, 800, 600); 
+        this.ctx.drawImage(resources.get('img/start_page/titlescreen.png'), 0, 0, 800, 600);
         this.ctx.drawImage(resources.get('img/start_page/pvz_logo.png'), 80, 50, 600, 100);
     }
-  
+
     changeTextColor(event) {
         if (event.layerX >= 200 && event.layerX <= 590 && event.layerY >= 510 && event.layerY <= 563) {
             this.ctx.drawImage(resources.get('img/start_page/start_grass_button.png'), 200, 500, 400, 80);
@@ -87,24 +90,6 @@ export class StartGame {
         this.gameAudioStates.menupage.loop = true;
         this.audioPlayer(this.gameAudioStates.menupage);
         this.disableEvents();
-        this.menupage = new MenuPage();    
-    } 
+        this.menupage = new MenuPage();
+    }
 }
-  
-  
-  
-  
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
