@@ -1,12 +1,10 @@
-import {Peashooter} from "../../plantsComponents/peashooter";
-import {Zombie} from "../../zombiesComponents/Zombie";
 import {levelImages} from "../../imgComponents/levelImages";
 import {BetweenLevels} from "./BetweenLevels";
 import {commonImages} from "../../imgComponents/commonImages";
 import {Sunflower} from "../../plantsComponents/sunflower";
 import {Sun} from "../../otherComponents/sun";
 import {Bullet} from "../../plantsComponents/bulletNormal";
-import {Lawnmower} from "../../otherComponents/lawnmover";
+import {AllUnitInTheMap} from "./AllUnitInTheMap";
 import {buttonAudio} from '../../audioComponents/audioButton';
 import {gameAudioStates} from '../../audioComponents/audioGameState';
 import {zombyAudioWave} from '../../audioComponents/audioZombyWave';
@@ -14,573 +12,667 @@ import {zombyAudioGroan} from '../../audioComponents/audioZombyGroan';
 import {zombyAudioChomp} from '../../audioComponents/audioZombyChomp';
 import {zombyAudioFalling} from '../../audioComponents/audioZombyFalling';
 import {sunAudioPoints} from '../../audioComponents/audioSunPoints';
-
+import {plantAudio} from '../../audioComponents/audioPlants';
+import {resources} from '../../menuComponents/resources';
+import {store} from '../../menuComponents/store';
+import {audioPlayer} from '../../audioComponents/audioPlayer';
+import {MenuPage} from '../../menuComponents/menu_page';
 
 class LevelOne {
-    constructor(canvas) {
-        this.canvas = canvas;
-        this.context = this.canvas.getContext('2d');
-        this.backgroundPositionX = 0;
-        this.animationPositionX = 0;
-        this.numberOfSuns = 150;
-        this.chose = 0;
-        this.toPlantBind = this.toPlant.bind(this);
-        this.createPlantLogoBind = this.createPlantLogo.bind(this);
-        this.calculatePlantUnitBind = this.calculatePlantUnit.bind(this);
-        this.receivingSunsBind = this.receivingSuns.bind(this);
-        this.drawOtherElementsBind = this.drawOtherElements.bind(this);
-        this.drawGardenBind = this.drawGarden.bind(this);
-        this.createPlantUnitBind = this.createPlantUnit.bind(this);
-        this.openFireBind = this.openFire.bind(this);
-        this.levelCompleteBind = this.levelComplete.bind(this);
-        this.awardingBind = this.awarding.bind(this);
-        this.peashooterUnit = null;
-        this.levelTimeLinePosition = 0;
-        this.positionX = 0;
-        this.positionY = 0;
-        this.positionToCreateX = 0;
-        this.positionToCreateY = 0;
-        this.plants = [];
-        this.positionOfPlantX = [];
-        this.positionOfPlantY = [];
-        this.suns = [];
-        this.firstPlant = 0;
-        this.IdIntervalComingZombie = 0;
-        this.chosenSuns = [];
-        this.zombies = [];
-        this.zombiesC = [];
-        this.lawnmower = null;
-        this.lawnmowers = [];
-        this.zombiesLength = 0;
-        this.checkComingZombie = 0;
-        this.levelUp = 0;
-        this.stopLevel = 0;
-        this.IdIntervalFallOfSuns = 0;
-        this.once = 0;
-        this.stopAnimation = 0;
-        this.sunflower = new Sunflower(this.context);
-        this.menu = commonImages.menu;
-        this.menuOpen = 0;
-        this.frameWaiting = 0;
-        this.commingZombieTimer = 0;
-        this.sunTimer = 0;
-        this.sunDestroyTimer = 0;
-        this.zombieAttack = 0;
-        this.openFireTimer = 0;
-        this.awardTimer = 0;
-        this.peashooterRechargeTimer = 360;
-        this.buttonAudio = buttonAudio;
-        this.gameAudioStates = gameAudioStates;
-        this.zombyAudioWave = zombyAudioWave;
-        this.zombyAudioGroan = zombyAudioGroan;
-        this.zombyAudioChomp = zombyAudioChomp;
-        this.zombyAudioFalling = zombyAudioFalling;
-        this.sunAudioPoints = sunAudioPoints;
-           
+  constructor(canvas) {
+    this.canvas = canvas;
+    this.context = this.canvas.getContext('2d');
+    this.backgroundPositionX = 0;
+    this.animationPositionX = 0;
+    this.numberOfSuns = 1000;
+    this.toPlantBind = null;
+    this.receivingSunsBind = null;
+    this.drawElementsBind = null;
+    this.drawGardenBind = null;
+    this.createPlantUnitBind = null;
+    this.awardingBind = null;
+    this.awardingEventBind = null;
+    this.openMenuRestartBind = null;
+    this.openMenuQuitBind = null;
+    this.changeVolumeBind = null;
+    this.goToMenuOfGameBind = null;
+    this.levelTimeLinePosition = 0;
+    this.suns = [];
+    this.firstPlant = 0;
+    this.chosenSuns = [];
+    this.checkComingZombie = 0;
+    this.levelUp = 0;
+    this.stopLevel = 0;
+    this.once = 0;
+    this.stopAnimation = 0;
+    this.menu = commonImages.menu;
+    this.menuOpen = 0;
+    this.frameWaiting = 0;
+    this.commingZombieTimer = 0;
+    this.sunTimer = 0;
+    this.sunDestroyTimer = 0;
+    this.openFireTimer = 0;
+    this.awardTimer = 0;
+    this.awardCard = null;
+    this.allUnitInTheMap = null;
+    this.buttonAudio = buttonAudio;
+    this.gameAudioStates = gameAudioStates;
+    this.zombyAudioWave = zombyAudioWave;
+    this.zombyAudioGroan = zombyAudioGroan;
+    this.zombyAudioChomp = zombyAudioChomp;
+    this.zombyAudioFalling = zombyAudioFalling;
+    this.sunAudioPoints = sunAudioPoints;
+    this.plantAudio = plantAudio;
+    this.elemLeft = this.canvas.offsetLeft;
+    this.elemTop = this.canvas.offsetTop;
+    this.audioPlayer = audioPlayer;
+  }
+
+  startGame() {
+    this.setFontProperties();
+    this.setAudioProperties();
+    this.setAwardCard();
+    this.createAllUnitInTheMapObject();
+    this.setThisForCallbackFunctions();
+    this.createZombie();
+    this.sortZombieView();
+    this.createSeedPack();
+    this.createLawnmowers();
+  }
+
+  setFontProperties() {
+    this.context.font = '24px Arial';
+    this.context.textAlign = 'center';
+  }
+
+  setAudioProperties() {
+    this.audioPlayer(this.gameAudioStates.gameprocess);
+    this.gameAudioStates.gameprocess.loop = true;
+  }
+
+  setAwardCard() {
+    this.awardCard = new Sunflower(this.context);
+    this.awardCard.init();
+  }
+
+  createAllUnitInTheMapObject() {
+    this.allUnitInTheMap = new AllUnitInTheMap(this.canvas, this.context, 1);
+  };
+
+  setThisForCallbackFunctions() {
+    this.toPlantBind = this.toPlant.bind(this);
+    this.receivingSunsBind = this.receivingSuns.bind(this);
+    this.drawElementsBind = this.drawElements.bind(this);
+    this.drawGardenBind = this.drawGarden.bind(this);
+    this.createPlantUnitBind = this.createPlantUnit.bind(this);
+    this.awardingBind = this.awarding.bind(this);
+    this.awardingEventBind = this.awardingEvent.bind(this);
+    this.openMenuRestartBind = this.openMenuRestart.bind(this);
+    this.openMenuQuitBind = this.openMenuQuit.bind(this);
+    this.changeVolumeBind = this.changeVolume.bind(this);
+    this.goToMenuOfGameBind = this.goToMenuOfGame.bind(this);
+    this.context.drawImage(levelImages.backgroundOne, 0, 0);
+    this.checkOpenMenuEventBind = this.checkOpenMenuEvent.bind(this);
+    this.openMenuEventBind = this.openMenuEvent.bind(this);
+    requestAnimationFrame(this.levelOverview.bind(this));
+  }
+
+  createLawnmowers() {
+    this.allUnitInTheMap.createLawnmowers(245, 97);
+  }
+
+  drawLawnmowers() {
+    this.allUnitInTheMap.drawLawnmowers();
+  }
+
+  createSeedPack() {
+    this.allUnitInTheMap.createSeedPack();
+  }
+
+  drawSeedPack() {
+    this.allUnitInTheMap.drawSeedPack();
+  }
+
+  createZombie() {
+    this.allUnitInTheMap.createZombie();
+  }
+
+  setZombieState() {
+    this.allUnitInTheMap.setZombieState(this.setRandom);
+  }
+
+  sortZombieView() {
+    this.allUnitInTheMap.sortZombieView();
+  }
+
+  levelOverview() {
+    if (this.backgroundPositionX > -600) {
+      this.backgroundPositionX -= 10;
+    } else {
+      this.frameWaiting++;
     }
-
-    startGame() {
-        this.context.font = '24px Arial';
-        this.context.textAlign = 'center';
-        
-        window.setTimeout(() => { this.gameAudioStates.gameprocess.play()}, 3500);
-        this.gameAudioStates.gameprocess.loop = true;
-        this.gameAudioStates.gameprocess.volume = 0.5;
-        
-        this.levelTimeLinePosition = 0;
-
-        commonImages.arrowTop.startY = 100;
-        commonImages.arrowTop.endY = 85;
-        commonImages.arrowTop.direction = 'bottom';
-
-        this.peashooterUnit = new Peashooter(this.context);
-        for (let i = 0; i < 1; i++) {
-            this.lawnmower = new Lawnmower(this.context, -40, 255);
-            this.lawnmowers.push(this.lawnmower);
-        }
-        this.lawnmower = new Lawnmower(this.context, -40, 255);
-            this.context.drawImage(levelImages.backgroundOne, 0, 0);
-            requestAnimationFrame(this.levelOverview.bind(this));
-        this.createZombie();
-        this.sortZombieView();
+    this.context.drawImage(levelImages.backgroundOne, this.backgroundPositionX, 0);
+    if (this.backgroundPositionX < -320) {
+      this.allUnitInTheMap.levelOverview(this.frameWaiting);
     }
+    if (this.frameWaiting === 120) {
+      requestAnimationFrame(this.returnOnGarden.bind(this, levelImages.backgroundOne));
+    } else {
+      requestAnimationFrame(this.levelOverview.bind(this, levelImages.backgroundOne));
+    }
+  }
 
-    createZombie() {
-        for (let i = 0; i < 5; i++) {
-            this.simpleZombie = new Zombie(this.context);
-            this.simpleZombie.positionOfCreate();
-            this.zombies.push(this.simpleZombie);
-        }
-        this.zombiesLength = this.zombies.length;
-    } // TODO AllUnitInTheMap.createZombie()
+  returnOnGarden() {
+    this.backgroundPositionX += 10;
+    this.context.drawImage(levelImages.backgroundOne, this.backgroundPositionX, 0);
+    if (this.backgroundPositionX < -220) {
+      this.allUnitInTheMap.returnOnGarden();
+      requestAnimationFrame(this.returnOnGarden.bind(this, levelImages.backgroundOne));
+    } else {
+      requestAnimationFrame(this.drawGardenBind);
+    }
+  }
 
-    sortZombieView() {
-        this.zombies = this.zombies.slice().sort((a,b) => {
-            let c = a.positionY;
-            let d = b.positionY;
-            if ( c < d) {
-                return -1;
-            } else if( c > d ) {
-                return 1;
+  drawGarden() {
+    this.context.drawImage(levelImages.backgroundTwo, 0, 0, this.animationPositionX, 600, -220, 0, this.animationPositionX, 600);
+    if (this.animationPositionX < 1390) {
+      this.animationPositionX += 10;
+      requestAnimationFrame(this.drawGardenBind);
+    } else {
+      requestAnimationFrame(this.drawElementsBind);
+      this.gameAudioStates.gameprocess.play();
+      this.startLevel();
+      this.checkOpenMenu();
+      this.openMenu();
+    }
+  }
+
+  checkOpenMenu() {
+    this.canvas.addEventListener('mousemove', this.checkOpenMenuEventBind);
+  }
+
+  checkOpenMenuEvent(e) {
+      if (e.layerX > 660 && e.layerX < 770 && e.layerY > 0 && e.layerY < 28){
+          this.menu = commonImages.menuHover;
+      } else {
+          this.menu = commonImages.menu;
+      }
+  }
+
+
+  openMenu() {
+    this.canvas.addEventListener('click', this.openMenuEventBind);
+  }
+
+  openMenuEvent() {
+      if(this.menu === commonImages.menuHover) {
+          if (this.menuOpen) {
+              this.menuOpen = 0;
+              this.stopLevel = 0;
+              this.gameAudioStates.gameprocess.play();
+              requestAnimationFrame(this.drawElementsBind);
+          } else {
+              this.gameAudioStates.gameprocess.pause();
+              this.stopLevel = 1;
+              this.menuOpen = 1;
+          }
+      }
+  }
+
+  drawElements() {
+    this.drawCommonElements();
+    this.drawPlantElements();
+    this.drawSunElements();
+    this.drawZombieElements();
+    this.drawOtherElements();
+  }
+
+  drawCommonElements() {
+    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.context.drawImage(levelImages.backgroundTwo, 0, 0, this.animationPositionX, 600, -220, 0, this.animationPositionX, 600);
+    this.context.drawImage(commonImages.seedBank, 10, 0);
+    this.context.drawImage(commonImages.sunBank, 10, 0);
+    this.context.fillText(`${this.numberOfSuns}`, 48.5, 80);
+    this.context.drawImage(this.menu, 660, -5);
+  }
+
+  drawPlantElements() {
+    this.drawLawnmowers();
+    this.drawSeedPack();
+    this.choseSeedPack();
+    this.drawPlant();
+    this.drawOpenFire();
+  }
+
+  drawSunElements() {
+    this.drawSun();
+    this.drawFallOfSuns();
+    this.choseSun();
+  }
+
+  drawZombieElements() {
+    this.checkForComingZombie();
+    this.levelProgress();
+    this.zombieComing();
+    this.createPlantLogo();
+  }
+
+  drawOtherElements() {
+    //this.showMenu();
+    this.checkLevelComplete();
+    this.checkAnimation();
+  }
+
+  checkAnimation() {
+    if (!this.stopLevel) {
+      requestAnimationFrame(this.drawElementsBind);
+    }
+  }
+
+  checkLevelComplete(){
+    if (this.levelUp && !this.stopAnimation) {
+      this.levelComplete();
+    }
+  }
+
+  levelComplete() {
+    this.awardCard.award();
+    if (!this.once) {
+      this.once = 1;
+      this.canvas.addEventListener('click', this.awardingEventBind);
+    }
+  }
+
+  awardingEvent(e) {
+    if (e.layerX > this.awardCard.startX && e.layerX < this.awardCard.startX+50  && e.layerY > this.awardCard.endY+40 && e.layerY < this.awardCard.endY + 110) {
+      this.awarding();
+      this.canvas.removeEventListener('click', this.awardingEventBind)
+    }
+  }
+
+  awarding() {
+    this.awardCard.award();
+    this.stopAnimation = 1;
+    this.biasAwardForY();
+    if (this.awardCard.startX > 376) {
+      this.biasAwardForXLeft();
+    } else if (this.awardCard.startX < 374) {
+      this.biasAwardForXRight();
+    } else {
+      this.drawStarBurst();
+      this.awardCard.award();
+      if (this.awardTimer === 60){
+        this.runBetweenLevel();
+      } else {
+        this.awardTimer++;
+        requestAnimationFrame(this.awardingBind);
+      }
+    }
+  }
+
+  biasAwardForXLeft() {
+    this.awardCard.startX -= ((this.awardCard.startX - 376) / 10) + 1;
+    requestAnimationFrame(this.awardingBind);
+  }
+
+  biasAwardForXRight() {
+    this.awardCard.startX += ((374-this.awardCard.startX)/10)+1;
+    requestAnimationFrame(this.awardingBind);
+  }
+
+  biasAwardForY() {
+    if (this.awardCard.startY > 226) {
+      this.awardCard.startY -= ((this.awardCard.startY - 226) / 10);
+    } else if(this.awardCard.startY < 224) {
+      this.awardCard.startY += ((224 - this.awardCard.startY) / 10) + 1;
+    }
+  }
+
+  drawStarBurst() {
+    this.context.drawImage(commonImages.starburst, 107, 6);
+  }
+
+  runBetweenLevel() {
+    this.stopLevel = 1;
+    this.canvas.removeEventListener('click', this.toPlantBind);
+    this.canvas.removeEventListener('click', this.openMenuEventBind);
+    this.canvas.removeEventListener('mousemove', this.checkOpenMenuEventBind);
+    const betweenLevel = new BetweenLevels(this.canvas, this.context, this.awardCard.packet, 1);
+    betweenLevel.create();
+    betweenLevel.start();
+  }
+
+  zombieComing() {
+    let positionToEndX;
+    let positionToEndY;
+
+    this.allUnitInTheMap.runLawnmowers();
+    this.allUnitInTheMap.zombiesC.forEach((zombie, i, arrayOfZombie) => {
+      this.allUnitInTheMap.checkLawnmowers(zombie);
+      if (zombie.positionX < -70) {
+
+      }
+      if (zombie.health < 1) {
+        this.zombyAudioFalling.zombyfalling1.play();
+        this.audioPlayer(this.zombyAudioFalling.zombyfalling1);
+        this.allUnitInTheMap.zombiesDead(zombie, i, arrayOfZombie);
+      } else if(zombie.burn) {
+        this.allUnitInTheMap.zombiesBurn(zombie, i,arrayOfZombie);
+      } else {
+        if (this.allUnitInTheMap.plants.some((plant, i, arr) => {
+            if (plant.positionX - 20 > zombie.positionX && plant.positionX - 90 < zombie.positionX && plant.positionY < zombie.positionY + 75 && plant.positionY > zombie.positionY + 65) {
+              this.allUnitInTheMap.zombiesAttackPlants(plant, i, arr);
+              this.audioPlayer(this.zombyAudioChomp.chomp);
+              this.audioPlayer(this.zombyAudioChomp.chomp2);
+              this.audioPlayer(this.zombyAudioChomp.chompSoft);
+              return true;
+            } else {
+              return false;
             }
-            return 0;
-        });
-    } //TODO AllUnitInTheMap.sortZombieView()
+          })) {
+          zombie.attack();
+        } else {
+          zombie.walk();
+        }
+      }
+      if (this.allUnitInTheMap.zombies.length < 1 && arrayOfZombie.length < 1) {
+        positionToEndX = zombie.positionX;
+        positionToEndY = zombie.positionY;
+      }
+    });
+    if (positionToEndY && positionToEndX) {
+      this.levelEnd(positionToEndX, positionToEndY);
+    }
+  }
 
-    levelOverview() {
-        if (this.backgroundPositionX > -600) {
-            this.backgroundPositionX -= 10;
-        } else {
-            this.frameWaiting++;
+  levelEnd(pointX, pointY) {
+    this.gameAudioStates.gameprocess.pause();
+    this.awardCard.createAwardPosition(pointX, pointY);
+    this.levelUp = 1;
+    this.levelComplete(pointX);
+  }
+
+  levelProgress () {
+    if (this.checkComingZombie) {
+      this.context.drawImage(commonImages.levelTimeLine, 600, 555);
+      this.context.drawImage(commonImages.levelTimeLineProcess, 0, 0, this.levelTimeLinePosition + 18, 26, 758.55-this.levelTimeLinePosition , 568, this.levelTimeLinePosition + 18, 26);
+      if (this.levelTimeLinePosition < 131) {
+        this.levelTimeLinePosition += 0.03;
+      }
+    }
+  }
+
+  drawPlant() {
+    this.allUnitInTheMap.plants.forEach((plant, i, arr) => {
+      plant.build();
+      this.allUnitInTheMap.zombiesC.forEach((zombie) => {
+        this.allUnitInTheMap.plantsAttackZombies(plant, zombie, this.audioPlayer.bind(this, this.zombyAudioFalling.bonk));
+      });
+      if (plant.name === Sunflower) {
+        this.allUnitInTheMap.ifPlantSunflower(plant, this.suns);
+      } else {
+        plant.useOfAbility();
+      }
+    });
+  }
+
+  drawSun() {
+    this.suns.forEach((sun) => {
+      sun.fall();
+    });
+  }
+
+  choseSun() {    // TODO AllUnitInTheMap.choseSun()
+    this.chosenSuns.forEach((sun, i, arr) => {
+      sun.chose();
+      if (sun.startX < 10){
+        arr.splice(i, 1);
+        this.numberOfSuns += 25;
+      }
+    });
+  }
+
+  startLevel() {
+    this.canvas.addEventListener('click', this.toPlantBind);
+    this.setZombieState();
+  }
+
+  toPlant(e) {
+    if (this.allUnitInTheMap.seedPack.every((seed) => (!seed.chose))) {
+      this.allUnitInTheMap.chosePlant(e, this.numberOfSuns, this.audioPlayer.bind(this, this.plantAudio.seedlift));
+    } else {
+      this.allUnitInTheMap.cancelChosePlantClick(e);
+    }
+  }
+
+  choseSeedPack() {
+    this.allUnitInTheMap.choseSeedPack(this.numberOfSuns);
+  }
+
+  createPlantLogo() {
+    this.allUnitInTheMap.seedPack.forEach((seed) => {
+      if (seed.chose === 1) {
+        this.allUnitInTheMap.createPlantLogo(seed, 0, 1, 215, 105, );
+        this.canvas.addEventListener('click', this.createPlantUnitBind);
+      }
+    });
+  }
+
+  createPlantUnit(e) {
+    let plant;
+    this.allUnitInTheMap.seedPack.forEach((seed) => {
+      if (seed.chose) {
+        plant = new seed.name(this.context, this.allUnitInTheMap.positionToCreate.x, this.allUnitInTheMap.positionToCreate.y)
+      }
+    });
+    if (plant) {
+      this.allUnitInTheMap.createPlantUnit(e, plant);
+      if (this.allUnitInTheMap.checkPlantBuild) {
+        this.numberOfSuns -= plant.cost;
+        this.audioPlayer(this.plantAudio.plant1);
+        this.checkForSuns();
+      }
+      this.canvas.removeEventListener('click', this.createPlantUnitBind);
+    }
+    this.checkForZombie();
+  }
+
+  checkForSuns() {
+    if (!this.firstPlant) {
+      this.firstPlant = 1;
+      this.fallOfSuns();
+      this.canvas.addEventListener('click', this.receivingSunsBind);
+    }
+  }
+
+  checkForZombie() {
+    if ((this.allUnitInTheMap.plants.length > 1) && (!this.checkComingZombie)) {
+      this.checkComingZombie = 1;
+      this.commingZombieTimer = 0;
+      this.startComingZombie();
+      this.audioPlayer(this.zombyAudioGroan.groan3);
+      this.audioPlayer(this.zombyAudioGroan.groan5);
+      this.audioPlayer(this.zombyAudioGroan.groan6);
+    }
+  }
+
+  checkForComingZombie() {
+    if ((this.checkComingZombie) && (this.allUnitInTheMap.zombies.length > 0)){
+      this.startComingZombie();
+    }
+  }
+
+  startComingZombie() {
+    this.allUnitInTheMap.startComingZombie(0, 0, 97, 195);
+  }
+
+  openFire() {
+    if (this.openFireTimer === 90){
+      this.allUnitInTheMap.plants.forEach((plant) => {
+        if (this.allUnitInTheMap.zombiesC.some((zombie) => zombie.positionX < 690 && zombie.positionX > plant.positionX-35 && zombie.positionY+75 > plant.positionY && zombie.positionY+65 < plant.positionY && !zombie.burn)){
+          this.audioPlayer(this.plantAudio.firepea);
+          const bullet =  new Bullet(plant.positionX, plant.positionY);
+          plant.positionOfBullet.push(bullet);
         }
-        this.context.drawImage(levelImages.backgroundOne, this.backgroundPositionX, 0);
-        if (this.backgroundPositionX < -320) {
-            this.zombies.forEach((elem) => { // TODO AllUnitInTheMap.levelOverview
-                if (!this.frameWaiting) {
-                    elem.positionX -= 10;
-                }
-                elem.create();
-            });
-        }
-        if (this.frameWaiting === 120) {
-            requestAnimationFrame(this.returnOnGarden.bind(this, levelImages.backgroundOne));
-        } else {
-            requestAnimationFrame(this.levelOverview.bind(this, levelImages.backgroundOne));
-        }
+      });
+      this.openFireTimer = 0;
+    } else {
+      this.openFireTimer++;
     }
 
+  }
 
-
-    returnOnGarden() {
-        this.backgroundPositionX += 10;
-        this.context.drawImage(levelImages.backgroundOne, this.backgroundPositionX, 0);
-        if (this.backgroundPositionX < -220) {
-            this.zombies.forEach((elem) => { // TODO AllUnitInTheMap.returnOnGarder();
-                elem.positionX += 10;
-                elem.create();
-            });
-            requestAnimationFrame(this.returnOnGarden.bind(this, levelImages.backgroundOne));
-        } else {
-            requestAnimationFrame(this.drawGardenBind);
-        }
+  drawOpenFire() {
+    if ((this.allUnitInTheMap.plants.length > 0) && this.allUnitInTheMap.zombiesC.length) {
+      this.openFire();
     }
+  }
 
-    drawGarden() {
-        this.context.drawImage(levelImages.backgroundTwo, 0, 0, this.animationPositionX, 600, -220, 0, this.animationPositionX, 600);
-        if (this.animationPositionX < 1390) {
-            this.animationPositionX += 10;
-            requestAnimationFrame(this.drawGarden.bind(this));
-        } else {
-            requestAnimationFrame(this.drawOtherElements.bind(this));
-            this.startLevel();
-            this.canvas.addEventListener('mousemove', (e) => {
-                if (e.layerX > 660 && e.layerX < 770 && e.layerY > 0 && e.layerY < 28){
-                    this.menu = commonImages.menuHover;
-                } else {
-                    this.menu = commonImages.menu;
-                }
-            });
-            this.canvas.addEventListener('click', () => {
-                if(this.menu === commonImages.menuHover) {
-                    if (this.menuOpen) {
-                        this.menuOpen = 0
-                    } else {
-                        this.menuOpen = 1;
-                    }
-                }
-            })
-        }
+  fallOfSuns() {
+    if (this.sunTimer < 300 && !this.levelUp) {
+      this.sunTimer++;
+    } else if (!this.levelUp){
+      const sun = new Sun(this.context);
+      sun.create();
+      this.suns.push(sun);
+      this.sunTimer = 0;
     }
+    this.destroySuns();
+  }
 
-    drawOtherElements() {
-        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.context.drawImage(levelImages.backgroundTwo, 0, 0, this.animationPositionX, 600, -220, 0, this.animationPositionX, 600);
-        this.context.drawImage(commonImages.seedBank, 10, 0);
-        this.context.drawImage(commonImages.sunBank, 10, 0);
-        this.context.fillText(`${this.numberOfSuns}`, 48.5, 80);
-        this.context.drawImage(this.menu, 660, -5);
+  drawFallOfSuns() {
+    if (this.firstPlant){
+      this.fallOfSuns();
+    }
+  }
 
-       
-        this.lawnmowers.forEach((lawnmower) => lawnmower.draw());
-        this.zombieComing();
-        this.drawPlant();
-        this.drawSun();
-        this.peashooterRechargeTimer++;
-        if (this.firstPlant){
-            this.fallOfSuns();
-        }
-        if ((this.checkComingZombie) && (this.zombies.length > 0)){
-            this.startComingZombie();
-        }
-        if ((this.plants.length > 0) && this.zombiesC.length) {
-            this.openFire();
-        }
-        this.chosePlant();
-        this.levelProgress();
-        this.choseSun();
-        this.demoFirstArrow();
+  destroySuns() {
+    if (this.suns.length > 2 && this.sunDestroyTimer > 450) {
+      this.suns.shift();
+      this.sunDestroyTimer = 0;
+    } else {
+      this.sunDestroyTimer++;
+    }
+  }
 
+  receivingSuns(e){
+    this.suns.forEach((sun, i, arr) => {
+      if ((e.layerX > sun.startX) && (e.layerX < sun.startX + 75) && (e.layerY > sun.startY) && (e.layerY < sun.startY + 75)){
+        this.sunAudioPoints.sunpoints.play();
+        this.chosenSuns.push(sun);
+        arr.splice(i, 1);
+      }
+    });
+  }
+
+  setRandom(min, max) {
+    return Math.floor(Math.random() * (max - min +1)) + min;
+  }
+
+  showMenu() {
+    this.context.drawImage(commonImages.menuWindow, 188, 30);
+    //this.context.drawImage(commonImages.restartButton, 230, 445);
+    //this.context.drawImage(commonImages.quitButton, 397, 445);
+    //this.context.drawImage(commonImages.sliderKnob, this.knobPositionX, this.knobPositionY);
+    this.canvas.addEventListener('click', this.changeVolumeBind);
+    this.canvas.addEventListener('click', this.openMenuRestartBind);
+    this.canvas.addEventListener('click', this.openMenuQuitBind);
+  }
+
+  openMenuRestart(e) {
+    if (this.outsideArea(e,230,390,445,500)) return;
+
+    this.audioPlayer(this.buttonAudio.tap);
+    this.audioPlayer(this.buttonAudio.tap2);
+    this.audioPlayer(this.buttonAudio.bleep);
+    this.restartDialogOpen = 1;
+  }
+
+  menuRestartDraw() {
+    this.context.drawImage(resources.get('img/dialog_window/quit_menu.png'),170, 180, 450, 350);
+    this.context.drawImage(commonImages.restart1, 325, 250);
+    this.context.drawImage(commonImages.restart2, 205, 350);
+    this.context.drawImage(commonImages.restartButton, 210, 460);
+    this.context.drawImage(commonImages.cancelButton, 420, 460);
+    this.canvas.addEventListener('click', this.returnToGameBind);
+    this.canvas.addEventListener('click', this.restartCurrentLevelBind);
+    this.canvas.removeEventListener('click', this.changeVolumeBind);
+    this.canvas.removeEventListener('click', this.openMenuQuitBind);
+  }
+
+  openMenuQuit(e) {
+    if (this.outsideArea(e,397,555,445,500)) return;
+    this.audioPlayer(this.buttonAudio.tap);
+    this.audioPlayer(this.buttonAudio.tap2);
+    this.audioPlayer(this.buttonAudio.bleep);
+    this.quitDialogOpen = 1;
+  }
+
+  menuQuitDraw() {
+    this.context.drawImage(resources.get('img/dialog_window/quit_menu.png'),170, 180, 450, 350);
+    this.context.drawImage(commonImages.quit1, 350, 250);
+    this.context.drawImage(commonImages.quit2, 210, 350);
+    this.context.drawImage(commonImages.quitButton, 210, 460);
+    this.context.drawImage(commonImages.cancelButton, 420, 460);
+    this.canvas.addEventListener('click', this.returnToGameBind);
+    this.canvas.addEventListener('click', this.goToMenuOfGameBind);
+    this.canvas.removeEventListener('click', this.changeVolumeBind);
+    this.canvas.removeEventListener('click', this.openMenuRestartBind);
+
+  }
+
+  goToMenuOfGame(e) {
+    if (this.outsideArea(e, 210, 370, 460, 500)) return;
+    this.audioPlayer(this.buttonAudio.tap);
+    this.audioPlayer(this.buttonAudio.tap2);
+    this.audioPlayer(this.buttonAudio.bleep);
+    this.canvas.removeEventListener('mousemove', this.calculatePlantUnitBind);
+    this.canvas.removeEventListener('click', this.toPlantBind);
+    this.canvas.removeEventListener('click', () => {
+      if (this.menu === commonImages.menuHover) {
         if (this.menuOpen) {
-            this.showMenu();
-        }
-        if (this.levelUp && !this.stopAnimation) {
-            this.levelComplete();
-        }
-        if (!this.stopLevel) {
-            requestAnimationFrame(this.drawOtherElementsBind);
-        }
-    }
-
-    levelComplete() {
-        this.sunflower.award();
-        this.context.drawImage(commonImages.arrowBottom, this.sunflower.startX, this.sunflower.endY);
-        if (!this.once) {
-            this.once = 1;
-            this.canvas.addEventListener('click', (e) => {
-                if (e.layerX > this.sunflower.startX && e.layerX < this.sunflower.startX+50  && e.layerY > this.sunflower.endY+70 && e.layerY < this.sunflower.endY + 140) {
-                    this.awarding()
-                }})
-        }
-        this.hint(this.sunflower);
-    }
-
-    awarding() {
-        this.sunflower.award();
-        this.stopAnimation = 1;
-        if (this.sunflower.startX > 376) {
-            this.sunflower.startX -= ((this.sunflower.startX - 376) / 10) + 1;
-            requestAnimationFrame(this.awardingBind);
-        } else if (this.sunflower.startX < 374) {
-            this.sunflower.startX += ((374-this.sunflower.startX)/10)+1;
-            requestAnimationFrame(this.awardingBind);
+          this.menuOpen = 0
         } else {
-            this.context.drawImage(commonImages.starburst, 107, 6);
-            this.sunflower.award();
-             if (this.awardTimer === 60){
-                 this.stopLevel = 1;
-                 this.canvas.removeEventListener('mousemove', this.calculatePlantUnitBind);
-                 const betweenLevel = new BetweenLevels(this.canvas, this.context, this.sunflower.logo, 1);
-                 betweenLevel.create();
-                 betweenLevel.start();
-            } else {
-                 this.awardTimer++;
-                 requestAnimationFrame(this.awardingBind);
-             }
+          this.menuOpen = 1;
+          this.gameAudioStates.menupage.loop = true;
+          this.audioPlayer(this.gameAudioStates.menupage);
+          this.menupage = new MenuPage();
         }
+      }
+    });
+  }
+
+
+
+  outsideArea(e, x1, x2, y1, y2) {
+    let x = e.pageX - this.elemLeft, y = e.pageY - this.elemTop;
+    return x < x1 || x > x2 || y < y1 || y > y2;
+  }
+
+
+  changeVolume(e) {
+    if (this.outsideArea(e, 320, 460, 180, 230)) return;
+    this.knobPositionX = e.pageX - this.elemLeft - 5;
+    this.knobpositionY = e.pageY - this.elemTop - 5;
+    if (this.knobPositionX  <= 460 && this.knobPositionX > 420) {
+      store.setVolume(0.5);
+    } else if (this.knobPositionX  <= 420 && this.knobPositionX > 380) {
+      store.setVolume(0.3);
+    } else if (this.knobPositionX  <= 380 && this.knobPositionX > 340) {
+      store.setVolume(0.2);
+    } else if (this.knobPositionX  <= 340 && this.knobPositionX > 320) {
+      store.setVolume(0.1);
+    } else if (this.knobPositionX <= 320) {
+      store.setVolume(0);
     }
+    this.gameAudioStates.gameprocess.volume = Number(store.getVolume());
+  }
 
-    zombieComing() { //TODO AllUnitInTheMap.zombieComing();
-        if (this.lawnmowers.length > 0) { //
-            this.lawnmowers.forEach((lawnmower) => lawnmower.activated());
-        }
-        this.zombiesC.forEach((elem, i, arr) => {
-            this.lawnmowers.forEach((lawnmower) => { //
-                if (lawnmower.pointX > elem.positionX) {
-                    lawnmower.used = 1;
-                    elem.health = 0;
-                }
-            });
-            if (elem.health < 1) {
-                this.zombyAudioFalling.zombyfalling1.play();
-                elem.zombiesDead();
-                if (elem.timerDied > 59) {
-                    arr.splice(i,1);
-                }
-            } else {
-                if (this.plants.some((plant, i, arr) => {
-                        if (plant.positionX-20 > elem.positionX && plant.positionX - 90 < elem.positionX){
-                            this.zombyAudioChomp.chomp.play();
-                            this.zombyAudioChomp.chomp2.play();
-                            this.zombyAudioChomp.chompSoft.play();
-                            this.zombieAttack++;
-                            if (this.zombieAttack > 42){
-                                plant.health -= 1;
-                                this.zombieAttack = 0;
-                                if (plant.health < 1) {
-                                    this.positionOfPlantX.splice(i, 1);
-                                    this.positionOfPlantY.splice(i, 1);
-                                    arr.splice(i, 1);
-                                }
-                            }
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    })){
-                    elem.attack();
-                } else {
-                    elem.walk();
-                }
-            } //TODO over here
-            if (this.zombies.length < 1 && elem.health < 1 && arr.length < 1) {
-                this.levelEnd(elem.positionX, elem.positionY);
-            }
-        });
-    }
-
-    levelEnd(pointX, pointY) {
-        this.gameAudioStates.gameprocess.pause();
-        this.sunflower.createAwardPosition(pointX, pointY);
-        this.levelUp = 1;
-        this.levelComplete(pointX);
-        this.sunflower.state = 'once';
-        this.sunflower.direction = 'top';
-    }
-
-    levelProgress () {
-        if (this.checkComingZombie) {
-            this.context.drawImage(commonImages.levelTimeLine, 600, 555);
-            this.context.drawImage(commonImages.levelTimeLineProcess, 0, 0, this.levelTimeLinePosition + 18, 26, 758.55-this.levelTimeLinePosition , 568, this.levelTimeLinePosition + 18, 26);
-            if (this.levelTimeLinePosition < 131) {
-                this.levelTimeLinePosition += 0.06;
-            }
-        }
-    }
-
-    demoFirstArrow() {
-        if (((!this.firstPlant) || (this.plants.length < 2 && this.numberOfSuns > 100)) && (!this.chose)) {
-            this.context.drawImage(commonImages.arrowTop, 98, commonImages.arrowTop.startY);
-            this.hint(commonImages.arrowTop);
-        }
-    }
-
-
-    hint (pointer){
-        if (!this.once) {
-            if (pointer.direction === 'top'){
-                pointer.startY += 1;
-                if (pointer.startY > pointer.endY + 15) {
-                    pointer.direction = 'bottom';
-                }
-            } else if (pointer.direction === 'bottom') {
-                pointer.startY -= 1;
-                if (pointer.startY < pointer.endY) {
-                    pointer.direction = 'top';
-                }
-            }
-        }
-    }
-
-    chosePlant() {
-        if (!this.chose && this.numberOfSuns > 99 && this.peashooterRechargeTimer > 360) {
-            this.peashooterUnit.choice();
-        } else {
-            this.peashooterUnit.cancelChoice();
-        }
-    }
-
-    drawPlant() {
-        this.plants.forEach((elem) => {
-            elem.build();
-            this.zombiesC.forEach((zombie) => {
-                for (let i = 0; i < elem.positionOfBullet.length; i++) {
-                    if (elem.positionOfBullet[i].pointX > zombie.positionX+60 && elem.positionOfBullet[i].pointX < zombie.positionX+85) {
-                        elem.positionOfBullet[i].hit = 1;
-                        if (elem.positionOfBullet[i].frameBulletSpeed === 3) {
-                            this.zombyAudioFalling.bonk.play();
-                            zombie.health -= 1;
-                        }
-                    }
-                }
-            });
-            elem.attack();
-        });
-    }   //TODO AllUnitInTheMap.drawPlant()
-
-    drawSun() { //TODO AllUnitInTheMap.drawSun()
-        this.suns.forEach((elem) => {
-            elem.fall();
-        });
-    }
-
-    choseSun() {    // TODO AllUnitInTheMap.choseSun()
-        this.chosenSuns.forEach((elem, i, arr) => {
-            elem.chose();
-            if (elem.startX < 10){
-                arr.splice(i, 1);
-                this.numberOfSuns += 25;
-            }
-        });
-    }
-
-
-
-    startLevel() {
-        this.canvas.addEventListener('click', this.toPlantBind);
-    }
-
-    toPlant(e) {
-        if ((e.layerX > 99) && (e.layerX < 143) && (e.layerY > 9) && (e.layerY < 74)) {
-            
-            if (!this.chose && this.numberOfSuns > this.peashooterUnit.cost-1 && this.peashooterRechargeTimer > 360) {
-                this.chose = 1;
-                this.plantAudio.seedlift.play();
-                this.positionX = e.layerX - this.peashooterUnit.calculateWidth() / 2;
-                this.positionY = e.layerY - this.peashooterUnit.calculateHeight() / 2;
-                this.canvas.addEventListener('mousemove', this.calculatePlantUnitBind);
-            } else {
-                this.chose = 0;
-                this.positionY = 0;
-                this.positionX = 0;
-                this.canvas.removeEventListener('mousemove', this.calculatePlantUnitBind);
-            }
-            requestAnimationFrame(this.createPlantLogoBind);
-        }
-    }
-
-    createPlantLogo() {
-        if (this.chose === 1) {
-            this.peashooterUnit.create(this.positionX, this.positionY);
-            for (let i = 0; i < 10; i++) {
-                if ((this.positionX > (i * 72)) && (this.positionX < ((i + 1) * 72)) && (this.positionY > 230) && (this.positionY < 340)) {
-                    this.peashooterUnit.create(40 + i * 72, 270);
-                    this.positionToCreateX = 40 + i * 72;
-                    this.positionToCreateY = 270;
-                    this.canvas.addEventListener('click', this.createPlantUnitBind);
-                }
-            }
-        }
-        if (!this.levelUp) {
-            requestAnimationFrame(this.createPlantLogoBind);
-        }
-    }
-
-
-    calculatePlantUnit(e) {
-        this.positionX = e.layerX - this.peashooterUnit.calculateWidth() / 2;
-        this.positionY = e.layerY - this.peashooterUnit.calculateHeight() / 2;
-    }
-
-    createPlantUnit() {
-        this.plantAudio.plant1.play();
-        let plant = new Peashooter(this.context, this.positionToCreateX, this.positionToCreateY);
-        let length = this.positionOfPlantX.length;
-        let checkUniq = 1;
-        if (this.positionX < 730 && this.positionY > 230 && this.positionY < 335) {
-            for (let i = 0; i < length; i++) {
-                if (this.positionOfPlantX[i] === plant.positionOfCreateX && this.positionOfPlantY[i] === plant.positionOfCreateY) {
-                    checkUniq = 0;
-                }
-            }
-            if (checkUniq && this.peashooterRechargeTimer > 360) {
-                this.peashooterRechargeTimer = 0;
-                this.plants.push(plant);
-                this.positionOfPlantX.push(plant.positionOfCreateX);
-                this.positionOfPlantY.push(plant.positionOfCreateY);
-                this.chose = 0;
-                this.numberOfSuns -= this.peashooterUnit.cost;
-                if (!this.firstPlant) {
-                    this.firstPlant = 1;
-                    this.fallOfSuns();
-                }
-                if ((this.plants.length > 1) && (!this.checkComingZombie)) {
-                    this.checkComingZombie = 1;
-                    this.commingZombieTimer = 600;
-                    this.startComingZombie();
-                }
-            }
-        }
-
-
-        this.canvas.addEventListener('click', this.receivingSunsBind);
-        this.canvas.removeEventListener('click', this.createPlantUnitBind);
-
-    }
-
-    startComingZombie() {
-        if (this.commingZombieTimer === 600) {
-            this.zombyAudioGroan.groan3.play();
-            this.zombyAudioGroan.groan5.play();
-            this.zombyAudioGroan.groan6.play();
-            if (this.zombies.length > 0) {
-                this.zombies[this.zombies.length - 1].positionX = 710;
-                this.zombies[this.zombies.length - 1].positionY = 200;
-                this.zombiesC.push(this.zombies.pop());
-            }
-            this.commingZombieTimer = 0;
-        } else {
-            this.commingZombieTimer++;
-        } if (this.commingZombieTimer === 60) {
-            let length = Math.ceil(this.zombiesLength/2);
-            if (this.zombies.length < length - 1) {
-                for (let i = 0; i < length - 2; i++) {
-                    this.zombies[i].positionX = 710;
-                    this.zombies[i].positionY = 200;
-                    this.zombiesC.push(this.zombies.pop());
-                }
-                this.commingZombieTimer = 0;
-            }
-        }
-    }
-
-
-    openFire() {
-        if (this.openFireTimer === 90){
-            this.plants.forEach((elem) => {
-                if (this.zombiesC.some((zombie) => { return (zombie.positionX < 690 && zombie.positionX > elem.positionX-35) })) {
-                    const bullet =  new Bullet(elem.positionX,elem.positionY);
-                    elem.positionOfBullet.push(bullet);
-                }
-            });
-            this.openFireTimer = 0;
-        } else {
-            this.openFireTimer++;
-        }
-
-    }
-
-
-    fallOfSuns() {
-        if (this.sunTimer < 300 && !this.levelUp) {
-            this.sunTimer++;
-        } else if (!this.levelUp){
-            const sun = new Sun(this.context);
-            sun.create();
-            this.suns.push(sun);
-            this.sunTimer = 0;
-        }
-        this.destroySuns();
-    }
-
-    destroySuns() {
-        if (this.suns.length > 2 && this.sunDestroyTimer > 450) {
-            this.suns.shift();
-            this.sunDestroyTimer = 0;
-        } else {
-            this.sunDestroyTimer++;
-        }
-    }
-
-    receivingSuns(e){
-        this.suns.forEach((elem, i, arr) => {
-            if ((e.layerX > elem.startX) && (e.layerX < elem.startX + 75) && (e.layerY > elem.startY) && (e.layerY < elem.startY + 75)){
-                this.sunAudioPoints.sunpoints.play();
-                this.chosenSuns.push(elem);
-                arr.splice(i, 1);
-            }
-        });
-    }
-
-    showMenu() {
-        this.context.drawImage(commonImages.menuWindow, 188, 30);
-    }
 
 }
 
 export { LevelOne };
 
-
-/*
-   location = this.createLevel(this.level, location);
-
-createLevel(level, location) {
-    location = document.createElement(level.name);
-    level.elements.forEach((elem, i) => {
-        location.appendChild(this.createLevel(elem));
-    });
-    return location;
-}
-*/
 
 
 

@@ -7,7 +7,6 @@ function archivatorAudio(obj) {
     return obj;
 }
 
-
 export {archivatorAudio};
 
 

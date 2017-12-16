@@ -58,7 +58,7 @@ class Sunflower extends Plants {
         const sun = new Sun(this.context);
         sun.startX = this.positionX;
         sun.startY = this.positionY;
-        sun.endY = this.positionY + 60;
+        sun.endY = this.positionY + 40;
         return sun;
     }
 

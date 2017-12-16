@@ -38,7 +38,7 @@ class BetweenLevels {
             this.context.drawImage(this.buttonImage, 322, 515);
             this.context.fillStyle = '#d59f2b';
             this.context.fillText(this.heading, 400, 57);
-            this.context.fillText(this.description.name, 400, 328);
+            this.context.fillText(this.description.name, 400, 327);
             this.context.fillText(this.buttonLabel, 400, 544);
             this.context.fillStyle = '#28325a';
             this.context.fillText(this.description.body, 400, 418);
@@ -62,6 +62,9 @@ class BetweenLevels {
         }
     }
 
+    playerWon() {
+        console.log('player won');
+    }
 }
 
 export {BetweenLevels}

@@ -12,6 +12,17 @@ class Plants {
         this.positionOfBullet = [];
         this.frame = 0;
         this.frameSpeed = 0;
+        this.abilityTimer = 0;
+    }
+
+    award(image, pointX, pointY) {
+        this.context.drawImage(image, pointX, pointY);
+    }
+
+    createAwardPosition(pointX, pointY) {
+        this.startX = pointX;
+        this.startY = pointY;
+        this.endY = pointY - 10;
     }
 
     create(image, pointX, pointY){
@@ -20,16 +31,13 @@ class Plants {
 
     init() {
         this.positionOfCreate.pointX = Math.floor((this.positionX - 40)/72);
-        this.positionOfCreate.pointY = Math.ceil((this.positionY - 80)/115);
+        this.positionOfCreate.pointY = Math.floor((this.positionY - 100)/97);
     }
 
     drawSeed(img, pointX, pointY) {
         this.context.drawImage(img, pointX, pointY);
     }
 
-    award(image, pointX, pointY) {
-        this.context.drawImage(image, pointX, pointY);
-    }
 }
 
 export { Plants };

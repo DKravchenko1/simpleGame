@@ -2,12 +2,16 @@ import {resources} from './resources';
 import {MenuPage} from './menu_page';
 import {buttonAudio} from '../audioComponents/audioButton';
 import {gameAudioStates} from '../audioComponents/audioGameState';
+import {store} from './store';
+import {audioPlayer} from "../audioComponents/audioPlayer";
+
 
 export class StartGame {
     constructor () {
         this.ctx = start.getContext('2d');
         this.gameAudioStates = gameAudioStates;
         this.buttonAudio = buttonAudio;
+        this.audioPlayer = audioPlayer;
     }
   
     enableEvents() {
@@ -45,8 +49,9 @@ export class StartGame {
             'img/dialog_window/enter_name.png',
             'img/menu_backgrounds/quit_flowers.png',
             'img/menu_backgrounds/level_2_light.png',
-            'img/zomby_hand/sprite_zomby_hand.png'
-         
+            'img/zomby_hand/sprite_zomby_hand.png',
+            'img/start_page/writting_white.png',
+            'img/start_page/writting_red.png'    
         ]);
         resources.onReady(this.renderPage.bind(this));
         document.querySelector('#start-button').classList.add('not-display');
@@ -63,15 +68,11 @@ export class StartGame {
     changeTextColor(event) {
         if (event.layerX >= 200 && event.layerX <= 590 && event.layerY >= 510 && event.layerY <= 563) {
             this.ctx.drawImage(resources.get('img/start_page/start_grass_button.png'), 200, 500, 400, 80);
-            this.ctx.fillstyle = "#E32636"; 
-            this.ctx.font = "italic 25px Arial";
-            this.ctx.fillText("Press key to enter", 275, 555);
+            this.ctx.drawImage(resources.get('img/start_page/writting_red.png'), 300, 540);
         } else {
             this.renderPage();
             this.ctx.drawImage(resources.get('img/start_page/start_grass_button.png'), 200, 500, 400, 80);
-            this.ctx.fillstyle = "white";
-            this.ctx.font = "italic 25px Arial";
-            this.ctx.fillText("Press key to enter", 275, 555);
+            this.ctx.drawImage(resources.get('img/start_page/writting_white.png'), 300, 540);
         }
     }
 
@@ -82,10 +83,11 @@ export class StartGame {
 
     onGoToMenu(event) {
         if (this.outsideArea(event,200,590,510,563)) return;
+        store.setVolume(0.5);
         this.gameAudioStates.menupage.loop = true;
-        this.gameAudioStates.menupage.play();
+        this.audioPlayer(this.gameAudioStates.menupage);
         this.disableEvents();
-        this.menupage = new MenuPage();
+        this.menupage = new MenuPage();    
     } 
 }
   
