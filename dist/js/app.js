@@ -2231,6 +2231,7 @@ class LevelThree {
   setFontProperties() {
     this.context.font = '24px Arial';
     this.context.textAlign = 'center';
+    this.context.fillStyle = '#000';
   }
 
   setAudioProperties() {
