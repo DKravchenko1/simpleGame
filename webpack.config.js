@@ -16,6 +16,8 @@ module.exports = {
     // Specify the resulting CSS filename
     new ExtractTextPlugin('dist/css/style.css')
   ],
+  
+  
 
   module: {
     rules: [
@@ -36,19 +38,46 @@ module.exports = {
           ]
         })
       },
-      {
-        test: /\.(png|jpg|gif|svg)$/,
+       /*{
+        test: /\slider*.png$/,
         use: [
-          /*{
-            loader: 'url-loader',
-            options: {
-              limit: 8192
-            }
-          },*/
           {
             loader: 'file-loader',
             options: {
-                name: 'dist/images/[name].[ext]'
+                name: '../../static/[name].[ext]',
+            }
+          }
+        ]
+      },
+      {
+        test: /\.(png|jpg|gif)$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+                name: 'dist/images/[name].[ext]',
+            }
+          }
+        ]
+      },
+      {
+        test: /\.(svg)$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+                name: '../../static/[name].[ext]',
+            }
+          }
+        ]
+      },*/
+      {
+        test: /\.(png|jpg|gif|svg)$/,
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+                name: 'dist/images/[name].[ext]',
             }
           }
         ]
@@ -81,3 +110,4 @@ module.exports = {
   // Create Sourcemaps for the bundle
   devtool: 'source-map'
 };
+

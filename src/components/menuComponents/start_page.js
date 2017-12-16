@@ -27,7 +27,7 @@ export class StartGame {
     }
 
     onLoadResources() {
-        if(resources.isReady()) { this.renderPage();}       
+        if(resources.isReady()) { this.readyToRender();}       
         resources.load([
             'img/start_page/start_grass_button.png',
             'img/start_page/titlescreen.png',
@@ -52,7 +52,7 @@ export class StartGame {
             'img/start_page/writting_white.png',
             'img/start_page/writting_red.png'
         ]);
-        resources.onReady(this.renderPage.bind(this));
+        resources.onReady(this.readyToRender.bind(this));
         document.querySelector('#start-button').classList.add('not-display');
         document.querySelector('#canvas-container').classList.remove('not-display');
         document.querySelector('#landing-information').classList.add('not-display');
@@ -61,20 +61,24 @@ export class StartGame {
         start.width  = 800;
         start.height = 600;
     }
+    
+    readyToRender() {
+        this.renderPage();
+        this.enableEvents();
+    }
 
     renderPage() {
         this.ctx.drawImage(resources.get('img/start_page/titlescreen.png'), 0, 0, 800, 600);
         this.ctx.drawImage(resources.get('img/start_page/pvz_logo.png'), 80, 50, 600, 100);
-        this.enableEvents();
+        this.ctx.drawImage(resources.get('img/start_page/start_grass_button.png'), 200, 500, 400, 80);
     }
 
     changeTextColor(event) {
         if (event.layerX >= 200 && event.layerX <= 590 && event.layerY >= 510 && event.layerY <= 563) {
-            this.ctx.drawImage(resources.get('img/start_page/start_grass_button.png'), 200, 500, 400, 80);
+            this.renderPage();
             this.ctx.drawImage(resources.get('img/start_page/writting_red.png'), 300, 540);
         } else {
             this.renderPage();
-            this.ctx.drawImage(resources.get('img/start_page/start_grass_button.png'), 200, 500, 400, 80);
             this.ctx.drawImage(resources.get('img/start_page/writting_white.png'), 300, 540);
         }
     }
