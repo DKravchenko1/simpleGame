@@ -27,12 +27,7 @@ export class StartGame {
     }
 
     onLoadResources() {
-<<<<<<< HEAD
-        this.enableEvents();
-        if(resources.isReady()) { this.renderPage();}
-=======
         if(resources.isReady()) { this.renderPage();}       
->>>>>>> gh-pages-katya
         resources.load([
             'img/start_page/start_grass_button.png',
             'img/start_page/titlescreen.png',

@@ -114,10 +114,9 @@ class Resources {
             let that = this;
             img.onload = function () {
                 that.resourceCache[url] = img;
-                console.log(url);
                 if (that.isReady()) {
                     that.readyCallbacks.forEach(function (func) {
-                        console.log("callback function");func();
+                        func();
                     }); //should call after all image was loaded
                 }
             };
@@ -2868,7 +2867,6 @@ class StartGame {
     }
 
     onLoadResources() {
-        this.enableEvents();
         if (__WEBPACK_IMPORTED_MODULE_0__resources__["a" /* resources */].isReady()) {
             this.renderPage();
         }
@@ -2886,6 +2884,7 @@ class StartGame {
     renderPage() {
         this.ctx.drawImage(__WEBPACK_IMPORTED_MODULE_0__resources__["a" /* resources */].get('img/start_page/titlescreen.png'), 0, 0, 800, 600);
         this.ctx.drawImage(__WEBPACK_IMPORTED_MODULE_0__resources__["a" /* resources */].get('img/start_page/pvz_logo.png'), 80, 50, 600, 100);
+        this.enableEvents();
     }
 
     changeTextColor(event) {
