@@ -24,7 +24,7 @@ class LevelOne {
     this.context = this.canvas.getContext('2d');
     this.backgroundPositionX = 0;
     this.animationPositionX = 0;
-    this.numberOfSuns = 1000;
+    this.numberOfSuns = 150;
     this.toPlantBind = null;
     this.receivingSunsBind = null;
     this.drawElementsBind = null;
@@ -83,6 +83,7 @@ class LevelOne {
   setFontProperties() {
     this.context.font = '24px Arial';
     this.context.textAlign = 'center';
+    this.context.fillStyle = '#000';
   }
 
   setAudioProperties() {
@@ -284,7 +285,7 @@ class LevelOne {
   }
 
   awardingEvent(e) {
-    if (e.layerX > this.awardCard.startX && e.layerX < this.awardCard.startX+50  && e.layerY > this.awardCard.endY+40 && e.layerY < this.awardCard.endY + 110) {
+    if (e.layerX > this.awardCard.startX && e.layerX < this.awardCard.startX+50  && e.layerY > this.awardCard.endY+40 && e.layerY < this.awardCard.endY + 120) {
       this.awarding();
       this.canvas.removeEventListener('click', this.awardingEventBind)
     }
@@ -333,10 +334,7 @@ class LevelOne {
   }
 
   runBetweenLevel() {
-    this.stopLevel = 1;
-    this.canvas.removeEventListener('click', this.toPlantBind);
-    this.canvas.removeEventListener('click', this.openMenuEventBind);
-    this.canvas.removeEventListener('mousemove', this.checkOpenMenuEventBind);
+    this.gameEnd();
     const betweenLevel = new BetweenLevels(this.canvas, this.context, this.awardCard.packet, 1);
     betweenLevel.create();
     betweenLevel.start();
@@ -349,8 +347,8 @@ class LevelOne {
     this.allUnitInTheMap.runLawnmowers();
     this.allUnitInTheMap.zombiesC.forEach((zombie, i, arrayOfZombie) => {
       this.allUnitInTheMap.checkLawnmowers(zombie);
-      if (zombie.positionX < -70) {
-
+      if (zombie.positionX < -100) {
+          this.playerLose();
       }
       if (zombie.health < 1) {
         this.zombyAudioFalling.zombyfalling1.play();
@@ -567,6 +565,21 @@ class LevelOne {
 
   setRandom(min, max) {
     return Math.floor(Math.random() * (max - min +1)) + min;
+  }
+
+  playerLose() {
+      this.gameEnd();
+      const betweenLevel = new BetweenLevels(this.canvas, this.context, this.awardCard.packet, 1);
+      betweenLevel.createPlayerLose();
+      betweenLevel.playerLose();
+  }
+
+  gameEnd() {
+      this.stopLevel = 1;
+      this.gameAudioStates.gameprocess.pause();
+      this.canvas.removeEventListener('click', this.toPlantBind);
+      this.canvas.removeEventListener('click', this.openMenuEventBind);
+      this.canvas.removeEventListener('mousemove', this.checkOpenMenuEventBind);
   }
 
   showMenu() {

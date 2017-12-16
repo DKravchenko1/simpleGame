@@ -56,9 +56,6 @@ export class StartGame {
         resources.onReady(this.renderPage.bind(this));
         document.querySelector('#start-button').classList.add('not-display');
         document.querySelector('#canvas-container').classList.remove('not-display');
-        document.querySelector('#landing-information').classList.add('not-display');
-        document.querySelector('.body-landing').classList.add('body-in-game');
-        document.querySelector('.body-landing').classList.remove('body-landing');
         start.width  = 800;
         start.height = 600;  
     }  

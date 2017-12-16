@@ -26,7 +26,7 @@ class LevelThree {
     this.context = this.canvas.getContext('2d');
     this.backgroundPositionX = 0;
     this.animationPositionX = 0;
-    this.numberOfSuns = 1000;
+    this.numberOfSuns = 300;
     this.toPlantBind = null;
     this.receivingSunsBind = null;
     this.drawElementsBind = null;
@@ -100,6 +100,7 @@ class LevelThree {
   setAwardCard() {
     this.awardCard = new CherryBomb(this.context);
     this.awardCard.init();
+    this.awardCard.packet = commonImages.zombieNoteSmall;
   }
 
   createAllUnitInTheMapObject() {
@@ -290,7 +291,7 @@ class LevelThree {
   }
 
   awardingEvent(e) {
-    if (e.layerX > this.awardCard.startX && e.layerX < this.awardCard.startX+50  && e.layerY > this.awardCard.endY+40 && e.layerY < this.awardCard.endY + 110) {
+    if (e.layerX > this.awardCard.startX && e.layerX < this.awardCard.startX+78  && e.layerY > this.awardCard.endY+40 && e.layerY < this.awardCard.endY + 92) {
       this.awarding();
       this.canvas.removeEventListener('click', this.awardingEventBind)
     }
@@ -300,9 +301,9 @@ class LevelThree {
     this.awardCard.award();
     this.stopAnimation = 1;
     this.biasAwardForY();
-    if (this.awardCard.startX > 376) {
+    if (this.awardCard.startX > 357) {
       this.biasAwardForXLeft();
-    } else if (this.awardCard.startX < 374) {
+    } else if (this.awardCard.startX < 355) {
       this.biasAwardForXRight();
     } else {
       this.drawStarBurst();
@@ -317,20 +318,20 @@ class LevelThree {
   }
 
   biasAwardForXLeft() {
-    this.awardCard.startX -= ((this.awardCard.startX - 376) / 10) + 1;
+    this.awardCard.startX -= ((this.awardCard.startX - 357) / 10) + 1;
     requestAnimationFrame(this.awardingBind);
   }
 
   biasAwardForXRight() {
-    this.awardCard.startX += ((374-this.awardCard.startX)/10)+1;
+    this.awardCard.startX += ((355-this.awardCard.startX)/10)+1;
     requestAnimationFrame(this.awardingBind);
   }
 
   biasAwardForY() {
-    if (this.awardCard.startY > 226) {
-      this.awardCard.startY -= ((this.awardCard.startY - 226) / 10);
-    } else if(this.awardCard.startY < 224) {
-      this.awardCard.startY += ((224 - this.awardCard.startY) / 10) + 1;
+    if (this.awardCard.startY > 235) {
+      this.awardCard.startY -= ((this.awardCard.startY - 235) / 10);
+    } else if(this.awardCard.startY < 237) {
+      this.awardCard.startY += ((237 - this.awardCard.startY) / 10) + 1;
     }
   }
 
@@ -339,11 +340,9 @@ class LevelThree {
   }
 
   runBetweenLevel() {
-    this.stopLevel = 1;
-    this.canvas.removeEventListener('click', this.toPlantBind);
-    this.canvas.removeEventListener('click', this.openMenuEventBind);
-    this.canvas.removeEventListener('mousemove', this.checkOpenMenuEventBind);
+    this.gameEnd();
     const betweenLevel = new BetweenLevels(this.canvas, this.context, this.awardCard.packet, 3);
+    betweenLevel.createPlayerWon();
     betweenLevel.playerWon();
   }
 
@@ -353,6 +352,9 @@ class LevelThree {
     this.allUnitInTheMap.runLawnmowers();
     this.allUnitInTheMap.zombiesC.forEach((zombie, i, arrayOfZombie) => {
       this.allUnitInTheMap.checkLawnmowers(zombie);
+      if (zombie.positionX < -100) {
+          this.playerLose();
+      }
       if (zombie.health < 1) {
         this.audioPlayer(this.zombyAudioFalling.zombyfalling1);
         this.allUnitInTheMap.zombiesDead(zombie, i, arrayOfZombie);
@@ -386,7 +388,6 @@ class LevelThree {
   }
 
   levelEnd(pointX, pointY) {
-
     this.awardCard.createAwardPosition(pointX, pointY);
     this.levelUp = 1;
     this.levelComplete(pointX);
@@ -574,9 +575,20 @@ class LevelThree {
     return Math.floor(Math.random() * (max - min +1)) + min;
   }
 
-  playerLose() {
+    playerLose() {
+        this.gameEnd();
+        const betweenLevel = new BetweenLevels(this.canvas, this.context, this.awardCard.packet, 3);
+        betweenLevel.createPlayerLose();
+        betweenLevel.playerLose();
+    }
 
-  }
+    gameEnd() {
+        this.stopLevel = 1;
+        this.gameAudioStates.gameprocess.pause();
+        this.canvas.removeEventListener('click', this.toPlantBind);
+        this.canvas.removeEventListener('click', this.openMenuEventBind);
+        this.canvas.removeEventListener('mousemove', this.checkOpenMenuEventBind);
+    }
 
   showMenu() {
     this.context.drawImage(commonImages.menuWindow, 188, 30);

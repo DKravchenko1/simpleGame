@@ -241,7 +241,7 @@ class AllUnitInTheMap {
   }
   //--------TODO Zombie------
   createZombie() {
-    for (let i = 0; i < 10*this.level; i++) { //TODO change number Of zombie
+    for (let i = 0; i < 8*this.level; i++) { //TODO change number Of zombie
       let zombie = new Zombie(this.context);
       zombie.positionOfCreate();
       this.zombies.push(zombie);

@@ -24,7 +24,7 @@ class LevelTwo {
     this.context = this.canvas.getContext('2d');
     this.backgroundPositionX = 0;
     this.animationPositionX = 0;
-    this.numberOfSuns = 1000;
+    this.numberOfSuns = 200;
     this.toPlantBind = null;
     this.receivingSunsBind = null;
     this.drawElementsBind = null;
@@ -84,6 +84,7 @@ class LevelTwo {
   setFontProperties() {
     this.context.font = '24px Arial';
     this.context.textAlign = 'center';
+    this.context.fillStyle = '#000';
   }
 
   setAudioProperties() {
@@ -332,10 +333,7 @@ class LevelTwo {
   }
 
   runBetweenLevel() {
-    this.stopLevel = 1;
-    this.canvas.removeEventListener('click', this.toPlantBind);
-    this.canvas.removeEventListener('click', this.openMenuEventBind);
-    this.canvas.removeEventListener('mousemove', this.checkOpenMenuEventBind);
+    this.gameEnd();
     const betweenLevel = new BetweenLevels(this.canvas, this.context, this.awardCard.packet, 2);
     betweenLevel.create();
     betweenLevel.start();
@@ -566,10 +564,20 @@ class LevelTwo {
     return Math.floor(Math.random() * (max - min +1)) + min;
   }
 
-  playerLose() {
+    playerLose() {
+        this.gameEnd();
+        const betweenLevel = new BetweenLevels(this.canvas, this.context, this.awardCard.packet, 2);
+        betweenLevel.createPlayerLose();
+        betweenLevel.playerLose();
+    }
 
-
-  }
+    gameEnd() {
+        this.stopLevel = 1;
+        this.gameAudioStates.gameprocess.pause();
+        this.canvas.removeEventListener('click', this.toPlantBind);
+        this.canvas.removeEventListener('click', this.openMenuEventBind);
+        this.canvas.removeEventListener('mousemove', this.checkOpenMenuEventBind);
+    }
 
   showMenu() {
     this.context.drawImage(commonImages.menuWindow, 188, 30);
