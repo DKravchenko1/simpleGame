@@ -28,9 +28,9 @@ class Resources {
             let that = this;
             img.onload = function() {
                 that.resourceCache[url] = img;
-
+                console.log(url);
                 if(that.isReady()) {
-                    that.readyCallbacks.forEach(function(func) { func(); }); //should call after all image was loaded
+                    that.readyCallbacks.forEach(function(func) { console.log("callback function");func(); }); //should call after all image was loaded
                 }
             };
             this.resourceCache[url] = false; // 
