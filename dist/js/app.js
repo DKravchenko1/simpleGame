@@ -114,10 +114,10 @@ class Resources {
             let that = this;
             img.onload = function () {
                 that.resourceCache[url] = img;
-
+                console.log(url);
                 if (that.isReady()) {
                     that.readyCallbacks.forEach(function (func) {
-                        func();
+                        console.log("callback function");func();
                     }); //should call after all image was loaded
                 }
             };

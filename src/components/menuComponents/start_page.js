@@ -27,8 +27,12 @@ export class StartGame {
     }
 
     onLoadResources() {
+<<<<<<< HEAD
         this.enableEvents();
         if(resources.isReady()) { this.renderPage();}
+=======
+        if(resources.isReady()) { this.renderPage();}       
+>>>>>>> gh-pages-katya
         resources.load([
             'img/start_page/start_grass_button.png',
             'img/start_page/titlescreen.png',
@@ -66,6 +70,7 @@ export class StartGame {
     renderPage() {
         this.ctx.drawImage(resources.get('img/start_page/titlescreen.png'), 0, 0, 800, 600);
         this.ctx.drawImage(resources.get('img/start_page/pvz_logo.png'), 80, 50, 600, 100);
+        this.enableEvents();
     }
 
     changeTextColor(event) {
