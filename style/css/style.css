@@ -171,7 +171,7 @@ div.addition-information p:first-child {
     width: 97px;
     height: 97px;
     position: relative;
-    top: 0;
+    top: calc(50% - 48px);
     left: 0;
     right: 0;
     bottom: 0;
