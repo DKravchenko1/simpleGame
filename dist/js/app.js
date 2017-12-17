@@ -398,8 +398,8 @@ class MenuPage {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__audio_gamestates_evillaugh_ogg___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__audio_gamestates_evillaugh_ogg__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__audio_gamestates_losemusic_ogg__ = __webpack_require__(34);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__audio_gamestates_losemusic_ogg___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__audio_gamestates_losemusic_ogg__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__audio_gamestates_winmusic_ogg__ = __webpack_require__(35);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__audio_gamestates_winmusic_ogg___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__audio_gamestates_winmusic_ogg__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__audio_gamestates_finalfanfare_ogg__ = __webpack_require__(35);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__audio_gamestates_finalfanfare_ogg___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__audio_gamestates_finalfanfare_ogg__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__audio_gamestates_menu_page_mp3__ = __webpack_require__(36);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__audio_gamestates_menu_page_mp3___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__audio_gamestates_menu_page_mp3__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__audio_gamestates_game_process_mp3__ = __webpack_require__(37);
@@ -413,7 +413,7 @@ class MenuPage {
 
 
 
-let gameAudioStates = { evilLaugh: __WEBPACK_IMPORTED_MODULE_0__audio_gamestates_evillaugh_ogg___default.a, loseaudio: __WEBPACK_IMPORTED_MODULE_1__audio_gamestates_losemusic_ogg___default.a, winaudio: __WEBPACK_IMPORTED_MODULE_2__audio_gamestates_winmusic_ogg___default.a, menupage: __WEBPACK_IMPORTED_MODULE_3__audio_gamestates_menu_page_mp3___default.a, gameprocess: __WEBPACK_IMPORTED_MODULE_4__audio_gamestates_game_process_mp3___default.a };
+let gameAudioStates = { evilLaugh: __WEBPACK_IMPORTED_MODULE_0__audio_gamestates_evillaugh_ogg___default.a, loseaudio: __WEBPACK_IMPORTED_MODULE_1__audio_gamestates_losemusic_ogg___default.a, menupage: __WEBPACK_IMPORTED_MODULE_3__audio_gamestates_menu_page_mp3___default.a, gameprocess: __WEBPACK_IMPORTED_MODULE_4__audio_gamestates_game_process_mp3___default.a, betweenLevel: __WEBPACK_IMPORTED_MODULE_2__audio_gamestates_finalfanfare_ogg___default.a };
 gameAudioStates = Object(__WEBPACK_IMPORTED_MODULE_5__archiverForAudio__["a" /* archivatorAudio */])(gameAudioStates);
 
 
@@ -1807,6 +1807,7 @@ class LevelOne {
 
   runBetweenLevel() {
     this.gameEnd();
+    Object(__WEBPACK_IMPORTED_MODULE_16__audioComponents_audioPlayer__["a" /* audioPlayer */])(__WEBPACK_IMPORTED_MODULE_8__audioComponents_audioGameState__["a" /* gameAudioStates */].betweenLevel);
     __WEBPACK_IMPORTED_MODULE_15__menuComponents_store__["a" /* store */].setLevel(2);
     const betweenLevel = new __WEBPACK_IMPORTED_MODULE_1__BetweenLevels__["a" /* BetweenLevels */](this.canvas, this.context, this.awardCard.packet, 1);
     betweenLevel.create();
@@ -2037,6 +2038,7 @@ class LevelOne {
 
   playerLose() {
     this.gameEnd();
+    Object(__WEBPACK_IMPORTED_MODULE_16__audioComponents_audioPlayer__["a" /* audioPlayer */])(__WEBPACK_IMPORTED_MODULE_8__audioComponents_audioGameState__["a" /* gameAudioStates */].loseaudio);
     const betweenLevel = new __WEBPACK_IMPORTED_MODULE_1__BetweenLevels__["a" /* BetweenLevels */](this.canvas, this.context, this.awardCard.packet, 1);
     betweenLevel.createPlayerLose();
     betweenLevel.playerLose();
@@ -2522,6 +2524,7 @@ class LevelTwo {
 
   runBetweenLevel() {
     this.gameEnd();
+    Object(__WEBPACK_IMPORTED_MODULE_17__audioComponents_audioPlayer__["a" /* audioPlayer */])(__WEBPACK_IMPORTED_MODULE_9__audioComponents_audioGameState__["a" /* gameAudioStates */].betweenLevel);
     __WEBPACK_IMPORTED_MODULE_16__menuComponents_store__["a" /* store */].setLevel(3);
     const betweenLevel = new __WEBPACK_IMPORTED_MODULE_1__BetweenLevels__["a" /* BetweenLevels */](this.canvas, this.context, this.awardCard.packet, 2);
     betweenLevel.create();
@@ -2751,6 +2754,7 @@ class LevelTwo {
 
   playerLose() {
     this.gameEnd();
+    Object(__WEBPACK_IMPORTED_MODULE_17__audioComponents_audioPlayer__["a" /* audioPlayer */])(__WEBPACK_IMPORTED_MODULE_9__audioComponents_audioGameState__["a" /* gameAudioStates */].loseaudio);
     const betweenLevel = new __WEBPACK_IMPORTED_MODULE_1__BetweenLevels__["a" /* BetweenLevels */](this.canvas, this.context, this.awardCard.packet, 2);
     betweenLevel.createPlayerLose();
     betweenLevel.playerLose();
@@ -3239,6 +3243,7 @@ class LevelThree {
 
   runBetweenLevel() {
     this.gameEnd();
+    Object(__WEBPACK_IMPORTED_MODULE_17__audioComponents_audioPlayer__["a" /* audioPlayer */])(__WEBPACK_IMPORTED_MODULE_9__audioComponents_audioGameState__["a" /* gameAudioStates */].betweenLevel);
     __WEBPACK_IMPORTED_MODULE_16__menuComponents_store__["a" /* store */].setLevel(3); //final level
     const betweenLevel = new __WEBPACK_IMPORTED_MODULE_1__BetweenLevels__["a" /* BetweenLevels */](this.canvas, this.context, this.awardCard.packet, 3);
     betweenLevel.createPlayerWon();
@@ -3472,6 +3477,7 @@ class LevelThree {
 
   playerLose() {
     this.gameEnd();
+    Object(__WEBPACK_IMPORTED_MODULE_17__audioComponents_audioPlayer__["a" /* audioPlayer */])(__WEBPACK_IMPORTED_MODULE_9__audioComponents_audioGameState__["a" /* gameAudioStates */].loseaudio);
     const betweenLevel = new __WEBPACK_IMPORTED_MODULE_1__BetweenLevels__["a" /* BetweenLevels */](this.canvas, this.context, this.awardCard.packet, 3);
     betweenLevel.createPlayerLose();
     betweenLevel.playerLose();
@@ -3878,7 +3884,7 @@ module.exports = __webpack_require__.p + "dist/audio/losemusic.ogg";
 /* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__.p + "dist/audio/winmusic.ogg";
+module.exports = __webpack_require__.p + "dist/audio/finalfanfare.ogg";
 
 /***/ }),
 /* 36 */

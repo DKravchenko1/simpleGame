@@ -18,6 +18,7 @@ import {store} from '../../menuComponents/store';
 import {audioPlayer} from '../../audioComponents/audioPlayer';
 import {MenuPage} from '../../menuComponents/menu_page';
 
+
 class LevelThree {
   constructor(canvas) {
     this.canvas = canvas;
@@ -333,6 +334,7 @@ class LevelThree {
 
   runBetweenLevel() {
     this.gameEnd();
+    audioPlayer(gameAudioStates.betweenLevel);
     store.setLevel(3); //final level
     const betweenLevel = new BetweenLevels(this.canvas, this.context, this.awardCard.packet, 3);
     betweenLevel.createPlayerWon();
@@ -566,6 +568,7 @@ class LevelThree {
 
     playerLose() {
         this.gameEnd();
+        audioPlayer(gameAudioStates.loseaudio);
         const betweenLevel = new BetweenLevels(this.canvas, this.context, this.awardCard.packet, 3);
         betweenLevel.createPlayerLose();
         betweenLevel.playerLose();
