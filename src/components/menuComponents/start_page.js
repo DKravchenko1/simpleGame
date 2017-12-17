@@ -9,9 +9,6 @@ import {audioPlayer} from "../audioComponents/audioPlayer";
 export class StartGame {
     constructor () {
         this.ctx = start.getContext('2d');
-        this.gameAudioStates = gameAudioStates;
-        this.buttonAudio = buttonAudio;
-        this.audioPlayer = audioPlayer;
     }
 
     enableEvents() {
@@ -34,9 +31,12 @@ export class StartGame {
             'img/start_page/pvz_logo.png',
             'img/menu_backgrounds/level_1_background.png',
             'img/menu_backgrounds/level_2_background.png',
+            'img/menu_backgrounds/level_3_background.png',
             'img/dialog_window/quit_menu.png',
             'img/dialog_window/button.png',
             'img/menu_backgrounds/level_1_light.png',
+            'img/menu_backgrounds/level_2_light.png',
+            'img/menu_backgrounds/level_3_light.png',
             'img/dialog_window/quit_menu.png',
             'img/dialog_window/button.png',
             'img/dialog_window/quit_text_1.png',
@@ -47,7 +47,6 @@ export class StartGame {
             'img/dialog_window/please.png',
             'img/dialog_window/enter_name.png',
             'img/menu_backgrounds/quit_flowers.png',
-            'img/menu_backgrounds/level_2_light.png',
             'img/zomby_hand/sprite_zomby_hand.png',
             'img/start_page/writting_white.png',
             'img/start_page/writting_red.png'
@@ -90,9 +89,6 @@ export class StartGame {
 
     onGoToMenu(event) {
         if (this.outsideArea(event,200,590,510,563)) return;
-        store.setVolume(0.5);
-        this.gameAudioStates.menupage.loop = true;
-        this.audioPlayer(this.gameAudioStates.menupage);
         this.disableEvents();
         this.menupage = new MenuPage();
     }

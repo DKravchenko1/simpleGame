@@ -5,7 +5,7 @@ var webpack = require('webpack');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = {
-  entry: ['./src/app.js', './style/css/style.css', './style/scss/style.scss'],
+  entry: ['./src/app.js', './style/css/style.css', './style/scss/style.scss', './style/css/reset.css'],
 
   output: {
     path: __dirname,
@@ -38,39 +38,6 @@ module.exports = {
           ]
         })
       },
-       /*{
-        test: /\slider*.png$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-                name: '../../static/[name].[ext]',
-            }
-          }
-        ]
-      },
-      {
-        test: /\.(png|jpg|gif)$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-                name: 'dist/images/[name].[ext]',
-            }
-          }
-        ]
-      },
-      {
-        test: /\.(svg)$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-                name: '../../static/[name].[ext]',
-            }
-          }
-        ]
-      },*/
       {
         test: /\.(png|jpg|gif|svg)$/,
         use: [
