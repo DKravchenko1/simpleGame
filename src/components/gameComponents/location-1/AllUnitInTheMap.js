@@ -116,7 +116,7 @@ class AllUnitInTheMap {
 
   cancelChosePlantEsc(e) {
     if (e.code === 'Escape') {
-      this.seedPack.find((seed, i) => {
+      this.seedPack.find((seed) => {
         if (seed.chose) {
           this.cancelChosePlant(seed);
           return true;

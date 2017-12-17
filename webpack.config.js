@@ -3,6 +3,7 @@
 var path = require('path');
 var webpack = require('webpack');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
   entry: ['./src/app.js', './style/css/style.css', './style/scss/style.scss', './style/css/reset.css'],
@@ -14,10 +15,11 @@ module.exports = {
 
   plugins: [
     // Specify the resulting CSS filename
-    new ExtractTextPlugin('dist/css/style.css')
+    new ExtractTextPlugin('dist/css/style.css'),
+    new UglifyJsPlugin()
   ],
-  
-  
+
+
 
   module: {
     rules: [
@@ -49,6 +51,11 @@ module.exports = {
           }
         ]
       },
+        {
+            enforce: "pre",
+            test: /\.js$/,
+            loader: 'eslint-loader'
+        },
       {
         test: /\.(ogg|mp3|wav|mpe?g)$/i,
         use: [
@@ -68,7 +75,7 @@ module.exports = {
     poll: 1000,
     ignored: ['dist/**/*.js', 'bundle/**/*.js']
   },
-  
+
   stats: {
     // Colored output
     colors: true

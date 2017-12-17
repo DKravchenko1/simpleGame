@@ -59,7 +59,7 @@ class LevelOne {
     this.elemTop = this.canvas.offsetTop;
     this.knobPositionX = store.knobPosition(320,440);
     this.knobPositionY = 210;
-    
+
   }
 
   startGame() {
@@ -93,7 +93,7 @@ class LevelOne {
 
   createAllUnitInTheMapObject() {
     this.allUnitInTheMap = new AllUnitInTheMap(this.canvas, this.context, 1);
-  };
+  }
 
   setThisForCallbackFunctions() {
     this.toPlantBind = this.toPlant.bind(this);
@@ -184,8 +184,8 @@ class LevelOne {
       this.openMenu();
     }
   }
-  
-  
+
+
   checkOpenMenu() {
     this.canvas.addEventListener('mousemove', this.checkOpenMenuEventBind);
   }
@@ -260,7 +260,7 @@ class LevelOne {
     this.showMenu();
     this.checkLevelComplete();
     this.checkAnimation();
-   
+
   }
 
   checkAnimation() {
@@ -399,7 +399,7 @@ class LevelOne {
   }
 
   drawPlant() {
-    this.allUnitInTheMap.plants.forEach((plant, i, arr) => {
+    this.allUnitInTheMap.plants.forEach((plant) => {
       plant.build();
       this.allUnitInTheMap.zombiesC.forEach((zombie) => {
         this.allUnitInTheMap.plantsAttackZombies(plant, zombie, audioPlayer.bind(this, zombyAudioFalling.bonk));
@@ -418,7 +418,7 @@ class LevelOne {
     });
   }
 
-  choseSun() {    // TODO AllUnitInTheMap.choseSun()
+  choseSun() {
     this.chosenSuns.forEach((sun, i, arr) => {
       sun.chose();
       if (sun.startX < 10){
@@ -448,7 +448,7 @@ class LevelOne {
   createPlantLogo() {
     this.allUnitInTheMap.seedPack.forEach((seed) => {
       if (seed.chose === 1) {
-        this.allUnitInTheMap.createPlantLogo(seed, 0, 1, 215, 105, );
+        this.allUnitInTheMap.createPlantLogo(seed, 0, 1, 215, 105);
         this.canvas.addEventListener('click', this.createPlantUnitBind);
       }
     });
@@ -583,7 +583,7 @@ class LevelOne {
       this.canvas.removeEventListener('click', this.goToMenuOfGameBind);
       this.canvas.removeEventListener('click', this.returnToGameBind);
       this.canvas.removeEventListener('click', this.restartLevelBind);
-      
+
   }
 
   showMenu() {
@@ -603,7 +603,7 @@ class LevelOne {
     audioPlayer(buttonAudio.tap, buttonAudio.tap2, buttonAudio.bleep);
     this.menuRestartDraw();
   }
-  
+
 
   menuRestartDraw() {
     this.context.drawImage(resources.get('img/dialog_window/quit_menu.png'),170, 180, 450, 350);
@@ -622,7 +622,7 @@ class LevelOne {
     if (this.outsideArea(e,397,555,445,500)) return;
     audioPlayer(buttonAudio.tap, buttonAudio.tap2, buttonAudio.bleep);
     this.menuQuitDraw();
-    
+
   }
 
   menuQuitDraw() {
@@ -645,9 +645,9 @@ class LevelOne {
     this.gameEnd();
     this.context.clearRect(0, 0, 800, 600);
     let menupage = new MenuPage();
-    
+    menupage.render();
   }
-  
+
   returnToGame(e) {
       if (this.outsideArea(e, 420, 580, 460, 500)) return;
       this.menuOpen = 0;
@@ -661,13 +661,13 @@ class LevelOne {
       gameAudioStates.gameprocess.play();
       requestAnimationFrame(this.drawElementsBind);
   }
-  
+
   restartLevel(e) {
       if (this.outsideArea(e, 210, 370, 460, 500)) return;
       this.gameEnd();
       this.context.clearRect(0, 0, 800, 600);
       let level = new LevelOne(this.canvas);
-      level.startGame();      
+      level.startGame();
   }
 
   outsideArea(e, x1, x2, y1, y2) {

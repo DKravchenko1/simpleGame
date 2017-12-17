@@ -1,14 +1,12 @@
 import {resources} from './resources';
 import {MenuPage} from './menu_page';
-import {buttonAudio} from '../audioComponents/audioButton';
-import {gameAudioStates} from '../audioComponents/audioGameState';
-import {store} from './store';
-import {audioPlayer} from "../audioComponents/audioPlayer";
+
 
 
 export class StartGame {
     constructor () {
-        this.ctx = start.getContext('2d');
+        this.start = document.querySelector('#start');
+        this.ctx = this.start.getContext('2d');
     }
 
     startLoad() {
@@ -17,20 +15,18 @@ export class StartGame {
 
     enableEvents() {
         this.event_goToMenu = this.onGoToMenu.bind(this);
-        start.addEventListener('click', this.event_goToMenu, false);
+        this.start.addEventListener('click', this.event_goToMenu, false);
         this.event_changeText = this.changeTextColor.bind(this);
-        start.addEventListener('mousemove', this.event_changeText, false);
+        this.start.addEventListener('mousemove', this.event_changeText, false);
     }
 
     disableEvents() {
-        start.removeEventListener('click', this.event_goToMenu, false);
-        start.removeEventListener('mousemove', this.event_changeText, false);
+        this.start.removeEventListener('click', this.event_goToMenu, false);
+        this.start.removeEventListener('mousemove', this.event_changeText, false);
     }
 
     onLoadResources() {
-        if(resources.isReady()) {
-            this.readyToRender();
-        }
+        if(resources.isReady()) { this.readyToRender();}
         resources.load([
             'img/start_page/start_grass_button.png',
             'img/start_page/titlescreen.png',
@@ -63,8 +59,8 @@ export class StartGame {
         document.querySelector('#landing-information').classList.add('not-display');
         document.querySelector('.body-landing').classList.add('body-in-game');
         document.querySelector('.body-landing').classList.remove('body-landing');
-        start.width  = 800;
-        start.height = 600;
+        this.start.width  = 800;
+        this.start.height = 600;
     }
 
     readyToRender() {

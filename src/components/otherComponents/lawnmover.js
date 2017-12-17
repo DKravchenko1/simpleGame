@@ -11,11 +11,6 @@ class Lawnmower {
         this.unit = commonImages.lawnmower;
     }
 
-    create(currentLevel) {
-
-    }
-
-
     draw() {
         this.context.drawImage(this.unit, this.pointX, this.pointY)
     }

@@ -91,7 +91,7 @@ class LevelTwo {
 
   createAllUnitInTheMapObject() {
     this.allUnitInTheMap = new AllUnitInTheMap(this.canvas, this.context, 2);
-  };
+  }
 
   setThisForCallbackFunctions() {
     this.toPlantBind = this.toPlant.bind(this);
@@ -133,7 +133,7 @@ class LevelTwo {
     this.allUnitInTheMap.createZombie();
   }
 
-  setZombieState() { // TODO change number of stateZombie
+  setZombieState() {
     this.allUnitInTheMap.setZombieState(this.setRandom);
   }
 
@@ -364,7 +364,7 @@ class LevelTwo {
         } else {
           zombie.walk();
         }
-      }//TODO over here
+      }
       if (this.allUnitInTheMap.zombies.length < 1 && arrayOfZombie.length < 1) {
         positionToEndX = zombie.positionX;
         positionToEndY = zombie.positionY;
@@ -393,7 +393,7 @@ class LevelTwo {
   }
 
   drawPlant() {
-    this.allUnitInTheMap.plants.forEach((plant, i, arr) => {
+    this.allUnitInTheMap.plants.forEach((plant) => {
       plant.build();
       this.allUnitInTheMap.zombiesC.forEach((zombie) => {
         this.allUnitInTheMap.plantsAttackZombies(plant, zombie, audioPlayer.bind(this, zombyAudioFalling.bonk));
@@ -412,7 +412,7 @@ class LevelTwo {
     });
   }
 
-  choseSun() {    // TODO AllUnitInTheMap.choseSun()
+  choseSun() {
     this.chosenSuns.forEach((sun, i, arr) => {
       sun.chose();
       if (sun.startX < 10){
@@ -635,6 +635,7 @@ class LevelTwo {
     this.gameEnd();
     this.context.clearRect(0, 0, 800, 600);
     let menupage = new MenuPage();
+    menupage.render();
   }
 
   returnToGame(e) {
