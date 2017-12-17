@@ -8,7 +8,6 @@ import {CherryBomb} from "../../plantsComponents/cherryBomb";
 import {buttonAudio} from '../../audioComponents/audioButton';
 import {AllUnitInTheMap} from "./AllUnitInTheMap";
 import {gameAudioStates} from '../../audioComponents/audioGameState';
-import {zombyAudioWave} from '../../audioComponents/audioZombyWave';
 import {zombyAudioGroan} from '../../audioComponents/audioZombyGroan';
 import {zombyAudioChomp} from '../../audioComponents/audioZombyChomp';
 import {plantAudio} from '../../audioComponents/audioPlants';
@@ -53,21 +52,11 @@ class LevelThree {
     this.awardTimer = 0;
     this.awardCard = null;
     this.allUnitInTheMap = null;
-    this.buttonAudio = buttonAudio;
-    this.gameAudioStates = gameAudioStates;
-    this.zombyAudioWave = zombyAudioWave;
-    this.zombyAudioGroan = zombyAudioGroan;
-    this.zombyAudioChomp = zombyAudioChomp;
-    this.zombyAudioFalling = zombyAudioFalling;
-    this.plantAudio = plantAudio;
-    this.sunAudioPoints = sunAudioPoints;
     this.elemLeft = this.canvas.offsetLeft;
     this.elemTop = this.canvas.offsetTop;
-    this.audioPlayer = audioPlayer;
     this.reastartdialogOpen = 0;
-    this.knobPositionX = 450;
+    this.knobPositionX = store.knobPosition(320,440);
     this.knobPositionY = 205;
-    this.quitDialogOpen = 0;
   }
 
   startGame() {
@@ -94,8 +83,8 @@ class LevelThree {
   }
 
   setAudioProperties() {
-    this.audioPlayer(this.gameAudioStates.gameprocess);
-    this.gameAudioStates.gameprocess.loop = true;
+    audioPlayer(gameAudioStates.gameprocess);
+    gameAudioStates.gameprocess.loop = true;
   }
 
   setAwardCard() {
@@ -119,12 +108,14 @@ class LevelThree {
     this.openMenuRestartBind = this.openMenuRestart.bind(this);
     this.openMenuQuitBind = this.openMenuQuit.bind(this);
     this.changeVolumeBind = this.changeVolume.bind(this);
-    this.context.drawImage(levelImages.backgroundThree, 0, 0);
+    this.goToMenuOfGameBind = this.goToMenuOfGame.bind(this);
     this.checkOpenMenuEventBind = this.checkOpenMenuEvent.bind(this);
     this.openMenuEventBind = this.openMenuEvent.bind(this);
+    this.returnToGameBind = this.returnToGame.bind(this);
+    this.restartLevelBind = this.restartLevel.bind(this);
+    this.context.drawImage(levelImages.backgroundThree, 0, 0);
     requestAnimationFrame(this.levelOverview.bind(this));
   }
-
 
   createLawnmowers() {
     this.allUnitInTheMap.createLawnmowers(80, 97);
@@ -217,10 +208,10 @@ class LevelThree {
             if (this.menuOpen) {
                 this.menuOpen = 0;
                 this.stopLevel = 0;
-                this.gameAudioStates.gameprocess.play();
+                gameAudioStates.gameprocess.play();
                 requestAnimationFrame(this.drawElementsBind);
             } else {
-                this.gameAudioStates.gameprocess.pause();
+                gameAudioStates.gameprocess.pause();
                 this.stopLevel = 1;
                 this.menuOpen = 1;
             }
@@ -266,7 +257,7 @@ class LevelThree {
   }
 
   drawOtherElements() {
-    //this.showMenu();
+    this.showMenu();
     this.checkLevelComplete();
     this.checkAnimation();
   }
@@ -342,6 +333,7 @@ class LevelThree {
 
   runBetweenLevel() {
     this.gameEnd();
+    store.setLevel(3); //final level
     const betweenLevel = new BetweenLevels(this.canvas, this.context, this.awardCard.packet, 3);
     betweenLevel.createPlayerWon();
     betweenLevel.playerWon();
@@ -357,7 +349,7 @@ class LevelThree {
           this.playerLose();
       }
       if (zombie.health < 1) {
-        this.audioPlayer(this.zombyAudioFalling.zombyfalling1);
+        audioPlayer(zombyAudioFalling.zombyfalling1);
         this.allUnitInTheMap.zombiesDead(zombie, i, arrayOfZombie);
       } else if(zombie.burn) {
         this.allUnitInTheMap.zombiesBurn(zombie, i,arrayOfZombie);
@@ -365,9 +357,7 @@ class LevelThree {
         if (this.allUnitInTheMap.plants.some((plant, i, arr) => {
             if (plant.positionX - 20 > zombie.positionX && plant.positionX - 90 < zombie.positionX && plant.positionY < zombie.positionY + 75 && plant.positionY > zombie.positionY + 65) {
               this.allUnitInTheMap.zombiesAttackPlants(plant, i, arr);
-              this.audioPlayer(this.zombyAudioChomp.chomp);
-              this.audioPlayer(this.zombyAudioChomp.chomp2);
-              this.audioPlayer(this.zombyAudioChomp.chompSoft);
+              audioPlayer(zombyAudioChomp.chomp, zombyAudioChomp.chomp2, zombyAudioChomp.chompSoft);
               return true;
             } else {
               return false;
@@ -408,7 +398,7 @@ class LevelThree {
     this.allUnitInTheMap.plants.forEach((plant, i, arr) => {
       plant.build();
       this.allUnitInTheMap.zombiesC.forEach((zombie) => {
-        this.allUnitInTheMap.plantsAttackZombies(plant, zombie, this.audioPlayer.bind(this, this.zombyAudioFalling.bonk))
+        this.allUnitInTheMap.plantsAttackZombies(plant, zombie, audioPlayer.bind(this, zombyAudioFalling.bonk))
         if (plant.name === CherryBomb && plant.abilityTimer > 40) {
           this.allUnitInTheMap.cherryBombBurnsZombie(plant, zombie);
         }
@@ -446,7 +436,7 @@ class LevelThree {
 
   toPlant(e) {
     if (this.allUnitInTheMap.seedPack.every((seed) => (!seed.chose))) {
-      this.allUnitInTheMap.chosePlant(e, this.numberOfSuns, this.audioPlayer.bind(this, this.plantAudio.seedlift));
+      this.allUnitInTheMap.chosePlant(e, this.numberOfSuns, audioPlayer.bind(this, plantAudio.seedlift));
     } else {
       this.allUnitInTheMap.cancelChosePlantClick(e);
     }
@@ -476,7 +466,7 @@ class LevelThree {
       this.allUnitInTheMap.createPlantUnit(e, plant);
       if (this.allUnitInTheMap.checkPlantBuild) {
         this.numberOfSuns -= plant.cost;
-        this.audioPlayer(this.plantAudio.plant1);
+        audioPlayer(plantAudio.plant1);
         this.checkForSuns();
       }
       this.canvas.removeEventListener('click', this.createPlantUnitBind);
@@ -496,10 +486,8 @@ class LevelThree {
     if ((this.allUnitInTheMap.plants.length > 9) && (!this.checkComingZombie)) {
       this.checkComingZombie = 1;
       this.commingZombieTimer = 0;
+      audioPlayer(zombyAudioGroan.groan3, zombyAudioGroan.groan5, zombyAudioGroan.groan6);
       this.startComingZombie();
-      this.audioPlayer(this.zombyAudioGroan.groan3);
-      this.audioPlayer(this.zombyAudioGroan.groan5);
-      this.audioPlayer(this.zombyAudioGroan.groan6);
     }
   }
 
@@ -517,7 +505,7 @@ class LevelThree {
     if (this.openFireTimer === 90){
       this.allUnitInTheMap.plants.forEach((plant) => {
         if (this.allUnitInTheMap.zombiesC.some((zombie) => zombie.positionX < 690 && zombie.positionX > plant.positionX-35 && zombie.positionY+75 > plant.positionY && zombie.positionY+65 < plant.positionY && !zombie.burn)){
-          this.audioPlayer(this.plantAudio.firepea);
+          audioPlayer(plantAudio.firepea);
           const bullet =  new Bullet(plant.positionX, plant.positionY);
           plant.positionOfBullet.push(bullet);
         }
@@ -566,7 +554,7 @@ class LevelThree {
     this.suns.forEach((sun, i, arr) => {
       if ((e.layerX > sun.startX) && (e.layerX < sun.startX + 75) && (e.layerY > sun.startY) && (e.layerY < sun.startY + 75)){
         this.chosenSuns.push(sun);
-        this.sunAudioPoints.sunpoints.play();
+        audioPlayer(sunAudioPoints.sunpoints);
         arr.splice(i, 1);
       }
     });
@@ -585,28 +573,36 @@ class LevelThree {
 
     gameEnd() {
         this.stopLevel = 1;
-        this.gameAudioStates.gameprocess.pause();
+        gameAudioStates.gameprocess.pause();
         this.canvas.removeEventListener('click', this.toPlantBind);
         this.canvas.removeEventListener('click', this.openMenuEventBind);
         this.canvas.removeEventListener('mousemove', this.checkOpenMenuEventBind);
+        this.canvas.removeEventListener('click', this.changeVolumeBind);
+        this.canvas.removeEventListener('click', this.openMenuRestartBind);
+        this.canvas.removeEventListener('click', this.openMenuQuitBind);
+        this.canvas.removeEventListener('click', this.goToMenuOfGameBind);
+        this.canvas.removeEventListener('click', this.returnToGameBind);
+        this.canvas.removeEventListener('click', this.restartLevelBind);
     }
 
   showMenu() {
-    this.context.drawImage(commonImages.menuWindow, 188, 30);
-    //this.context.drawImage(commonImages.restartButton, 230, 445);
-    //this.context.drawImage(commonImages.quitButton, 397, 445);
-    //this.context.drawImage(commonImages.sliderKnob, this.knobPositionX, this.knobPositionY);
-    this.canvas.addEventListener('click', this.changeVolumeBind);
-    this.canvas.addEventListener('click', this.openMenuRestartBind);
-    this.canvas.addEventListener('click', this.openMenuQuitBind);
+    if(this.menuOpen) {
+        this.context.drawImage(commonImages.menuWindow, 188, 30);
+        this.context.drawImage(commonImages.restartButton, 230, 445);
+        this.context.drawImage(commonImages.quitButton, 397, 445);
+        this.context.drawImage(commonImages.sliderKnob, this.knobPositionX, this.knobPositionY);
+        this.canvas.addEventListener('click', this.changeVolumeBind);
+        this.canvas.addEventListener('click', this.openMenuRestartBind);
+        this.canvas.addEventListener('click', this.openMenuQuitBind);
+    }
   }
 
   openMenuRestart(e) {
     if (this.outsideArea(e,230,390,445,500)) return;
-    this.audioPlayer(this.buttonAudio.tap);
-    this.audioPlayer(this.buttonAudio.tap2);
-    this.audioPlayer(this.buttonAudio.bleep);
-    this.restartDialogOpen = 1;
+    audioPlayer(buttonAudio.tap);
+    audioPlayer(buttonAudio.tap2);
+    audioPlayer(buttonAudio.bleep);
+    this.menuRestartDraw();
   }
 
   menuRestartDraw() {
@@ -615,16 +611,18 @@ class LevelThree {
     this.context.drawImage(commonImages.restart2, 205, 350);
     this.context.drawImage(commonImages.restartButton, 210, 460);
     this.context.drawImage(commonImages.cancelButton, 420, 460);
+    this.canvas.addEventListener('click', this.returnToGameBind);
+    this.canvas.addEventListener('click', this.restartLevelBind);
     this.canvas.removeEventListener('click', this.openMenuQuitBind);
     this.canvas.removeEventListener('click', this.changeVolumeBind);
   }
 
   openMenuQuit(e) {
     if (this.outsideArea(e,397,555,445,500)) return;
-    this.audioPlayer(this.buttonAudio.tap);
-    this.audioPlayer(this.buttonAudio.tap2);
-    this.audioPlayer(this.buttonAudio.bleep);
-    this.quitDialogOpen = 1;
+    audioPlayer(buttonAudio.tap);
+    audioPlayer(buttonAudio.tap2);
+    audioPlayer(buttonAudio.bleep);
+    this.menuQuitDraw();
   }
 
   menuQuitDraw() {
@@ -633,14 +631,50 @@ class LevelThree {
     this.context.drawImage(commonImages.quit2, 210, 350);
     this.context.drawImage(commonImages.quitButton, 210, 460);
     this.context.drawImage(commonImages.cancelButton, 420, 460);
+    this.canvas.addEventListener('click', this.returnToGameBind);
+    this.canvas.addEventListener('click', this.goToMenuOfGameBind);
     this.canvas.removeEventListener('click', this.openMenuRestartBind);
     this.canvas.removeEventListener('click', this.changeVolumeBind);
+    this.canvas.removeEventListener('click', this.openMenuRestartBind);
+    this.canvas.removeEventListener('click', this.openMenuQuitBind);
   }
 
   outsideArea(e, x1, x2, y1, y2) {
     let x = e.pageX - this.elemLeft, y = e.pageY - this.elemTop;
     return x < x1 || x > x2 || y < y1 || y > y2;
   }
+  
+   goToMenuOfGame(e) {
+    if (this.outsideArea(e, 210, 370, 460, 500)) return;
+    audioPlayer(buttonAudio.tap);
+    audioPlayer(buttonAudio.tap2);
+    audioPlayer(buttonAudio.bleep);
+    this.gameEnd();
+    this.context.clearRect(0, 0, 800, 600);
+    let menupage = new MenuPage(); 
+  }
+  
+  returnToGame(e) {
+      if (this.outsideArea(e, 420, 580, 460, 500)) return;
+      this.menuOpen = 0;
+      this.stopLevel = 0;
+      this.canvas.removeEventListener('click', this.changeVolumeBind);
+      this.canvas.removeEventListener('click', this.openMenuRestartBind);
+      this.canvas.removeEventListener('click', this.openMenuQuitBind);
+      this.canvas.removeEventListener('click', this.goToMenuOfGameBind);
+      this.canvas.removeEventListener('click', this.returnToGameBind);
+      this.canvas.removeEventListener('click', this.restartLevelBind);
+      gameAudioStates.gameprocess.play();
+      requestAnimationFrame(this.drawElementsBind);
+   }
+  
+   restartLevel(e) {
+      if (this.outsideArea(e, 210, 370, 460, 500)) return;
+      this.gameEnd();
+      this.context.clearRect(0, 0, 800, 600);
+      let level = new LevelThree(this.canvas);
+      level.startGame();      
+   }
 
 
   changeVolume(e) {
@@ -658,7 +692,8 @@ class LevelThree {
     } else if (this.knobPositionX <= 320) {
       store.setVolume(0);
     }
-    this.gameAudioStates.gameprocess.volume = Number(store.getVolume());
+    gameAudioStates.gameprocess.volume = store.getVolume();
+    this.showMenu();
   }
 
 }

@@ -3,11 +3,24 @@ class Store {
     }
     
     getVolume() {
-        return localStorage.getItem('volume');
+        let x = localStorage.getItem('volume');
+        if (!x) {
+            this.setLevel(0.5);
+            return 0.5;
+        }
+        return Number(x);
     }
     
     setVolume(volume) {
         localStorage.setItem('volume', volume);
+    }
+    
+    maxVolume() {
+        return 0.5;
+    }
+    
+    knobPosition(x1,x2) { //calc knob position
+        return x1 + (this.getVolume()/this.maxVolume())*(x2-x1);
     }
     
     getPlayer() {

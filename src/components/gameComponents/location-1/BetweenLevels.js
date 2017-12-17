@@ -1,8 +1,10 @@
 import {description} from '../../descriptionComponents/description'
 import {awardImages} from "../../imgComponents/awardImages";
+import {LevelOne} from "./level-1";
 import {LevelTwo} from "./level-2";
 import {LevelThree} from "./level-3";
 import {commonImages} from "../../imgComponents/commonImages";
+
 
 
 class BetweenLevels {
@@ -126,7 +128,7 @@ class BetweenLevels {
             }
             this.context.clearRect(0, 0, 800, 600);
             level.startGame();
-        }
+        } 
     }
 
 

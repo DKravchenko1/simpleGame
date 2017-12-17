@@ -10,17 +10,12 @@ export class PlayerMenu {
         this.elemLeft = start.offsetLeft;  
         this.elemTop = start.offsetTop;
         this.ctx = start.getContext('2d');
-        this.enableEvents();
         this.hasInput = false;
-        this.input;
-        this.buttonAudio = buttonAudio;
         this.renderPage();
         this.enableEvents();
-        this.audioPlayer = audioPlayer;
-        this.buttonAudio = buttonAudio;
     }
     
-    enableEvents() {       
+    enableEvents() {   
         this.event_okDown = this.onOkDown.bind(this);
         start.addEventListener('mousedown', this.event_okDown, false);
         this.event_okUp = this.onOkUp.bind(this);
@@ -82,9 +77,9 @@ export class PlayerMenu {
     
     onCancelDown(event) {
         if (this.outsideArea(event,460,550,420,465)) return;
-        this.audioPlayer(this.buttonAudio.tap);
-        this.audioPlayer(this.buttonAudio.tap2);
-        this.audioPlayer(this.buttonAudio.bleep);
+        audioPlayer(buttonAudio.tap);
+        audioPlayer(buttonAudio.tap2);
+        audioPlayer(buttonAudio.bleep);
         this.buttonX = 460;
         this.buttonY = 420;
         this.ctx.drawImage(resources.get('img/dialog_window/quit_menu.png'), 220, 180, 400, 300);
@@ -108,21 +103,23 @@ export class PlayerMenu {
     
     onOkUp(event) {
         if (this.outsideArea(event,290,380,420,465)) return;
-        this.audioPlayer(this.buttonAudio.tap);
-        this.audioPlayer(this.buttonAudio.tap2);
-        this.audioPlayer(this.buttonAudio.bleep);
+        audioPlayer(buttonAudio.tap);
+        audioPlayer(buttonAudio.tap2);
+        audioPlayer(buttonAudio.bleep);
         this.effectButtonUp();
         store.setPlayer(this.input.value);
-        document.body.removeChild(this.input);
         this.disableEvents();
         let x = new MenuPage();
+        this.input.parentNode.removeChild(this.input);
+        this.input = null;
     }
     
     onCancelUp(event) {
         if (this.outsideArea(event,460,550,420,465)) return;
         this.effectButtonUp();
-        document.body.removeChild(this.input);
         this.disableEvents();
         let x = new MenuPage();
+        this.input.parentNode.removeChild(this.input);
+        this.input = null;
     }
 }

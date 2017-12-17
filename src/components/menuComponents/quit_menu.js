@@ -1,7 +1,8 @@
 import {resources} from './resources';
 import {MenuPage} from './menu_page';
 import {buttonAudio} from '../audioComponents/audioButton';
-
+import {audioPlayer} from '../audioComponents/audioPlayer';
+import {gameAudioStates} from '../audioComponents/audioGameState';
 
 export class QuitMenu {
     
@@ -55,12 +56,7 @@ export class QuitMenu {
     
     onQuitDown(event) {
         if (this.outsideArea(event,290,380,420,465)) return;
-        buttonAudio.tap.volume = 0.5;
-        buttonAudio.tap.play();
-        buttonAudio.tap2.volume = 0.5;
-        buttonAudio.tap2.play();
-        buttonAudio.bleep.volume = 0.5;
-        buttonAudio.bleep.play();
+        audioPlayer(buttonAudio.tap, buttonAudio.tap2, buttonAudio.bleep);
         this.ctx.drawImage(resources.get('img/dialog_window/quit_menu.png'), 220, 180, 400, 300);
         this.ctx.drawImage(resources.get('img/dialog_window/button.png'), 293, 417, 90, 45);
         this.ctx.drawImage(resources.get('img/dialog_window/button.png'), 460, 420, 90, 45);
@@ -72,12 +68,7 @@ export class QuitMenu {
     
     onCancelDown(event) {
         if (this.outsideArea(event,460,550,420,465)) return;
-        buttonAudio.tap.volume = 0.5;
-        buttonAudio.tap.play();
-        buttonAudio.tap2.volume = 0.5;
-        buttonAudio.tap2.play();
-        buttonAudio.bleep.volume = 0.5;
-        buttonAudio.bleep.play();
+        audioPlayer(buttonAudio.tap, buttonAudio.tap2, buttonAudio.bleep);
         this.ctx.drawImage(resources.get('img/dialog_window/quit_menu.png'), 220, 180, 400, 300);
         this.ctx.drawImage(resources.get('img/dialog_window/button.png'), 290, 420, 90, 45);
         this.ctx.drawImage(resources.get('img/dialog_window/button.png'), 463, 417, 90, 45);
@@ -101,8 +92,12 @@ export class QuitMenu {
         if (this.outsideArea(event,290,380,420,465)) return;
         this.effectButtonUp();
         this.disableEvents();
-        document.querySelector('#canvas-container').classList.add('not-display');
+        gameAudioStates.menupage.pause();
         document.querySelector('#start-button').classList.remove('not-display');
+        document.querySelector('#canvas-container').classList.add('not-display');
+        document.querySelector('#landing-information').classList.remove('not-display');
+        document.querySelector('.body-in-game').classList.add('body-landing');
+        document.querySelector('.body-in-game').classList.remove('body-in-game');
     }
     
     onCancelUp(event) {

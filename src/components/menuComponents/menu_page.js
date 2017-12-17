@@ -17,11 +17,8 @@ export class MenuPage {
         this.ctx = start.getContext('2d');
         this.renderPage();
         this.enableEvents();
-        this.counter = 0;
-        this.buttonAudio = buttonAudio;
-        this.gameAudioStates = gameAudioStates; 
-        this.buttonAudio = buttonAudio;
-        this.audioPlayer = audioPlayer;        
+        gameAudioStates.menupage.loop = true;
+        audioPlayer(gameAudioStates.menupage);
     }
     
     enableEvents() {
@@ -59,8 +56,8 @@ export class MenuPage {
     
     onGoToPlay() {
         if (this.outsideArea(event,400,720,80,190)) return;
-        this.gameAudioStates.menupage.pause();
-        this.audioPlayer(this.gameAudioStates.evilLaugh);
+        gameAudioStates.menupage.pause();
+        audioPlayer(gameAudioStates.evilLaugh);
         //Effect button down/up
         this.ctx.drawImage(resources.get('img/menu_backgrounds/level_'+store.getLevel()+'_light.png'), 400, 65, 335, 145);
         this.lasttime = Date.now();
@@ -97,16 +94,14 @@ export class MenuPage {
     
     onGoToPlayerMenu(event) {
         if (this.outsideArea(event,50,320,130,160)) return;
-        this.audioPlayer(this.buttonAudio.tap);
-        this.audioPlayer(this.buttonAudio.tap2);
-        this.audioPlayer(this.buttonAudio.bleep);
+        audioPlayer(buttonAudio.tap, buttonAudio.tap2, buttonAudio.bleep);
         this.disableEvents();
         this.playerMenu = new PlayerMenu();
     }
     
     onGoToQuitMenu(event) {
         if (this.outsideArea(event,700,780,490,550)) return;
-        this.audioPlayer(this.buttonAudio.click);
+        audioPlayer(buttonAudio.click);
         this.disableEvents();
         this.quitMenu = new QuitMenu();
     }
