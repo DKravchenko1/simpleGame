@@ -4,18 +4,18 @@ import {commonImages} from "../../imgComponents/commonImages";
 import {Sunflower} from "../../plantsComponents/sunflower";
 import {Sun} from "../../otherComponents/sun";
 import {Bullet} from "../../plantsComponents/bulletNormal";
-import {CherryBomb} from "../../plantsComponents/cherryBomb";
-import {buttonAudio} from '../../audioComponents/audioButton';
 import {AllUnitInTheMap} from "./AllUnitInTheMap";
+import {buttonAudio} from '../../audioComponents/audioButton';
 import {gameAudioStates} from '../../audioComponents/audioGameState';
 import {zombyAudioGroan} from '../../audioComponents/audioZombyGroan';
 import {zombyAudioChomp} from '../../audioComponents/audioZombyChomp';
-import {plantAudio} from '../../audioComponents/audioPlants';
 import {zombyAudioFalling} from '../../audioComponents/audioZombyFalling';
 import {sunAudioPoints} from '../../audioComponents/audioSunPoints';
-import {audioPlayer} from '../../audioComponents/audioPlayer';
+import {plantAudio} from '../../audioComponents/audioPlants';
 import {resources} from '../../menuComponents/resources';
 import {store} from '../../menuComponents/store';
+import {audioPlayer} from '../../audioComponents/audioPlayer';
+import {MenuPage} from '../../menuComponents/menu_page';
 
 class LevelTwo {
   constructor(canvas) {

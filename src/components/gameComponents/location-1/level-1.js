@@ -7,7 +7,6 @@ import {Bullet} from "../../plantsComponents/bulletNormal";
 import {AllUnitInTheMap} from "./AllUnitInTheMap";
 import {buttonAudio} from '../../audioComponents/audioButton';
 import {gameAudioStates} from '../../audioComponents/audioGameState';
-import {zombyAudioWave} from '../../audioComponents/audioZombyWave';
 import {zombyAudioGroan} from '../../audioComponents/audioZombyGroan';
 import {zombyAudioChomp} from '../../audioComponents/audioZombyChomp';
 import {zombyAudioFalling} from '../../audioComponents/audioZombyFalling';
