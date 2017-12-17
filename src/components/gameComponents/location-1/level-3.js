@@ -1,10 +1,10 @@
 import {levelImages} from "../../imgComponents/levelImages";
 import {BetweenLevels} from "./BetweenLevels";
 import {commonImages} from "../../imgComponents/commonImages";
-import {Sunflower} from "../../plantsComponents/sunflower";
 import {Sun} from "../../otherComponents/sun";
 import {Bullet} from "../../plantsComponents/bulletNormal";
 import {AllUnitInTheMap} from "./AllUnitInTheMap";
+import {CherryBomb} from "../../plantsComponents/cherryBomb";
 import {buttonAudio} from '../../audioComponents/audioButton';
 import {gameAudioStates} from '../../audioComponents/audioGameState';
 import {zombyAudioGroan} from '../../audioComponents/audioZombyGroan';
@@ -643,7 +643,7 @@ class LevelThree {
     let x = e.pageX - this.elemLeft, y = e.pageY - this.elemTop;
     return x < x1 || x > x2 || y < y1 || y > y2;
   }
-  
+
    goToMenuOfGame(e) {
     if (this.outsideArea(e, 210, 370, 460, 500)) return;
     audioPlayer(buttonAudio.tap);
@@ -651,9 +651,9 @@ class LevelThree {
     audioPlayer(buttonAudio.bleep);
     this.gameEnd();
     this.context.clearRect(0, 0, 800, 600);
-    let menupage = new MenuPage(); 
+    let menupage = new MenuPage();
   }
-  
+
   returnToGame(e) {
       if (this.outsideArea(e, 420, 580, 460, 500)) return;
       this.menuOpen = 0;
@@ -667,13 +667,13 @@ class LevelThree {
       gameAudioStates.gameprocess.play();
       requestAnimationFrame(this.drawElementsBind);
    }
-  
+
    restartLevel(e) {
       if (this.outsideArea(e, 210, 370, 460, 500)) return;
       this.gameEnd();
       this.context.clearRect(0, 0, 800, 600);
       let level = new LevelThree(this.canvas);
-      level.startGame();      
+      level.startGame();
    }
 
 

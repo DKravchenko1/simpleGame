@@ -331,10 +331,8 @@ class AllUnitInTheMap {
 
   zombiesAttackPlants(plant, i, arrayOfPlant) {
     plant.zombieAttackTimer++;
-      //console.log(plant.health);
     if (plant.zombieAttackTimer > 42) {
       plant.health -= 1;
-      console.log(plant.health);
       plant.zombieAttackTimer = 0;
       if (plant.health < 1) {
         this.positionOfPlant.splice(i, 1);
