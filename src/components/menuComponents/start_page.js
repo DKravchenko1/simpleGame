@@ -28,7 +28,10 @@ export class StartGame {
     }
 
     onLoadResources() {
-        if(resources.isReady()) { this.readyToRender();}
+        if(resources.isReady()) {
+            this.readyToRender();
+            document.querySelector('.overlay-loader').classList.add('not-display');
+        }
         resources.load([
             'img/start_page/start_grass_button.png',
             'img/start_page/titlescreen.png',
@@ -61,7 +64,6 @@ export class StartGame {
         document.querySelector('#landing-information').classList.add('not-display');
         document.querySelector('.body-landing').classList.add('body-in-game');
         document.querySelector('.body-landing').classList.remove('body-landing');
-        document.querySelector('.overlay-loader').classList.add('not-display');
         start.width  = 800;
         start.height = 600;
     }

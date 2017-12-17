@@ -3680,6 +3680,7 @@ class StartGame {
     onLoadResources() {
         if (__WEBPACK_IMPORTED_MODULE_0__resources__["a" /* resources */].isReady()) {
             this.readyToRender();
+            document.querySelector('.overlay-loader').classList.add('not-display');
         }
         __WEBPACK_IMPORTED_MODULE_0__resources__["a" /* resources */].load(['img/start_page/start_grass_button.png', 'img/start_page/titlescreen.png', 'img/start_page/pvz_logo.png', 'img/menu_backgrounds/level_1_background.png', 'img/menu_backgrounds/level_2_background.png', 'img/menu_backgrounds/level_3_background.png', 'img/dialog_window/quit_menu.png', 'img/dialog_window/button.png', 'img/menu_backgrounds/level_1_light.png', 'img/menu_backgrounds/level_2_light.png', 'img/menu_backgrounds/level_3_light.png', 'img/dialog_window/quit_menu.png', 'img/dialog_window/button.png', 'img/dialog_window/quit_text_1.png', 'img/dialog_window/quit_text_2.png', 'img/dialog_window/quit_button.png', 'img/dialog_window/cancel_button.png', 'img/dialog_window/ok_button.png', 'img/dialog_window/please.png', 'img/dialog_window/enter_name.png', 'img/menu_backgrounds/quit_flowers.png', 'img/zomby_hand/sprite_zomby_hand.png', 'img/start_page/writting_white.png', 'img/start_page/writting_red.png']);
         __WEBPACK_IMPORTED_MODULE_0__resources__["a" /* resources */].onReady(this.readyToRender.bind(this));
@@ -3688,7 +3689,6 @@ class StartGame {
         document.querySelector('#landing-information').classList.add('not-display');
         document.querySelector('.body-landing').classList.add('body-in-game');
         document.querySelector('.body-landing').classList.remove('body-landing');
-        document.querySelector('.overlay-loader').classList.add('not-display');
         start.width = 800;
         start.height = 600;
     }
