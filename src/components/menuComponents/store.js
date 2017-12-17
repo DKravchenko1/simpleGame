@@ -5,7 +5,7 @@ class Store {
     getVolume() {
         let x = localStorage.getItem('volume');
         if (!x) {
-            this.setLevel(0.5);
+            this.setVolume(0.5);
             return 0.5;
         }
         return Number(x);
