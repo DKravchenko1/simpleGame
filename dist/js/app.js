@@ -3627,6 +3627,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 function init() {
     const startgame = new __WEBPACK_IMPORTED_MODULE_0__components_menuComponents_start_page__["a" /* StartGame */]();
+    document.querySelector('#start-button').addEventListener('click', startgame.startLoad.bind(startgame), false);
     document.querySelector('#start-button').addEventListener('click', startgame.onLoadResources.bind(startgame), false);
 }
 init();
@@ -3654,6 +3655,10 @@ class StartGame {
         this.ctx = start.getContext('2d');
     }
 
+    startLoad() {
+        document.querySelector('.overlay-loader').classList.remove('not-display');
+    }
+
     enableEvents() {
         this.event_goToMenu = this.onGoToMenu.bind(this);
         start.addEventListener('click', this.event_goToMenu, false);
@@ -3677,6 +3682,7 @@ class StartGame {
         document.querySelector('#landing-information').classList.add('not-display');
         document.querySelector('.body-landing').classList.add('body-in-game');
         document.querySelector('.body-landing').classList.remove('body-landing');
+        document.querySelector('.overlay-loader').classList.add('not-display');
         start.width = 800;
         start.height = 600;
     }

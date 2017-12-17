@@ -11,6 +11,10 @@ export class StartGame {
         this.ctx = start.getContext('2d');
     }
 
+    startLoad() {
+        document.querySelector('.overlay-loader').classList.remove('not-display');
+    }
+
     enableEvents() {
         this.event_goToMenu = this.onGoToMenu.bind(this);
         start.addEventListener('click', this.event_goToMenu, false);
@@ -24,7 +28,7 @@ export class StartGame {
     }
 
     onLoadResources() {
-        if(resources.isReady()) { this.readyToRender();}       
+        if(resources.isReady()) { this.readyToRender();}
         resources.load([
             'img/start_page/start_grass_button.png',
             'img/start_page/titlescreen.png',
@@ -57,10 +61,11 @@ export class StartGame {
         document.querySelector('#landing-information').classList.add('not-display');
         document.querySelector('.body-landing').classList.add('body-in-game');
         document.querySelector('.body-landing').classList.remove('body-landing');
+        document.querySelector('.overlay-loader').classList.add('not-display');
         start.width  = 800;
         start.height = 600;
     }
-    
+
     readyToRender() {
         this.renderPage();
         this.enableEvents();

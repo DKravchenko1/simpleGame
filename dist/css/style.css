@@ -18,7 +18,7 @@ html {
 
 header {
   width: 1200px;
-  margin: 0px auto;
+  margin: 0 auto;
   background-color: white;
   height: 500px; }
 
@@ -61,7 +61,7 @@ section.slider {
 
 #landing-information {
   width: 1200px;
-  margin: 0px auto;
+  margin: 0 auto;
   background-color: white; }
 
 li.item {
@@ -81,14 +81,14 @@ p.rules-caption, p.game-introduction-caption {
   text-decoration: underline; }
 
 .game-introduction-caption {
-  padding-bottom: 0px; }
+  padding-bottom: 0; }
 
 .game-introduction-text {
   color: black;
   font-size: 18px;
   text-indent: 50px;
   line-height: 30px;
-  padding: 0px 15px 50px 30px; }
+  padding: 0 15px 50px 30px; }
 
 #start-button {
   margin-top: 40px;
@@ -140,7 +140,99 @@ div.addition-information p:first-child {
   text-transform: uppercase;
   font-size: 24px;
   text-shadow: 1px 1px black;
-  padding: 50px 0px; }
+  padding: 50px 0; }
+
+.overlay-loader {
+  margin: auto;
+  width: 97px;
+  height: 97px;
+  position: relative;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0; }
+
+.loader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  width: 97px;
+  height: 97px;
+  animation-name: rotateAnim;
+  animation-duration: 0.4s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear; }
+
+.loader div {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid black;
+  position: absolute;
+  top: 2px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto; }
+
+.loader div:nth-child(odd) {
+  border-top: none;
+  border-left: none; }
+
+.loader div:nth-child(even) {
+  border-bottom: none;
+  border-right: none; }
+
+.loader div:nth-child(2) {
+  border-width: 2px;
+  left: 0px;
+  top: -4px;
+  width: 12px;
+  height: 12px; }
+
+.loader div:nth-child(3) {
+  border-width: 2px;
+  left: -1px;
+  top: 3px;
+  width: 18px;
+  height: 18px; }
+
+.loader div:nth-child(4) {
+  border-width: 3px;
+  left: -1px;
+  top: -4px;
+  width: 23px;
+  height: 23px; }
+
+.loader div:nth-child(5) {
+  border-width: 3px;
+  left: -1px;
+  top: 4px;
+  width: 31px;
+  height: 31px; }
+
+.loader div:nth-child(6) {
+  border-width: 4px;
+  left: 0px;
+  top: -4px;
+  width: 39px;
+  height: 39px; }
+
+.loader div:nth-child(7) {
+  border-width: 4px;
+  left: 0px;
+  top: 6px;
+  width: 49px;
+  height: 49px; }
+
+@keyframes rotateAnim {
+  from {
+    transform: rotate(360deg); }
+  to {
+    transform: rotate(0deg); } }
 /* http://meyerweb.com/eric/tools/css/reset/ 
    v2.0 | 20110126
    License: none (public domain)
