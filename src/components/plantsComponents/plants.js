@@ -21,7 +21,7 @@ class Plants {
     }
 
     createAwardPosition(pointX, pointY) {
-        this.startX = pointX;
+        this.startX = pointX+100;
         this.startY = pointY;
         this.endY = pointY - 10;
     }

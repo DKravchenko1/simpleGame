@@ -595,7 +595,7 @@ class Sunflower extends __WEBPACK_IMPORTED_MODULE_0__plants__["a" /* Plants */] 
     }
 
     createAwardPosition(pointX, pointY) {
-        this.startX = pointX;
+        this.startX = pointX + 100;
         this.startY = pointY;
         this.endY = pointY - 10;
     }
@@ -1234,7 +1234,7 @@ class Plants {
     }
 
     createAwardPosition(pointX, pointY) {
-        this.startX = pointX;
+        this.startX = pointX + 100;
         this.startY = pointY;
         this.endY = pointY - 10;
     }
