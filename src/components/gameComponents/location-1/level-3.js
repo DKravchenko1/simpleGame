@@ -5,6 +5,7 @@ import {Sun} from "../../otherComponents/sun";
 import {Bullet} from "../../plantsComponents/bulletNormal";
 import {AllUnitInTheMap} from "./AllUnitInTheMap";
 import {CherryBomb} from "../../plantsComponents/cherryBomb";
+import {Sunflower} from "../../plantsComponents/sunflower";
 import {buttonAudio} from '../../audioComponents/audioButton';
 import {gameAudioStates} from '../../audioComponents/audioGameState';
 import {zombyAudioGroan} from '../../audioComponents/audioZombyGroan';
