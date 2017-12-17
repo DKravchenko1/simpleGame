@@ -398,8 +398,8 @@ class MenuPage {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__audio_gamestates_evillaugh_ogg___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__audio_gamestates_evillaugh_ogg__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__audio_gamestates_losemusic_ogg__ = __webpack_require__(34);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__audio_gamestates_losemusic_ogg___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__audio_gamestates_losemusic_ogg__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__audio_gamestates_winmusic_ogg__ = __webpack_require__(35);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__audio_gamestates_winmusic_ogg___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__audio_gamestates_winmusic_ogg__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__audio_gamestates_finalfanfare_ogg__ = __webpack_require__(35);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__audio_gamestates_finalfanfare_ogg___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__audio_gamestates_finalfanfare_ogg__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__audio_gamestates_menu_page_mp3__ = __webpack_require__(36);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__audio_gamestates_menu_page_mp3___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__audio_gamestates_menu_page_mp3__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__audio_gamestates_game_process_mp3__ = __webpack_require__(37);
@@ -413,7 +413,7 @@ class MenuPage {
 
 
 
-let gameAudioStates = { evilLaugh: __WEBPACK_IMPORTED_MODULE_0__audio_gamestates_evillaugh_ogg___default.a, loseaudio: __WEBPACK_IMPORTED_MODULE_1__audio_gamestates_losemusic_ogg___default.a, winaudio: __WEBPACK_IMPORTED_MODULE_2__audio_gamestates_winmusic_ogg___default.a, menupage: __WEBPACK_IMPORTED_MODULE_3__audio_gamestates_menu_page_mp3___default.a, gameprocess: __WEBPACK_IMPORTED_MODULE_4__audio_gamestates_game_process_mp3___default.a };
+let gameAudioStates = { evilLaugh: __WEBPACK_IMPORTED_MODULE_0__audio_gamestates_evillaugh_ogg___default.a, loseaudio: __WEBPACK_IMPORTED_MODULE_1__audio_gamestates_losemusic_ogg___default.a, menupage: __WEBPACK_IMPORTED_MODULE_3__audio_gamestates_menu_page_mp3___default.a, gameprocess: __WEBPACK_IMPORTED_MODULE_4__audio_gamestates_game_process_mp3___default.a, betweenLevel: __WEBPACK_IMPORTED_MODULE_2__audio_gamestates_finalfanfare_ogg___default.a };
 gameAudioStates = Object(__WEBPACK_IMPORTED_MODULE_5__archiverForAudio__["a" /* archivatorAudio */])(gameAudioStates);
 
 
@@ -683,8 +683,8 @@ levelImages = Object(__WEBPACK_IMPORTED_MODULE_4__archiver__["a" /* archivator *
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return BetweenLevels; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__descriptionComponents_description__ = __webpack_require__(45);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__imgComponents_awardImages__ = __webpack_require__(46);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__level_1__ = __webpack_require__(21);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__level_2__ = __webpack_require__(22);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__level_1__ = __webpack_require__(22);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__level_2__ = __webpack_require__(23);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__level_3__ = __webpack_require__(24);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__imgComponents_commonImages__ = __webpack_require__(8);
 
@@ -900,7 +900,7 @@ class Bullet {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__otherComponents_lawnmover__ = __webpack_require__(93);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__plantsComponents_peashooter__ = __webpack_require__(94);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__plantsComponents_sunflower__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__plantsComponents_cherryBomb__ = __webpack_require__(23);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__plantsComponents_cherryBomb__ = __webpack_require__(16);
 
 
 
@@ -1263,6 +1263,82 @@ class AllUnitInTheMap {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return CherryBomb; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__plants__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__imgComponents_cherryBombImages__ = __webpack_require__(101);
+
+
+
+class CherryBomb extends __WEBPACK_IMPORTED_MODULE_0__plants__["a" /* Plants */] {
+    constructor(context, positionX, positionY) {
+        super(context, 50, 10, 5, 150, positionX, positionY);
+        this.context = context;
+        this.startX = 0;
+        this.startY = 0;
+        this.endY = 0;
+        this.name = CherryBomb;
+        this.width = 112;
+        this.height = 81;
+        this.frameSpeed = 0;
+        this.frameBoom = 0;
+        this.packet = __WEBPACK_IMPORTED_MODULE_1__imgComponents_cherryBombImages__["a" /* cherryBombImages */].logo;
+    }
+
+    award() {
+        super.award(this.packet, this.startX, this.startY + 40);
+    }
+
+    createAwardPosition(positionX, positionY) {
+        super.createAwardPosition(positionX, positionY);
+    }
+
+    init() {
+        super.init();
+    }
+
+    choice() {
+        this.packet = __WEBPACK_IMPORTED_MODULE_1__imgComponents_cherryBombImages__["a" /* cherryBombImages */].chosen;
+    }
+
+    cancelChoice() {
+        this.packet = __WEBPACK_IMPORTED_MODULE_1__imgComponents_cherryBombImages__["a" /* cherryBombImages */].logo;
+    }
+
+    create(positionX, positionY) {
+        super.create(__WEBPACK_IMPORTED_MODULE_1__imgComponents_cherryBombImages__["a" /* cherryBombImages */].cursor, positionX, positionY);
+    }
+
+    build(pointX = this.positionX, pointY = this.positionY) {
+        this.frameSpeed++;
+        this.context.drawImage(__WEBPACK_IMPORTED_MODULE_1__imgComponents_cherryBombImages__["a" /* cherryBombImages */].unit, this.frameBoom, 0, this.width, this.height, pointX, pointY, this.width, this.height);
+        if (this.frameSpeed === 5) {
+            this.frameBoom += 112;
+            this.frameSpeed = 0;
+        }
+        if (this.frameBoom > 784) {
+            this.context.drawImage(__WEBPACK_IMPORTED_MODULE_1__imgComponents_cherryBombImages__["a" /* cherryBombImages */].pow, 0, 0, __WEBPACK_IMPORTED_MODULE_1__imgComponents_cherryBombImages__["a" /* cherryBombImages */].pow.width, __WEBPACK_IMPORTED_MODULE_1__imgComponents_cherryBombImages__["a" /* cherryBombImages */].pow.height, pointX, pointY, __WEBPACK_IMPORTED_MODULE_1__imgComponents_cherryBombImages__["a" /* cherryBombImages */].pow.width, __WEBPACK_IMPORTED_MODULE_1__imgComponents_cherryBombImages__["a" /* cherryBombImages */].pow.height);
+        }
+    }
+
+    useOfAbility() {}
+
+    calculateWidth() {
+        return __WEBPACK_IMPORTED_MODULE_1__imgComponents_cherryBombImages__["a" /* cherryBombImages */].cursor.width;
+    }
+
+    calculateHeight() {
+        return __WEBPACK_IMPORTED_MODULE_1__imgComponents_cherryBombImages__["a" /* cherryBombImages */].cursor.height;
+    }
+
+}
+
+
+
+/***/ }),
+/* 17 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return zombyAudioGroan; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__audio_zomby_groan_ogg__ = __webpack_require__(107);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__audio_zomby_groan_ogg___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__audio_zomby_groan_ogg__);
@@ -1291,7 +1367,7 @@ zombyAudioGroan = Object(__WEBPACK_IMPORTED_MODULE_6__archiverForAudio__["a" /* 
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1317,7 +1393,7 @@ zombyAudioChomp = Object(__WEBPACK_IMPORTED_MODULE_4__archiverForAudio__["a" /* 
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1337,7 +1413,7 @@ zombyAudioFalling = Object(__WEBPACK_IMPORTED_MODULE_2__archiverForAudio__["a" /
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1352,7 +1428,7 @@ let sunAudioPoints = Object(__WEBPACK_IMPORTED_MODULE_1__archiverForAudio__["a" 
 
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1378,7 +1454,7 @@ plantAudio = Object(__WEBPACK_IMPORTED_MODULE_4__archiverForAudio__["a" /* archi
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1392,11 +1468,11 @@ plantAudio = Object(__WEBPACK_IMPORTED_MODULE_4__archiverForAudio__["a" /* archi
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__AllUnitInTheMap__ = __webpack_require__(15);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__audioComponents_audioButton__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__audioComponents_audioGameState__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__audioComponents_audioZombyGroan__ = __webpack_require__(16);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__audioComponents_audioZombyChomp__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__audioComponents_audioZombyFalling__ = __webpack_require__(18);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__audioComponents_audioSunPoints__ = __webpack_require__(19);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__audioComponents_audioPlants__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__audioComponents_audioZombyGroan__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__audioComponents_audioZombyChomp__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__audioComponents_audioZombyFalling__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__audioComponents_audioSunPoints__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__audioComponents_audioPlants__ = __webpack_require__(21);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__menuComponents_resources__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__menuComponents_store__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__audioComponents_audioPlayer__ = __webpack_require__(4);
@@ -1733,6 +1809,7 @@ class LevelOne {
 
   runBetweenLevel() {
     this.gameEnd();
+    Object(__WEBPACK_IMPORTED_MODULE_16__audioComponents_audioPlayer__["a" /* audioPlayer */])(__WEBPACK_IMPORTED_MODULE_8__audioComponents_audioGameState__["a" /* gameAudioStates */].betweenLevel);
     __WEBPACK_IMPORTED_MODULE_15__menuComponents_store__["a" /* store */].setLevel(2);
     const betweenLevel = new __WEBPACK_IMPORTED_MODULE_1__BetweenLevels__["a" /* BetweenLevels */](this.canvas, this.context, this.awardCard.packet, 1);
     betweenLevel.create();
@@ -1963,6 +2040,7 @@ class LevelOne {
 
   playerLose() {
     this.gameEnd();
+    Object(__WEBPACK_IMPORTED_MODULE_16__audioComponents_audioPlayer__["a" /* audioPlayer */])(__WEBPACK_IMPORTED_MODULE_8__audioComponents_audioGameState__["a" /* gameAudioStates */].loseaudio);
     const betweenLevel = new __WEBPACK_IMPORTED_MODULE_1__BetweenLevels__["a" /* BetweenLevels */](this.canvas, this.context, this.awardCard.packet, 1);
     betweenLevel.createPlayerLose();
     betweenLevel.playerLose();
@@ -2093,7 +2171,7 @@ class LevelOne {
 
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2107,15 +2185,17 @@ class LevelOne {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__AllUnitInTheMap__ = __webpack_require__(15);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__audioComponents_audioButton__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__audioComponents_audioGameState__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__audioComponents_audioZombyGroan__ = __webpack_require__(16);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__audioComponents_audioZombyChomp__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__audioComponents_audioZombyFalling__ = __webpack_require__(18);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__audioComponents_audioSunPoints__ = __webpack_require__(19);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__audioComponents_audioPlants__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__audioComponents_audioZombyGroan__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__audioComponents_audioZombyChomp__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__audioComponents_audioZombyFalling__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__audioComponents_audioSunPoints__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__audioComponents_audioPlants__ = __webpack_require__(21);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__menuComponents_resources__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__menuComponents_store__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__audioComponents_audioPlayer__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__menuComponents_menu_page__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__plantsComponents_cherryBomb__ = __webpack_require__(16);
+
 
 
 
@@ -2202,7 +2282,7 @@ class LevelTwo {
   }
 
   setAwardCard() {
-    this.awardCard = new CherryBomb(this.context);
+    this.awardCard = new __WEBPACK_IMPORTED_MODULE_18__plantsComponents_cherryBomb__["a" /* CherryBomb */](this.context);
     this.awardCard.init();
   }
 
@@ -2446,6 +2526,7 @@ class LevelTwo {
 
   runBetweenLevel() {
     this.gameEnd();
+    Object(__WEBPACK_IMPORTED_MODULE_16__audioComponents_audioPlayer__["a" /* audioPlayer */])(__WEBPACK_IMPORTED_MODULE_8__audioComponents_audioGameState__["a" /* gameAudioStates */].betweenLevel);
     __WEBPACK_IMPORTED_MODULE_15__menuComponents_store__["a" /* store */].setLevel(3);
     const betweenLevel = new __WEBPACK_IMPORTED_MODULE_1__BetweenLevels__["a" /* BetweenLevels */](this.canvas, this.context, this.awardCard.packet, 2);
     betweenLevel.create();
@@ -2675,6 +2756,7 @@ class LevelTwo {
 
   playerLose() {
     this.gameEnd();
+    Object(__WEBPACK_IMPORTED_MODULE_16__audioComponents_audioPlayer__["a" /* audioPlayer */])(__WEBPACK_IMPORTED_MODULE_8__audioComponents_audioGameState__["a" /* gameAudioStates */].loseaudio);
     const betweenLevel = new __WEBPACK_IMPORTED_MODULE_1__BetweenLevels__["a" /* BetweenLevels */](this.canvas, this.context, this.awardCard.packet, 2);
     betweenLevel.createPlayerLose();
     betweenLevel.playerLose();
@@ -2804,82 +2886,6 @@ class LevelTwo {
 
 
 /***/ }),
-/* 23 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return CherryBomb; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__plants__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__imgComponents_cherryBombImages__ = __webpack_require__(101);
-
-
-
-class CherryBomb extends __WEBPACK_IMPORTED_MODULE_0__plants__["a" /* Plants */] {
-    constructor(context, positionX, positionY) {
-        super(context, 50, 10, 5, 150, positionX, positionY);
-        this.context = context;
-        this.startX = 0;
-        this.startY = 0;
-        this.endY = 0;
-        this.name = CherryBomb;
-        this.width = 112;
-        this.height = 81;
-        this.frameSpeed = 0;
-        this.frameBoom = 0;
-        this.packet = __WEBPACK_IMPORTED_MODULE_1__imgComponents_cherryBombImages__["a" /* cherryBombImages */].logo;
-    }
-
-    award() {
-        super.award(this.packet, this.startX, this.startY + 40);
-    }
-
-    createAwardPosition(positionX, positionY) {
-        super.createAwardPosition(positionX, positionY);
-    }
-
-    init() {
-        super.init();
-    }
-
-    choice() {
-        this.packet = __WEBPACK_IMPORTED_MODULE_1__imgComponents_cherryBombImages__["a" /* cherryBombImages */].chosen;
-    }
-
-    cancelChoice() {
-        this.packet = __WEBPACK_IMPORTED_MODULE_1__imgComponents_cherryBombImages__["a" /* cherryBombImages */].logo;
-    }
-
-    create(positionX, positionY) {
-        super.create(__WEBPACK_IMPORTED_MODULE_1__imgComponents_cherryBombImages__["a" /* cherryBombImages */].cursor, positionX, positionY);
-    }
-
-    build(pointX = this.positionX, pointY = this.positionY) {
-        this.frameSpeed++;
-        this.context.drawImage(__WEBPACK_IMPORTED_MODULE_1__imgComponents_cherryBombImages__["a" /* cherryBombImages */].unit, this.frameBoom, 0, this.width, this.height, pointX, pointY, this.width, this.height);
-        if (this.frameSpeed === 5) {
-            this.frameBoom += 112;
-            this.frameSpeed = 0;
-        }
-        if (this.frameBoom > 784) {
-            this.context.drawImage(__WEBPACK_IMPORTED_MODULE_1__imgComponents_cherryBombImages__["a" /* cherryBombImages */].pow, 0, 0, __WEBPACK_IMPORTED_MODULE_1__imgComponents_cherryBombImages__["a" /* cherryBombImages */].pow.width, __WEBPACK_IMPORTED_MODULE_1__imgComponents_cherryBombImages__["a" /* cherryBombImages */].pow.height, pointX, pointY, __WEBPACK_IMPORTED_MODULE_1__imgComponents_cherryBombImages__["a" /* cherryBombImages */].pow.width, __WEBPACK_IMPORTED_MODULE_1__imgComponents_cherryBombImages__["a" /* cherryBombImages */].pow.height);
-        }
-    }
-
-    useOfAbility() {}
-
-    calculateWidth() {
-        return __WEBPACK_IMPORTED_MODULE_1__imgComponents_cherryBombImages__["a" /* cherryBombImages */].cursor.width;
-    }
-
-    calculateHeight() {
-        return __WEBPACK_IMPORTED_MODULE_1__imgComponents_cherryBombImages__["a" /* cherryBombImages */].cursor.height;
-    }
-
-}
-
-
-
-/***/ }),
 /* 24 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -2894,16 +2900,16 @@ class CherryBomb extends __WEBPACK_IMPORTED_MODULE_0__plants__["a" /* Plants */]
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__AllUnitInTheMap__ = __webpack_require__(15);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__audioComponents_audioButton__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__audioComponents_audioGameState__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__audioComponents_audioZombyGroan__ = __webpack_require__(16);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__audioComponents_audioZombyChomp__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__audioComponents_audioZombyFalling__ = __webpack_require__(18);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__audioComponents_audioSunPoints__ = __webpack_require__(19);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__audioComponents_audioPlants__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__audioComponents_audioZombyGroan__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__audioComponents_audioZombyChomp__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__audioComponents_audioZombyFalling__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__audioComponents_audioSunPoints__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__audioComponents_audioPlants__ = __webpack_require__(21);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__menuComponents_resources__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__menuComponents_store__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__audioComponents_audioPlayer__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__menuComponents_menu_page__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__plantsComponents_cherryBomb__ = __webpack_require__(23);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__plantsComponents_cherryBomb__ = __webpack_require__(16);
 
 
 
@@ -3239,6 +3245,7 @@ class LevelThree {
 
   runBetweenLevel() {
     this.gameEnd();
+    Object(__WEBPACK_IMPORTED_MODULE_16__audioComponents_audioPlayer__["a" /* audioPlayer */])(__WEBPACK_IMPORTED_MODULE_8__audioComponents_audioGameState__["a" /* gameAudioStates */].betweenLevel);
     __WEBPACK_IMPORTED_MODULE_15__menuComponents_store__["a" /* store */].setLevel(3); //final level
     const betweenLevel = new __WEBPACK_IMPORTED_MODULE_1__BetweenLevels__["a" /* BetweenLevels */](this.canvas, this.context, this.awardCard.packet, 3);
     betweenLevel.createPlayerWon();
@@ -3472,6 +3479,7 @@ class LevelThree {
 
   playerLose() {
     this.gameEnd();
+    Object(__WEBPACK_IMPORTED_MODULE_16__audioComponents_audioPlayer__["a" /* audioPlayer */])(__WEBPACK_IMPORTED_MODULE_8__audioComponents_audioGameState__["a" /* gameAudioStates */].loseaudio);
     const betweenLevel = new __WEBPACK_IMPORTED_MODULE_1__BetweenLevels__["a" /* BetweenLevels */](this.canvas, this.context, this.awardCard.packet, 3);
     betweenLevel.createPlayerLose();
     betweenLevel.playerLose();
@@ -3878,7 +3886,7 @@ module.exports = __webpack_require__.p + "dist/audio/losemusic.ogg";
 /* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__.p + "dist/audio/winmusic.ogg";
+module.exports = __webpack_require__.p + "dist/audio/finalfanfare.ogg";
 
 /***/ }),
 /* 36 */
@@ -4096,8 +4104,8 @@ class Sprite {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return GameComponents; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__location_1_level_1__ = __webpack_require__(21);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__location_1_level_2__ = __webpack_require__(22);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__location_1_level_1__ = __webpack_require__(22);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__location_1_level_2__ = __webpack_require__(23);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__location_1_level_3__ = __webpack_require__(24);
 
 

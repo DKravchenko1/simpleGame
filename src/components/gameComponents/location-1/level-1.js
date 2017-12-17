@@ -334,6 +334,7 @@ class LevelOne {
 
   runBetweenLevel() {
     this.gameEnd();
+    audioPlayer(gameAudioStates.betweenLevel);
     store.setLevel(2);
     const betweenLevel = new BetweenLevels(this.canvas, this.context, this.awardCard.packet, 1);
     betweenLevel.create();
@@ -564,6 +565,7 @@ class LevelOne {
 
   playerLose() {
       this.gameEnd();
+      audioPlayer(gameAudioStates.loseaudio);
       const betweenLevel = new BetweenLevels(this.canvas, this.context, this.awardCard.packet, 1);
       betweenLevel.createPlayerLose();
       betweenLevel.playerLose();

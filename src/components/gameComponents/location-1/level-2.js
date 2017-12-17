@@ -16,6 +16,7 @@ import {resources} from '../../menuComponents/resources';
 import {store} from '../../menuComponents/store';
 import {audioPlayer} from '../../audioComponents/audioPlayer';
 import {MenuPage} from '../../menuComponents/menu_page';
+import {CherryBomb} from "../../plantsComponents/cherryBomb";
 
 class LevelTwo {
   constructor(canvas) {
@@ -328,6 +329,7 @@ class LevelTwo {
 
   runBetweenLevel() {
     this.gameEnd();
+    audioPlayer(gameAudioStates.betweenLevel);
     store.setLevel(3);
     const betweenLevel = new BetweenLevels(this.canvas, this.context, this.awardCard.packet, 2);
     betweenLevel.create();
@@ -557,6 +559,7 @@ class LevelTwo {
 
     playerLose() {
         this.gameEnd();
+        audioPlayer(gameAudioStates.loseaudio);
         const betweenLevel = new BetweenLevels(this.canvas, this.context, this.awardCard.packet, 2);
         betweenLevel.createPlayerLose();
         betweenLevel.playerLose();
