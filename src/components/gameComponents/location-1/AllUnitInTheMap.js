@@ -209,8 +209,9 @@ class AllUnitInTheMap {
         plant.positionOfBullet[i].hit = 1;
         sound();
         if (plant.positionOfBullet[i].frameBulletSpeed === 3) {
-          zombie.health -= plant.damage;
-          zombie.checkState();
+            plant.positionOfBullet.splice(i,1);
+            zombie.health -= plant.damage;
+            zombie.checkState();
         }
       }
     }
@@ -329,10 +330,12 @@ class AllUnitInTheMap {
   }
 
   zombiesAttackPlants(plant, i, arrayOfPlant) {
-    this.zombieAttackTimer++;
-    if (this.zombieAttackTimer > 42) {
+    plant.zombieAttackTimer++;
+      //console.log(plant.health);
+    if (plant.zombieAttackTimer > 42) {
       plant.health -= 1;
-      this.zombieAttackTimer = 0;
+      console.log(plant.health);
+      plant.zombieAttackTimer = 0;
       if (plant.health < 1) {
         this.positionOfPlant.splice(i, 1);
         arrayOfPlant.splice(i, 1);

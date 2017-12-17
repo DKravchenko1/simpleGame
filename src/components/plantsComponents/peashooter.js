@@ -61,10 +61,6 @@ class Peashooter extends Plants{
                     this.context.drawImage(peashooterImages.bullet, 56, 0, this.widthBullet, this.heightBullet, this.positionOfBullet[i].pointX, this.positionOfBullet[i].pointY, this.widthBullet, this.heightBullet);
                     this.positionOfBullet[i].frameBulletSpeed++;
                     this.positionOfBullet[i].pointX += 5;
-                    if (this.positionOfBullet[i].frameBulletSpeed === 4) {
-                        this.positionOfBullet[i].frameBulletSpeed = 0;
-                        this.positionOfBullet.splice(i, 1);
-                    }
                 } else {
                     this.context.drawImage(peashooterImages.bullet, 0, 0, this.widthBullet, this.heightBullet, this.positionOfBullet[i].pointX + 25, this.positionOfBullet[i].pointY, this.widthBullet, this.heightBullet);
                     this.positionOfBullet[i].pointX += 5;

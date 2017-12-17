@@ -809,6 +809,7 @@ class Plants {
         this.frame = 0;
         this.frameSpeed = 0;
         this.abilityTimer = 0;
+        this.zombieAttackTimer = 0;
     }
 
     award(image, pointX, pointY) {
@@ -1160,6 +1161,7 @@ class AllUnitInTheMap {
         plant.positionOfBullet[i].hit = 1;
         sound();
         if (plant.positionOfBullet[i].frameBulletSpeed === 3) {
+          plant.positionOfBullet.splice(i, 1);
           zombie.health -= plant.damage;
           zombie.checkState();
         }
@@ -1281,10 +1283,12 @@ class AllUnitInTheMap {
   }
 
   zombiesAttackPlants(plant, i, arrayOfPlant) {
-    this.zombieAttackTimer++;
-    if (this.zombieAttackTimer > 42) {
+    plant.zombieAttackTimer++;
+    //console.log(plant.health);
+    if (plant.zombieAttackTimer > 42) {
       plant.health -= 1;
-      this.zombieAttackTimer = 0;
+      console.log(plant.health);
+      plant.zombieAttackTimer = 0;
       if (plant.health < 1) {
         this.positionOfPlant.splice(i, 1);
         arrayOfPlant.splice(i, 1);
@@ -1547,6 +1551,7 @@ class LevelTwo {
     this.context.font = '24px Arial';
     this.context.textAlign = 'center';
     this.context.fillStyle = '#000';
+    this.context.textBaseline = 'alphabetic';
   }
 
   setAudioProperties() {
@@ -2231,6 +2236,7 @@ class LevelThree {
     this.context.font = '24px Arial';
     this.context.textAlign = 'center';
     this.context.fillStyle = '#000';
+    this.context.textBaseline = 'alphabetic';
   }
 
   setAudioProperties() {
@@ -3416,6 +3422,7 @@ class LevelOne {
     this.context.font = '24px Arial';
     this.context.textAlign = 'center';
     this.context.fillStyle = '#000';
+    this.context.textBaseline = 'alphabetic';
   }
 
   setAudioProperties() {
@@ -4721,10 +4728,6 @@ class Peashooter extends __WEBPACK_IMPORTED_MODULE_0__plants__["a" /* Plants */]
                     this.context.drawImage(__WEBPACK_IMPORTED_MODULE_1__imgComponents_peashooterImages__["a" /* peashooterImages */].bullet, 56, 0, this.widthBullet, this.heightBullet, this.positionOfBullet[i].pointX, this.positionOfBullet[i].pointY, this.widthBullet, this.heightBullet);
                     this.positionOfBullet[i].frameBulletSpeed++;
                     this.positionOfBullet[i].pointX += 5;
-                    if (this.positionOfBullet[i].frameBulletSpeed === 4) {
-                        this.positionOfBullet[i].frameBulletSpeed = 0;
-                        this.positionOfBullet.splice(i, 1);
-                    }
                 } else {
                     this.context.drawImage(__WEBPACK_IMPORTED_MODULE_1__imgComponents_peashooterImages__["a" /* peashooterImages */].bullet, 0, 0, this.widthBullet, this.heightBullet, this.positionOfBullet[i].pointX + 25, this.positionOfBullet[i].pointY, this.widthBullet, this.heightBullet);
                     this.positionOfBullet[i].pointX += 5;

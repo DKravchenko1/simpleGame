@@ -13,6 +13,7 @@ class Plants {
         this.frame = 0;
         this.frameSpeed = 0;
         this.abilityTimer = 0;
+        this.zombieAttackTimer = 0;
     }
 
     award(image, pointX, pointY) {
