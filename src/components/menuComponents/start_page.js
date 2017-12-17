@@ -30,7 +30,6 @@ export class StartGame {
     onLoadResources() {
         if(resources.isReady()) {
             this.readyToRender();
-            document.querySelector('.overlay-loader').classList.add('not-display');
         }
         resources.load([
             'img/start_page/start_grass_button.png',
@@ -74,6 +73,7 @@ export class StartGame {
     }
 
     renderPage() {
+        document.querySelector('.overlay-loader').classList.add('not-display');
         this.ctx.drawImage(resources.get('img/start_page/titlescreen.png'), 0, 0, 800, 600);
         this.ctx.drawImage(resources.get('img/start_page/pvz_logo.png'), 80, 50, 600, 100);
         this.ctx.drawImage(resources.get('img/start_page/start_grass_button.png'), 200, 500, 400, 80);
