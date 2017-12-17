@@ -16,7 +16,6 @@ import {resources} from '../../menuComponents/resources';
 import {store} from '../../menuComponents/store';
 import {audioPlayer} from '../../audioComponents/audioPlayer';
 import {MenuPage} from '../../menuComponents/menu_page';
-import {CherryBomb} from "../../plantsComponents/cherryBomb";
 
 class LevelThree {
   constructor(canvas) {
