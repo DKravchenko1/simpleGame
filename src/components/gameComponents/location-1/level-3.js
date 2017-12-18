@@ -285,7 +285,6 @@ class LevelThree {
   awardingEvent(e) {
     if (e.layerX > this.awardCard.startX && e.layerX < this.awardCard.startX+78  && e.layerY > this.awardCard.endY+40 && e.layerY < this.awardCard.endY + 92) {
       this.awarding();
-      this.canvas.removeEventListener('click', this.awardingEventBind)
     }
   }
 
@@ -577,8 +576,10 @@ class LevelThree {
     gameEnd() {
         this.stopLevel = 1;
         gameAudioStates.gameprocess.pause();
+        this.canvas.removeEventListener('click', this.awardingEventBind);
         this.canvas.removeEventListener('click', this.toPlantBind);
         this.canvas.removeEventListener('click', this.openMenuEventBind);
+        this.canvas.removeEventListener('click', this.receivingSunsBind);
         this.canvas.removeEventListener('mousemove', this.checkOpenMenuEventBind);
         this.canvas.removeEventListener('click', this.changeVolumeBind);
         this.canvas.removeEventListener('click', this.openMenuRestartBind);
