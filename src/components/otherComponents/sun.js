@@ -12,6 +12,7 @@ class Sun {
         this.frame = 0;
         this.width = 75;
         this.height = 75;
+        this.destroyTimer = 0;
     }
 
     create() {

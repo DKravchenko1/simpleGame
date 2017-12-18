@@ -46,7 +46,6 @@ class LevelTwo {
     this.frameWaiting = 0;
     this.commingZombieTimer = 0;
     this.sunTimer = 0;
-    this.sunDestroyTimer = 0;
     this.openFireTimer = 0;
     this.awardTimer = 0;
     this.gameOver = 0;
@@ -534,14 +533,15 @@ class LevelTwo {
     }
   }
 
-  destroySuns() {
-    if (this.suns.length > 2 && this.sunDestroyTimer > 450) {
-      this.suns.shift();
-      this.sunDestroyTimer = 0;
-    } else {
-      this.sunDestroyTimer++;
+    destroySuns() {
+        this.suns.forEach((sun, i, arr) => {
+            if (sun.destroyTimer > 450){
+                arr.splice(i, 1);
+            } else {
+                sun.destroyTimer++;
+            }
+        });
     }
-  }
 
   receivingSuns(e){
     this.suns.forEach((sun, i, arr) => {
