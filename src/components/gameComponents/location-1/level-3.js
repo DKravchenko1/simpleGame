@@ -598,6 +598,10 @@ class LevelThree {
         this.canvas.addEventListener('click', this.changeVolumeBind);
         this.canvas.addEventListener('click', this.openMenuRestartBind);
         this.canvas.addEventListener('click', this.openMenuQuitBind);
+    }  else {
+        this.canvas.removeEventListener('click', this.changeVolumeBind);
+        this.canvas.removeEventListener('click', this.openMenuRestartBind);
+        this.canvas.removeEventListener('click', this.openMenuQuitBind);
     }
   }
 
