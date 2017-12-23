@@ -7,6 +7,7 @@ import {GameComponents} from "../gameComponents/gameComponents";
 import {buttonAudio} from '../audioComponents/audioButton';
 import {gameAudioStates} from '../audioComponents/audioGameState';
 import {audioPlayer} from '../audioComponents/audioPlayer';
+import {Options} from './options_dialog';
 
 
 export class MenuPage {
@@ -18,12 +19,9 @@ export class MenuPage {
         this.ctx = this.start.getContext('2d');
         this.renderPage();
         this.enableEvents();
+        this.options;
         gameAudioStates.menupage.loop = true;
         audioPlayer(gameAudioStates.menupage);
-    }
-
-    render() {
-
     }
 
     enableEvents() {
@@ -35,23 +33,27 @@ export class MenuPage {
 
         this.event_goToQuitMenu = this.onGoToQuitMenu.bind(this);
         this.start.addEventListener('click', this.event_goToQuitMenu, false);
+        
+        this.event_openOptions = this.openOptions.bind(this);
+        this.start.addEventListener('click', this.event_openOptions, false);
     }
 
     disableEvents() {
         this.start.removeEventListener('click', this.event_goToPlay, false);
         this.start.removeEventListener('click', this.event_goToPlayerMenu, false);
         this.start.removeEventListener('click', this.event_goToQuitMenu, false);
+        this.start.removeEventListener('click', this.event_openOptions, false);
     }
 
     renderPage() {
-      this.ctx.drawImage(resources.get('img/menu_backgrounds/level_'+store.getLevel()+'_background.png'), 0, 0, 800, 600);
-      if (store.getPlayer()){
-        this.ctx.textBaseline = 'top';
-        this.ctx.textAlign = 'left';
-        this.ctx.fillStyle = "white";
-        this.ctx.font = "italic 25px Arial";
-        this.ctx.fillText(store.getPlayer(), 80, 80);
-      }
+        this.ctx.drawImage(resources.get('img/menu_backgrounds/level_'+store.getLevel()+'_background.png'), 0, 0, 800, 600);
+        if (store.getPlayer()){
+            this.ctx.textBaseline = 'top';
+            this.ctx.textAlign = 'left';
+            this.ctx.fillStyle = "white";
+            this.ctx.font = "italic 25px Arial";
+            this.ctx.fillText(store.getPlayer(), 80, 80);
+        }
     }
 
     outsideArea(event,x1,x2,y1,y2) {
@@ -110,5 +112,13 @@ export class MenuPage {
         this.disableEvents();
         this.quitMenu = new QuitMenu();
     }
-
+    
+    openOptions(event) {
+        if (this.outsideArea(event, 600, 690, 490, 550)) return;
+        audioPlayer(buttonAudio.click);
+        this.disableEvents();
+        this.options = new Options(this.start);
+        this.options.renderSoundWindow();
+        this.options.enableEvents();
+    }
 }

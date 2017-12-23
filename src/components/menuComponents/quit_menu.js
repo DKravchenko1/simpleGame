@@ -104,7 +104,6 @@ export class QuitMenu {
         if (this.outsideArea(event,460,550,420,465)) return;
         this.effectButtonUp();
         this.disableEvents();
-        let x = new MenuPage();
-        x.render();
+        new MenuPage();
     }
 }
