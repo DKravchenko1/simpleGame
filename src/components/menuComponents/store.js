@@ -1,12 +1,13 @@
 class Store {
     constructor() {
+        this.maxVolume = 0.5;
     }
     
     getVolume() {
         let x = localStorage.getItem('volume');
         if (!x) {
-            this.setVolume(0.5);
-            return 0.5;
+            this.setVolume(this.maxVolume);
+            return this.maxVolume;
         }
         return Number(x);
     }
@@ -15,12 +16,8 @@ class Store {
         localStorage.setItem('volume', volume);
     }
     
-    maxVolume() {
-        return 0.5;
-    }
-    
     knobPosition(x1,x2) { //calc knob position
-        return x1 + (this.getVolume()/this.maxVolume())*(x2-x1);
+        return x1 + (this.getVolume()/this.maxVolume)*(x2-x1);
     }
     
     getPlayer() {

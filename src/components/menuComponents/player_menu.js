@@ -70,23 +70,21 @@ export class PlayerMenu {
         this.ctx.drawImage(resources.get('img/dialog_window/button.png'), 293, 417, 90, 45);
         this.ctx.drawImage(resources.get('img/dialog_window/button.png'), 460, 420, 90, 45);
         this.ctx.drawImage(resources.get('img/dialog_window/please.png'), 370, 240, 120, 35);
-        this.ctx.drawImage(resources.get('img/dialog_window/enter_name.png'), 310, 365, 220, 30);
+        this.ctx.drawImage(resources.get('img/dialog_window/enter_name.png'), 310, 360, 220, 30);
         this.ctx.drawImage(resources.get('img/dialog_window/ok_button.png'), 323, 427, 25, 20);
         this.ctx.drawImage(resources.get('img/dialog_window/cancel_button.png'), 468, 427, 70, 25);
     }
 
     onCancelDown(event) {
         if (this.outsideArea(event,460,550,420,465)) return;
-        audioPlayer(buttonAudio.tap);
-        audioPlayer(buttonAudio.tap2);
-        audioPlayer(buttonAudio.bleep);
+        audioPlayer(buttonAudio.tap, buttonAudio.tap2, buttonAudio.bleep);
         this.buttonX = 460;
         this.buttonY = 420;
         this.ctx.drawImage(resources.get('img/dialog_window/quit_menu.png'), 220, 180, 400, 300);
         this.ctx.drawImage(resources.get('img/dialog_window/button.png'), 290, 420, 90, 45);
         this.ctx.drawImage(resources.get('img/dialog_window/button.png'), 463, 417, 90, 45);
         this.ctx.drawImage(resources.get('img/dialog_window/please.png'), 370, 240, 120, 35);
-        this.ctx.drawImage(resources.get('img/dialog_window/enter_name.png'), 310, 365, 220, 30);
+        this.ctx.drawImage(resources.get('img/dialog_window/enter_name.png'), 310, 360, 220, 30);
         this.ctx.drawImage(resources.get('img/dialog_window/ok_button.png'), 320, 430, 25, 20);
         this.ctx.drawImage(resources.get('img/dialog_window/cancel_button.png'), 471, 424, 70, 25);
     }
@@ -96,7 +94,7 @@ export class PlayerMenu {
         this.ctx.drawImage(resources.get('img/dialog_window/button.png'), 293, 417, 90, 45);
         this.ctx.drawImage(resources.get('img/dialog_window/button.png'), 460, 420, 90, 45);
         this.ctx.drawImage(resources.get('img/dialog_window/please.png'), 370, 240, 120, 35);
-        this.ctx.drawImage(resources.get('img/dialog_window/enter_name.png'), 310, 365, 220, 30);
+        this.ctx.drawImage(resources.get('img/dialog_window/enter_name.png'), 310, 360, 220, 30);
         this.ctx.drawImage(resources.get('img/dialog_window/ok_button.png'), 320, 430, 25, 20);
         this.ctx.drawImage(resources.get('img/dialog_window/cancel_button.png'), 465, 425, 70, 25);
     }
@@ -109,8 +107,7 @@ export class PlayerMenu {
         this.effectButtonUp();
         store.setPlayer(this.input.value);
         this.disableEvents();
-        let x = new MenuPage();
-        x.render();
+        new MenuPage();
         this.input.parentNode.removeChild(this.input);
         this.input = null;
     }
@@ -119,8 +116,7 @@ export class PlayerMenu {
         if (this.outsideArea(event,460,550,420,465)) return;
         this.effectButtonUp();
         this.disableEvents();
-        let x = new MenuPage();
-        x.render();
+        new MenuPage();
         this.input.parentNode.removeChild(this.input);
         this.input = null;
     }

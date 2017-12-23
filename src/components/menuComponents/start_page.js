@@ -49,6 +49,7 @@ export class StartGame {
             'img/dialog_window/please.png',
             'img/dialog_window/enter_name.png',
             'img/menu_backgrounds/quit_flowers.png',
+            'img/menu_backgrounds/options_flowers.png',
             'img/zomby_hand/sprite_zomby_hand.png',
             'img/start_page/writting_white.png',
             'img/start_page/writting_red.png'
@@ -93,6 +94,6 @@ export class StartGame {
     onGoToMenu(event) {
         if (this.outsideArea(event,200,590,510,563)) return;
         this.disableEvents();
-        this.menupage = new MenuPage();
+        new MenuPage();
     }
 }

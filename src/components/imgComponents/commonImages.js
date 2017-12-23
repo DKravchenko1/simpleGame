@@ -19,6 +19,7 @@ import restart1 from '../../../img/common/restart1.png';
 import restart2 from '../../../img/common/restart2.png';
 import quit1 from '../../../img/common/quit1.png';
 import quit2 from '../../../img/common/quit2.png';
+import ok from '../../../img/common/ok_button.png';
 import cancelButton from '../../../img/common/cancel-button.png';
 import {archivator} from "./archiver";
 
@@ -26,7 +27,7 @@ let commonImages = {
     seedBank, menu, menuHover, sunBank, arrowTop,
     arrowBottom, levelTimeLine, levelTimeLineProcess, menuWindow,
     lawnmower, starburst, zombiesWon, zombieNoteSmall, zombieNoteLarge,
-    restartButton, quitButton, sliderKnob, restart1, restart2, quit1, quit2, cancelButton
+    restartButton, quitButton, sliderKnob, restart1, restart2, quit1, quit2, cancelButton, ok
 };
 
 commonImages = archivator(commonImages);
